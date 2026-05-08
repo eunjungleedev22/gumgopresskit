@@ -10,6 +10,9 @@
 
 import { fetchSheet, type Row } from './sheets';
 
+// Session-scoped cache — avoids re-fetching oEmbed on revisit / hot reload
+const oEmbedCache = new Map<string, { title: string; thumbnail_url: string }>();
+
 interface Mix {
   url: string;
   genre: string;
@@ -19,11 +22,14 @@ interface Mix {
 }
 
 async function fetchOEmbed(trackUrl: string): Promise<{ title: string; thumbnail_url: string } | null> {
+  if (oEmbedCache.has(trackUrl)) return oEmbedCache.get(trackUrl)!;
   try {
     const endpoint = `https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(trackUrl)}`;
-    const res = await fetch(endpoint, { signal: AbortSignal.timeout(7000) });
+    const res = await fetch(endpoint, { signal: AbortSignal.timeout(6_000) });
     if (!res.ok) return null;
-    return await res.json() as { title: string; thumbnail_url: string };
+    const data = await res.json() as { title: string; thumbnail_url: string };
+    oEmbedCache.set(trackUrl, data);
+    return data;
   } catch {
     return null;
   }

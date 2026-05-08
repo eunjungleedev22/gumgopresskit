@@ -56,7 +56,10 @@ function splitCSVLine(line: string): string[] {
 }
 
 export async function fetchSheet(csvUrl: string): Promise<Row[]> {
-  const res = await fetch(csvUrl, { cache: 'no-store' });
+  const res = await fetch(csvUrl, {
+    cache: 'default',                      // respect server Cache-Control; don't force bypass
+    signal: AbortSignal.timeout(10_000),   // bail after 10 s instead of hanging forever
+  });
   if (!res.ok) throw new Error(`Sheet fetch failed: ${res.status} ${res.statusText}`);
   const text = await res.text();
   return parseCSV(text);

@@ -12,6 +12,34 @@
 
 import { fetchSheet, type Row } from './sheets';
 
+// Session-scoped cache — one proxy call per URL per session
+const metaCache = new Map<string, { title: string; summary: string }>();
+
+/**
+ * Run `fn` over `items` with at most `limit` requests in-flight at once.
+ * Preserves result order, mirrors Promise.allSettled shape.
+ */
+async function settledPool<T, R>(
+  items: T[],
+  fn: (item: T) => Promise<R>,
+  limit: number,
+): Promise<PromiseSettledResult<R>[]> {
+  const results: PromiseSettledResult<R>[] = new Array(items.length);
+  let next = 0;
+  const worker = async (): Promise<void> => {
+    while (next < items.length) {
+      const i = next++;
+      try {
+        results[i] = { status: 'fulfilled', value: await fn(items[i]) };
+      } catch (e) {
+        results[i] = { status: 'rejected', reason: e };
+      }
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+  return results;
+}
+
 interface PressItem {
   url: string;
   publication: string;
@@ -22,9 +50,10 @@ interface PressItem {
 }
 
 async function fetchMeta(url: string): Promise<{ title: string; summary: string }> {
+  if (metaCache.has(url)) return metaCache.get(url)!;
   try {
     const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-    const res = await fetch(proxy, { signal: AbortSignal.timeout(8000) });
+    const res = await fetch(proxy, { signal: AbortSignal.timeout(8_000) });
     if (!res.ok) return fallback(url);
     const data = await res.json() as { contents: string };
     const doc = new DOMParser().parseFromString(data.contents ?? '', 'text/html');
@@ -42,7 +71,9 @@ async function fetchMeta(url: string): Promise<{ title: string; summary: string 
       '';
 
     const summary = toTwoSentences(rawDesc);
-    return { title: title.trim(), summary };
+    const result = { title: title.trim(), summary };
+    metaCache.set(url, result);
+    return result;
   } catch {
     return fallback(url);
   }
@@ -106,8 +137,8 @@ export async function renderPressCoverage(csvUrl: string): Promise<void> {
         <div class="skel skel-text"></div>
       </div>`).join('');
 
-    // Fetch metadata in parallel
-    const results = await Promise.allSettled(items.map(item => fetchMeta(item.url)));
+    // Fetch metadata with max 4 concurrent proxy calls — allorigins rate-limits under burst load
+    const results = await settledPool(items.map(item => item.url), fetchMeta, 4);
     results.forEach((res, i) => {
       if (res.status === 'fulfilled') {
         items[i].title = res.value.title;
