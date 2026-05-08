@@ -1,12 +1,16 @@
 import './style.css';
 import { renderGigs } from './gigs';
 import { renderVideos } from './videos';
+import { renderMixes } from './soundcloud';
+import { renderPressCoverage } from './press-coverage';
+import { renderBio } from './bio';
 
 // ── Config ───────────────────────────────────────────────────────────────────
-// Replace these with your published Google Sheets CSV URLs.
-// See GOOGLE_SHEETS_GUIDE.md in the repo root for setup instructions.
-const GIGS_CSV_URL = import.meta.env.VITE_GIGS_CSV_URL as string | undefined;
-const VIDEOS_CSV_URL = import.meta.env.VITE_VIDEOS_CSV_URL as string | undefined;
+const GIGS_CSV_URL      = import.meta.env.VITE_GIGS_CSV_URL      as string | undefined;
+const VIDEOS_CSV_URL    = import.meta.env.VITE_VIDEOS_CSV_URL     as string | undefined;
+const MIXES_CSV_URL     = import.meta.env.VITE_MIXES_CSV_URL      as string | undefined;
+const PRESS_CSV_URL     = import.meta.env.VITE_PRESS_CSV_URL      as string | undefined;
+const BIO_CSV_URL       = import.meta.env.VITE_BIO_CSV_URL        as string | undefined;
 
 // ── Nav scroll + mobile toggle ────────────────────────────────────────────────
 function initNav(): void {
@@ -103,42 +107,28 @@ function initReveal(): void {
 
 // ── Google Sheets data ────────────────────────────────────────────────────────
 async function initSheetData(): Promise<void> {
-  const gigsEl = document.getElementById('gigs-list');
-  const videosEl = document.getElementById('videos-grid');
+  // All sections load independently so a slow fetch doesn't block others
+  const tasks: Promise<void>[] = [];
 
-  if (GIGS_CSV_URL) {
-    await renderGigs(GIGS_CSV_URL);
-  } else if (gigsEl) {
-    gigsEl.innerHTML = renderPlaceholderGigs();
+  if (BIO_CSV_URL)   tasks.push(renderBio(BIO_CSV_URL));
+  if (GIGS_CSV_URL)  tasks.push(renderGigs(GIGS_CSV_URL));
+  else {
+    const el = document.getElementById('gigs-list');
+    if (el) el.innerHTML = `<div class="empty-state">Set VITE_GIGS_CSV_URL in .env — see GOOGLE_SHEETS_GUIDE.md</div>`;
   }
-
-  if (VIDEOS_CSV_URL) {
-    await renderVideos(VIDEOS_CSV_URL);
-  } else if (videosEl) {
-    videosEl.innerHTML = renderPlaceholderVideos();
+  if (MIXES_CSV_URL)  tasks.push(renderMixes(MIXES_CSV_URL));
+  else {
+    const el = document.getElementById('mixes-list');
+    if (el) el.innerHTML = `<div class="empty-state">Set VITE_MIXES_CSV_URL in .env — see GOOGLE_SHEETS_GUIDE.md</div>`;
   }
-}
+  if (VIDEOS_CSV_URL) tasks.push(renderVideos(VIDEOS_CSV_URL));
+  else {
+    const el = document.getElementById('videos-grid');
+    if (el) el.innerHTML = `<div class="empty-state" style="grid-column:1/-1">Set VITE_VIDEOS_CSV_URL in .env</div>`;
+  }
+  if (PRESS_CSV_URL)  tasks.push(renderPressCoverage(PRESS_CSV_URL));
 
-function renderPlaceholderGigs(): string {
-  const placeholders = [
-    { date: 'TBA', venue: 'Configure VITE_GIGS_CSV_URL', city: 'See GOOGLE_SHEETS_GUIDE.md', ticket: false },
-  ];
-  return placeholders.map((g) => `
-    <div class="gig-row reveal">
-      <span class="gig-date">${g.date}</span>
-      <div class="gig-info">
-        <div class="gig-venue">${g.venue}</div>
-        <div class="gig-city">${g.city}</div>
-      </div>
-      <span class="gig-ticket sold-out">TBA</span>
-    </div>`).join('');
-}
-
-function renderPlaceholderVideos(): string {
-  return `<div class="empty-state" style="grid-column:1/-1">
-    Set <code>VITE_VIDEOS_CSV_URL</code> in your <code>.env</code> to load videos from Google Sheets.<br/>
-    See <strong>GOOGLE_SHEETS_GUIDE.md</strong> in the repo for full setup.
-  </div>`;
+  await Promise.allSettled(tasks);
 }
 
 // ── Cursor dot ────────────────────────────────────────────────────────────────

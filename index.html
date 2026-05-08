@@ -6,7 +6,7 @@
     <meta name="description" content="GUMGO — DJ & Producer Press Kit" />
     <meta property="og:title" content="GUMGO — Press Kit" />
     <meta property="og:description" content="Official press kit for DJ & producer GUMGO." />
-    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="theme-color" content="#080808" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>GUMGO — Press Kit</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
@@ -25,6 +25,7 @@
       <ul class="nav-links">
         <li><a href="#about">About</a></li>
         <li><a href="#gigs">Gigs</a></li>
+        <li><a href="#mixes">Mixes</a></li>
         <li><a href="#videos">Videos</a></li>
         <li><a href="#press">Press</a></li>
         <li><a href="#contact">Contact</a></li>
@@ -36,7 +37,7 @@
       <div class="hero-inner">
         <p class="hero-tag">DJ &amp; Producer</p>
         <h1 class="hero-name">GUMGO</h1>
-        <p class="hero-sub">Electronic · Techno · Club</p>
+        <p class="hero-sub">Underground Minimal · Electro</p>
         <div class="hero-cta">
           <a href="#gigs" class="btn btn-primary">Upcoming Gigs</a>
           <a href="#press" class="btn btn-ghost">Press Kit</a>
@@ -49,22 +50,15 @@
       <div class="container">
         <h2 class="section-label">About</h2>
         <div class="about-grid">
-          <div class="about-text">
+          <div id="bio-text" class="about-text">
             <p class="about-lead">
               GUMGO is a Seoul-based DJ and producer carving space at the intersection of
               raw club culture and meticulously crafted electronic sound.
             </p>
             <p>
-              Drawing from techno, industrial, and experimental club music, GUMGO's sets
-              are precision-engineered journeys — each transition a deliberate statement,
-              each track selection a story beat. Residencies across Seoul's underground
-              circuit have cemented a reputation for sets that never repeat and dancefloors
-              that remember.
-            </p>
-            <p>
-              Original productions explore texture over melody: percussive structures that
-              breathe, basslines that converse with silence, and an unflinching commitment
-              to dynamic range. Available for bookings globally.
+              Drawing from underground minimal, electro, and experimental club music,
+              GUMGO's sets are precision-engineered journeys — each transition deliberate,
+              each track selection a story beat.
             </p>
           </div>
           <div class="about-stats">
@@ -90,12 +84,20 @@
       <div class="container">
         <h2 class="section-label">Upcoming Gigs</h2>
         <div id="gigs-list" class="gigs-list">
-          <div class="loading-state">
-            <div class="spinner"></div>
-            <span>Loading gigs…</span>
-          </div>
+          <div class="loading-state"><div class="spinner"></div><span>Loading…</span></div>
         </div>
         <p id="gigs-error" class="data-error hidden"></p>
+      </div>
+    </section>
+
+    <!-- MIXES -->
+    <section id="mixes">
+      <div class="container">
+        <h2 class="section-label">Mixes</h2>
+        <div id="mixes-list" class="mixes-list">
+          <div class="loading-state"><div class="spinner"></div><span>Loading…</span></div>
+        </div>
+        <p id="mixes-error" class="data-error hidden"></p>
       </div>
     </section>
 
@@ -104,10 +106,7 @@
       <div class="container">
         <h2 class="section-label">Videos</h2>
         <div id="videos-grid" class="videos-grid">
-          <div class="loading-state">
-            <div class="spinner"></div>
-            <span>Loading videos…</span>
-          </div>
+          <div class="loading-state"><div class="spinner"></div><span>Loading…</span></div>
         </div>
         <p id="videos-error" class="data-error hidden"></p>
       </div>
@@ -117,6 +116,13 @@
     <section id="press">
       <div class="container">
         <h2 class="section-label">Press</h2>
+
+        <!-- Coverage items from Google Sheets -->
+        <div id="press-coverage" class="press-coverage"></div>
+        <p id="press-coverage-error" class="data-error hidden"></p>
+
+        <!-- Press kit blocks -->
+        <div class="press-kit-label">Press Kit</div>
         <div class="press-grid">
           <div class="press-block">
             <h3>Biography</h3>
