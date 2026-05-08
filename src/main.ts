@@ -141,11 +141,54 @@ function renderPlaceholderVideos(): string {
   </div>`;
 }
 
+// ── Cursor dot ────────────────────────────────────────────────────────────────
+function initCursor(): void {
+  if (window.matchMedia('(pointer: coarse)').matches) return; // skip on touch
+
+  const dot = document.createElement('div');
+  dot.id = 'cursor-dot';
+  document.body.appendChild(dot);
+
+  let cx = 0, cy = 0, tx = 0, ty = 0;
+  let raf = 0;
+
+  window.addEventListener('mousemove', (e) => {
+    tx = e.clientX;
+    ty = e.clientY;
+    if (!raf) raf = requestAnimationFrame(loop);
+  }, { passive: true });
+
+  function loop() {
+    cx += (tx - cx) * 0.18;
+    cy += (ty - cy) * 0.18;
+    dot.style.transform = `translate(calc(-50% + ${cx}px), calc(-50% + ${cy}px))`;
+    raf = Math.abs(cx - tx) > 0.1 || Math.abs(cy - ty) > 0.1
+      ? requestAnimationFrame(loop)
+      : 0;
+  }
+}
+
+// ── Section label line reveal ─────────────────────────────────────────────────
+function initLabelLines(): void {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('line-in');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.section-label').forEach((el) => observer.observe(el));
+}
+
 // ── Boot ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initNav();
   initActiveNav();
   initCounters();
   initReveal();
+  initCursor();
+  initLabelLines();
   initSheetData();
 });
