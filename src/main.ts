@@ -6,20 +6,28 @@ import { renderPressCoverage } from './press-coverage';
 import { renderBio } from './bio';
 
 // ── Config ───────────────────────────────────────────────────────────────────
-const GIGS_CSV_URL      = import.meta.env.VITE_GIGS_CSV_URL      as string | undefined;
-const VIDEOS_CSV_URL    = import.meta.env.VITE_VIDEOS_CSV_URL     as string | undefined;
-const MIXES_CSV_URL     = import.meta.env.VITE_MIXES_CSV_URL      as string | undefined;
-const PRESS_CSV_URL     = import.meta.env.VITE_PRESS_CSV_URL      as string | undefined;
-const BIO_CSV_URL       = import.meta.env.VITE_BIO_CSV_URL        as string | undefined;
+const GIGS_CSV_URL   = import.meta.env.VITE_GIGS_CSV_URL   as string | undefined;
+const VIDEOS_CSV_URL = import.meta.env.VITE_VIDEOS_CSV_URL  as string | undefined;
+const MIXES_CSV_URL  = import.meta.env.VITE_MIXES_CSV_URL   as string | undefined;
+const PRESS_CSV_URL  = import.meta.env.VITE_PRESS_CSV_URL   as string | undefined;
+const BIO_CSV_URL    = import.meta.env.VITE_BIO_CSV_URL     as string | undefined;
 
-// ── Nav scroll + mobile toggle ────────────────────────────────────────────────
+// ── Hero background — uses Vite BASE_URL so dev + prod both work ──────────────
+function initHero(): void {
+  document.documentElement.style.setProperty(
+    '--hero-img-url',
+    `url('${import.meta.env.BASE_URL}hero.webp')`
+  );
+}
+
+// ── Nav: scroll state + mobile toggle ────────────────────────────────────────
 function initNav(): void {
-  const nav = document.getElementById('nav')!;
+  const nav    = document.getElementById('nav')!;
   const toggle = nav.querySelector<HTMLButtonElement>('.nav-toggle')!;
-  const links = nav.querySelector<HTMLUListElement>('.nav-links')!;
+  const links  = nav.querySelector<HTMLUListElement>('.nav-links')!;
 
   window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 20);
+    nav.classList.toggle('scrolled', window.scrollY > 40);
   }, { passive: true });
 
   toggle.addEventListener('click', () => {
@@ -40,7 +48,7 @@ function initNav(): void {
 function initActiveNav(): void {
   const sections = document.querySelectorAll<HTMLElement>('section[id]');
   const navLinks = document.querySelectorAll<HTMLAnchorElement>('.nav-links a');
-  const navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 60;
+  const navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 56;
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
@@ -79,7 +87,7 @@ function initCounters(): void {
   nums.forEach((el) => observer.observe(el));
 }
 
-// ── Reveal on scroll ──────────────────────────────────────────────────────────
+// ── Reveal on scroll — opacity + translateY 20px → 0 ─────────────────────────
 function initReveal(): void {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
@@ -92,7 +100,6 @@ function initReveal(): void {
 
   document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
 
-  // Re-observe newly added .reveal elements (for dynamically rendered cards)
   const mutObs = new MutationObserver((mutations) => {
     mutations.forEach((m) => {
       m.addedNodes.forEach((node) => {
@@ -105,21 +112,52 @@ function initReveal(): void {
   mutObs.observe(document.body, { childList: true, subtree: true });
 }
 
+// ── Star field — 120 particles, one draw, no RAF loop ────────────────────────
+function initStarField(): void {
+  const canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;';
+  document.body.prepend(canvas);
+
+  const ctx = canvas.getContext('2d')!;
+
+  interface Star { xr: number; yr: number; r: number; a: number; }
+  const stars: Star[] = Array.from({ length: 120 }, () => ({
+    xr: Math.random(),
+    yr: Math.random(),
+    r:  Math.random() * 0.75 + 0.2,
+    a:  Math.random() * 0.38 + 0.12,
+  }));
+
+  function draw() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (const s of stars) {
+      ctx.beginPath();
+      ctx.arc(s.xr * canvas.width, s.yr * canvas.height, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(232,234,240,${s.a})`;
+      ctx.fill();
+    }
+  }
+
+  draw();
+  window.addEventListener('resize', draw, { passive: true });
+}
+
 // ── Google Sheets data ────────────────────────────────────────────────────────
 async function initSheetData(): Promise<void> {
-  // All sections load independently so a slow fetch doesn't block others
   const tasks: Promise<void>[] = [];
 
-  if (BIO_CSV_URL)   tasks.push(renderBio(BIO_CSV_URL));
-  if (GIGS_CSV_URL)  tasks.push(renderGigs(GIGS_CSV_URL));
+  if (BIO_CSV_URL)    tasks.push(renderBio(BIO_CSV_URL));
+  if (GIGS_CSV_URL)   tasks.push(renderGigs(GIGS_CSV_URL));
   else {
     const el = document.getElementById('gigs-list');
-    if (el) el.innerHTML = `<div class="empty-state">Set VITE_GIGS_CSV_URL in .env — see GOOGLE_SHEETS_GUIDE.md</div>`;
+    if (el) el.innerHTML = `<div class="empty-state">Set VITE_GIGS_CSV_URL in .env</div>`;
   }
   if (MIXES_CSV_URL)  tasks.push(renderMixes(MIXES_CSV_URL));
   else {
     const el = document.getElementById('mixes-list');
-    if (el) el.innerHTML = `<div class="empty-state">Set VITE_MIXES_CSV_URL in .env — see GOOGLE_SHEETS_GUIDE.md</div>`;
+    if (el) el.innerHTML = `<div class="empty-state">Set VITE_MIXES_CSV_URL in .env</div>`;
   }
   if (VIDEOS_CSV_URL) tasks.push(renderVideos(VIDEOS_CSV_URL));
   else {
@@ -131,54 +169,13 @@ async function initSheetData(): Promise<void> {
   await Promise.allSettled(tasks);
 }
 
-// ── Cursor dot ────────────────────────────────────────────────────────────────
-function initCursor(): void {
-  if (window.matchMedia('(pointer: coarse)').matches) return; // skip on touch
-
-  const dot = document.createElement('div');
-  dot.id = 'cursor-dot';
-  document.body.appendChild(dot);
-
-  let cx = 0, cy = 0, tx = 0, ty = 0;
-  let raf = 0;
-
-  window.addEventListener('mousemove', (e) => {
-    tx = e.clientX;
-    ty = e.clientY;
-    if (!raf) raf = requestAnimationFrame(loop);
-  }, { passive: true });
-
-  function loop() {
-    cx += (tx - cx) * 0.18;
-    cy += (ty - cy) * 0.18;
-    dot.style.transform = `translate(calc(-50% + ${cx}px), calc(-50% + ${cy}px))`;
-    raf = Math.abs(cx - tx) > 0.1 || Math.abs(cy - ty) > 0.1
-      ? requestAnimationFrame(loop)
-      : 0;
-  }
-}
-
-// ── Section label line reveal ─────────────────────────────────────────────────
-function initLabelLines(): void {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('line-in');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.3 });
-
-  document.querySelectorAll('.section-label').forEach((el) => observer.observe(el));
-}
-
 // ── Boot ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+  initHero();
+  initStarField();
   initNav();
   initActiveNav();
   initCounters();
   initReveal();
-  initCursor();
-  initLabelLines();
   initSheetData();
 });

@@ -3,17 +3,35 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="GUMGO — DJ & Producer Press Kit" />
+    <meta name="description" content="GUMGO — DJ &amp; Producer Press Kit. Underground Minimal · Electro. Seoul." />
     <meta property="og:title" content="GUMGO — Press Kit" />
-    <meta property="og:description" content="Official press kit for DJ & producer GUMGO." />
-    <meta name="theme-color" content="#080808" />
+    <meta property="og:description" content="Official press kit for DJ &amp; producer GUMGO." />
+    <meta name="theme-color" content="#060608" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>GUMGO — Press Kit</title>
+
+    <!-- Preload hero image -->
+    <link rel="preload" as="image" href="/hero.webp" type="image/webp" />
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:ital,wght@0,400;0,500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400&display=swap"
     />
+
+    <!-- Critical CSS — prevents flash on first paint -->
+    <style>
+      *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+      html{scroll-behavior:smooth}
+      body{background:#060608;color:#aaaaaa;font-family:'Outfit',system-ui,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+      #nav{position:fixed;top:0;left:0;right:0;z-index:100;height:56px;display:flex;align-items:center;justify-content:space-between;padding-inline:clamp(24px,5vw,64px);background:transparent}
+      #hero{min-height:100svh;position:relative;display:flex;align-items:flex-end;padding-bottom:clamp(56px,8vw,96px);overflow:hidden;background:#060608}
+      #hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(6,6,8,.25) 0%,rgba(6,6,8,.65) 55%,rgba(6,6,8,1) 100%);z-index:1}
+      .hero-inner{position:relative;z-index:2;width:100%;padding-inline:clamp(24px,5vw,64px)}
+      .hero-name{font-family:'Space Grotesk',system-ui,sans-serif;font-size:clamp(80px,15vw,120px);font-weight:700;line-height:.92;color:#ffffff}
+    </style>
   </head>
   <body>
     <!-- NAV -->
@@ -48,32 +66,30 @@
     <!-- ABOUT -->
     <section id="about">
       <div class="container">
-        <h2 class="section-label">About</h2>
-        <div class="about-grid">
-          <div id="bio-text" class="about-text">
-            <p class="about-lead">
-              GUMGO is a Seoul-based DJ and producer carving space at the intersection of
-              raw club culture and meticulously crafted electronic sound.
-            </p>
-            <p>
-              Drawing from underground minimal, electro, and experimental club music,
-              GUMGO's sets are precision-engineered journeys — each transition deliberate,
-              each track selection a story beat.
-            </p>
+        <h2 class="section-label reveal">About</h2>
+        <div id="bio-text" class="about-text reveal">
+          <p class="about-lead">
+            GUMGO is a Seoul-based DJ and producer carving space at the intersection of
+            raw club culture and meticulously crafted electronic sound.
+          </p>
+          <p>
+            Drawing from underground minimal, electro, and experimental club music,
+            GUMGO's sets are precision-engineered journeys — each transition deliberate,
+            each track selection a story beat.
+          </p>
+        </div>
+        <div class="about-stats reveal">
+          <div class="stat">
+            <span class="stat-num" data-count="200">0</span>
+            <span class="stat-label">Performances</span>
           </div>
-          <div class="about-stats">
-            <div class="stat">
-              <span class="stat-num" data-count="200">0</span>
-              <span class="stat-label">Performances</span>
-            </div>
-            <div class="stat">
-              <span class="stat-num" data-count="12">0</span>
-              <span class="stat-label">Countries</span>
-            </div>
-            <div class="stat">
-              <span class="stat-num" data-count="8">0</span>
-              <span class="stat-label">Releases</span>
-            </div>
+          <div class="stat">
+            <span class="stat-num" data-count="12">0</span>
+            <span class="stat-label">Countries</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num" data-count="8">0</span>
+            <span class="stat-label">Releases</span>
           </div>
         </div>
       </div>
@@ -82,7 +98,7 @@
     <!-- GIGS -->
     <section id="gigs">
       <div class="container">
-        <h2 class="section-label">Upcoming Gigs</h2>
+        <h2 class="section-label reveal">Upcoming Gigs</h2>
         <div id="gigs-list" class="gigs-list">
           <div class="loading-state"><div class="spinner"></div><span>Loading…</span></div>
         </div>
@@ -93,7 +109,7 @@
     <!-- MIXES -->
     <section id="mixes">
       <div class="container">
-        <h2 class="section-label">Mixes</h2>
+        <h2 class="section-label reveal">Mixes</h2>
         <div id="mixes-list" class="mixes-list">
           <div class="loading-state"><div class="spinner"></div><span>Loading…</span></div>
         </div>
@@ -104,7 +120,7 @@
     <!-- VIDEOS -->
     <section id="videos">
       <div class="container">
-        <h2 class="section-label">Videos</h2>
+        <h2 class="section-label reveal">Videos</h2>
         <div id="videos-grid" class="videos-grid">
           <div class="loading-state"><div class="spinner"></div><span>Loading…</span></div>
         </div>
@@ -115,15 +131,15 @@
     <!-- PRESS -->
     <section id="press">
       <div class="container">
-        <h2 class="section-label">Press</h2>
+        <h2 class="section-label reveal">Press</h2>
 
         <!-- Coverage items from Google Sheets -->
         <div id="press-coverage" class="press-coverage"></div>
         <p id="press-coverage-error" class="data-error hidden"></p>
 
         <!-- Press kit blocks -->
-        <div class="press-kit-label">Press Kit</div>
-        <div class="press-grid">
+        <div class="press-kit-label reveal">Press Kit</div>
+        <div class="press-grid reveal">
           <div class="press-block">
             <h3>Biography</h3>
             <p>Short and long-form bios available on request. The above bio may be reproduced with credit.</p>
@@ -135,14 +151,9 @@
             <a href="#contact" class="btn btn-ghost btn-sm">Request Rider</a>
           </div>
           <div class="press-block">
-            <h3>EPK &amp; Photos</h3>
-            <p>High-resolution press photos and EPK available for media and promoters.</p>
+            <h3>EPK &amp; Assets</h3>
+            <p>High-resolution press photos, logo files (SVG/PNG), stage visuals, and full EPK for media and promoters.</p>
             <a href="#contact" class="btn btn-ghost btn-sm">Request EPK</a>
-          </div>
-          <div class="press-block">
-            <h3>Logos &amp; Artwork</h3>
-            <p>Brand assets, logo files (SVG/PNG), and stage visuals available on request.</p>
-            <a href="#contact" class="btn btn-ghost btn-sm">Request Assets</a>
           </div>
         </div>
       </div>
@@ -151,8 +162,8 @@
     <!-- CONTACT -->
     <section id="contact">
       <div class="container">
-        <h2 class="section-label">Contact</h2>
-        <div class="contact-grid">
+        <h2 class="section-label reveal">Contact</h2>
+        <div class="contact-grid reveal">
           <div class="contact-block">
             <span class="contact-role">Bookings</span>
             <a href="mailto:booking@gumgo.xyz" class="contact-link">booking@gumgo.xyz</a>
@@ -166,11 +177,11 @@
             <a href="mailto:hello@gumgo.xyz" class="contact-link">hello@gumgo.xyz</a>
           </div>
         </div>
-        <div class="social-links">
-          <a href="#" class="social-link" aria-label="Instagram">IG</a>
-          <a href="#" class="social-link" aria-label="SoundCloud">SC</a>
-          <a href="#" class="social-link" aria-label="Resident Advisor">RA</a>
-          <a href="#" class="social-link" aria-label="Bandcamp">BC</a>
+        <div class="social-links reveal">
+          <a href="#" class="social-link">Instagram</a>
+          <a href="#" class="social-link">SoundCloud</a>
+          <a href="#" class="social-link">Resident Advisor</a>
+          <a href="#" class="social-link">Bandcamp</a>
         </div>
       </div>
     </section>
