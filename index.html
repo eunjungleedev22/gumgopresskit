@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="GUMGO — DJ & Producer Press Kit" />
+    <meta property="og:title" content="GUMGO — Press Kit" />
+    <meta property="og:description" content="Official press kit for DJ & producer GUMGO." />
+    <meta name="theme-color" content="#0a0a0a" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>GUMGO — Press Kit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap"
+    />
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav id="nav">
+      <a class="nav-logo" href="#hero">GUMGO</a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#gigs">Gigs</a></li>
+        <li><a href="#videos">Videos</a></li>
+        <li><a href="#press">Press</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- HERO -->
+    <section id="hero">
+      <div class="hero-inner">
+        <p class="hero-tag">DJ &amp; Producer</p>
+        <h1 class="hero-name">GUMGO</h1>
+        <p class="hero-sub">Electronic · Techno · Club</p>
+        <div class="hero-cta">
+          <a href="#gigs" class="btn btn-primary">Upcoming Gigs</a>
+          <a href="#press" class="btn btn-ghost">Press Kit</a>
+        </div>
+      </div>
+      <div class="hero-grid" aria-hidden="true"></div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="container">
+        <h2 class="section-label">About</h2>
+        <div class="about-grid">
+          <div class="about-text">
+            <p class="about-lead">
+              GUMGO is a Seoul-based DJ and producer carving space at the intersection of
+              raw club culture and meticulously crafted electronic sound.
+            </p>
+            <p>
+              Drawing from techno, industrial, and experimental club music, GUMGO's sets
+              are precision-engineered journeys — each transition a deliberate statement,
+              each track selection a story beat. Residencies across Seoul's underground
+              circuit have cemented a reputation for sets that never repeat and dancefloors
+              that remember.
+            </p>
+            <p>
+              Original productions explore texture over melody: percussive structures that
+              breathe, basslines that converse with silence, and an unflinching commitment
+              to dynamic range. Available for bookings globally.
+            </p>
+          </div>
+          <div class="about-stats">
+            <div class="stat">
+              <span class="stat-num" data-count="200">0</span>
+              <span class="stat-label">Performances</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num" data-count="12">0</span>
+              <span class="stat-label">Countries</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num" data-count="8">0</span>
+              <span class="stat-label">Releases</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GIGS -->
+    <section id="gigs">
+      <div class="container">
+        <h2 class="section-label">Upcoming Gigs</h2>
+        <div id="gigs-list" class="gigs-list">
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <span>Loading gigs…</span>
+          </div>
+        </div>
+        <p id="gigs-error" class="data-error hidden"></p>
+      </div>
+    </section>
+
+    <!-- VIDEOS -->
+    <section id="videos">
+      <div class="container">
+        <h2 class="section-label">Videos</h2>
+        <div id="videos-grid" class="videos-grid">
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <span>Loading videos…</span>
+          </div>
+        </div>
+        <p id="videos-error" class="data-error hidden"></p>
+      </div>
+    </section>
+
+    <!-- PRESS -->
+    <section id="press">
+      <div class="container">
+        <h2 class="section-label">Press</h2>
+        <div class="press-grid">
+          <div class="press-block">
+            <h3>Biography</h3>
+            <p>Short and long-form bios available on request. The above bio may be reproduced with credit.</p>
+            <a href="#contact" class="btn btn-ghost btn-sm">Request Bio</a>
+          </div>
+          <div class="press-block">
+            <h3>Technical Rider</h3>
+            <p>Full technical and hospitality rider provided upon confirmed booking.</p>
+            <a href="#contact" class="btn btn-ghost btn-sm">Request Rider</a>
+          </div>
+          <div class="press-block">
+            <h3>EPK &amp; Photos</h3>
+            <p>High-resolution press photos and EPK available for media and promoters.</p>
+            <a href="#contact" class="btn btn-ghost btn-sm">Request EPK</a>
+          </div>
+          <div class="press-block">
+            <h3>Logos &amp; Artwork</h3>
+            <p>Brand assets, logo files (SVG/PNG), and stage visuals available on request.</p>
+            <a href="#contact" class="btn btn-ghost btn-sm">Request Assets</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="container">
+        <h2 class="section-label">Contact</h2>
+        <div class="contact-grid">
+          <div class="contact-block">
+            <span class="contact-role">Bookings</span>
+            <a href="mailto:booking@gumgo.xyz" class="contact-link">booking@gumgo.xyz</a>
+          </div>
+          <div class="contact-block">
+            <span class="contact-role">Press &amp; Media</span>
+            <a href="mailto:press@gumgo.xyz" class="contact-link">press@gumgo.xyz</a>
+          </div>
+          <div class="contact-block">
+            <span class="contact-role">General</span>
+            <a href="mailto:hello@gumgo.xyz" class="contact-link">hello@gumgo.xyz</a>
+          </div>
+        </div>
+        <div class="social-links">
+          <a href="#" class="social-link" aria-label="Instagram">IG</a>
+          <a href="#" class="social-link" aria-label="SoundCloud">SC</a>
+          <a href="#" class="social-link" aria-label="Resident Advisor">RA</a>
+          <a href="#" class="social-link" aria-label="Bandcamp">BC</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <span>© 2026 GUMGO. All rights reserved.</span>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
