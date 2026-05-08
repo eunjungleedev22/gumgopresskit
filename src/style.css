@@ -94,7 +94,7 @@ section { padding-block: var(--gap); }
   font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--text-hi);
+  color: #ffffff;
   opacity: 0.9;
   transition: opacity 0.25s;
 }
@@ -109,12 +109,11 @@ section { padding-block: var(--gap); }
   font-size: 0.62rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--text-mid);
-  opacity: 0.7;
-  transition: opacity 0.2s;
+  color: rgba(255,255,255,0.55);
+  transition: color 0.2s;
 }
 .nav-links a:hover,
-.nav-links a.active { opacity: 1; color: var(--text-hi); }
+.nav-links a.active { color: #ffffff; }
 
 .nav-toggle {
   display: none;
@@ -178,10 +177,10 @@ section { padding-block: var(--gap); }
 .btn-primary:hover { background: #ffffff; }
 
 .btn-ghost {
-  border: 1px solid var(--border-hi);
-  color: var(--text-mid);
+  border: 1px solid rgba(255,255,255,0.28);
+  color: rgba(255,255,255,0.75);
 }
-.btn-ghost:hover { border-color: var(--text-mid); color: var(--text-hi); }
+.btn-ghost:hover { border-color: rgba(255,255,255,0.7); color: #ffffff; }
 .btn-sm { padding: 8px 18px; font-size: 0.62rem; }
 
 /* ── Section label ────────────────────────────────────── */
@@ -212,23 +211,48 @@ section { padding-block: var(--gap); }
 #hero {
   min-height: 100svh;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-end;
+  justify-content: flex-start;
   padding-block: 0;
   padding-top: var(--nav-h);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Photo fills the section */
+#hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('/hero.jpg') center center / cover no-repeat;
+  z-index: 0;
+}
+
+/* Dark gradient so text reads clearly over the photo */
+#hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, rgba(8,8,8,0.92) 0%, rgba(8,8,8,0.45) 42%, rgba(8,8,8,0.15) 100%),
+    linear-gradient(to right, rgba(8,8,8,0.55) 0%, transparent 60%);
+  z-index: 1;
 }
 
 .hero-inner {
-  text-align: center;
-  padding-inline: 24px;
+  position: relative;
+  z-index: 2;
+  text-align: left;
+  padding: clamp(40px, 6vw, 80px) clamp(20px, 5vw, 64px);
+  max-width: 760px;
 }
 
 .hero-tag {
   font-family: var(--mono);
-  font-size: 0.62rem;
+  font-size: 0.72rem;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: var(--text-mid);
+  color: rgba(255, 255, 255, 0.7);
   margin-bottom: 20px;
   opacity: 0;
   animation: fade-in 1s ease 0.2s forwards;
@@ -236,22 +260,23 @@ section { padding-block: var(--gap); }
 
 .hero-name {
   font-family: var(--display);
-  font-size: clamp(68px, 17vw, 168px);
+  font-size: clamp(80px, 18vw, 180px);
   font-weight: 800;
-  line-height: 0.92;
-  letter-spacing: -0.025em;
-  color: var(--text-max);
-  margin-bottom: 22px;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin-bottom: 24px;
+  text-shadow: 0 2px 40px rgba(0,0,0,0.5);
   opacity: 0;
   animation: fade-in 1s ease 0.4s forwards;
 }
 
 .hero-sub {
   font-family: var(--mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.28em;
+  font-size: 0.78rem;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: var(--text);
+  color: rgba(255, 255, 255, 0.65);
   margin-bottom: 44px;
   opacity: 0;
   animation: fade-in 1s ease 0.6s forwards;
@@ -260,7 +285,7 @@ section { padding-block: var(--gap); }
 .hero-cta {
   display: flex;
   gap: 12px;
-  justify-content: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
   opacity: 0;
   animation: fade-in 1s ease 0.8s forwards;
