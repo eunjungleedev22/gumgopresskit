@@ -3,190 +3,192 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="GUMGO — Korean DJ & vinyl selector. Minimal, electro, anything heavy. First European Tour 2026." />
+    <meta name="description" content="GUMGO — DJ &amp; Producer Press Kit. Underground Minimal · Electro. Seoul." />
     <meta property="og:title" content="GUMGO — Press Kit" />
-    <meta property="og:description" content="Korean DJ & vinyl selector. Minimal, electro, vinyl-only sets. Featured in Mixmag Asia Artists Exciting Us 2026." />
-    <meta name="theme-color" content="#C9A227" />
+    <meta property="og:description" content="Official press kit for DJ &amp; producer GUMGO." />
+    <meta name="theme-color" content="#060608" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>GUMGO — EPK</title>
+    <title>GUMGO — Press Kit</title>
 
+    <!-- Preload hero image -->
+    <link rel="preload" as="image" href="/hero.webp" type="image/webp" />
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@300;400&display=swap" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400&display=swap"
+    />
 
-    <!-- Critical CSS -->
+    <!-- Critical CSS — prevents flash on first paint -->
     <style>
       *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
       html{scroll-behavior:smooth}
-      body{background:#C9A227;color:#0A0A0A;font-family:'Inter',system-ui,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-      #nav{position:fixed;top:0;left:0;right:0;z-index:200;height:48px;background:#0A0A0A;border-bottom:2px solid #C9A227;display:flex;align-items:center}
-      #hero{display:grid;grid-template-columns:60fr 40fr;min-height:100svh;padding-top:48px}
-      .hero-img-col{background-color:#8a7040;background-size:cover;background-position:50% 15%;background-repeat:no-repeat}
-      .hero-text-col{background:#C9A227;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(20px,3.5vw,48px);min-height:calc(100svh - 48px)}
-      .hero-name{font-family:'Space Grotesk',system-ui,sans-serif;font-size:clamp(72px,10vw,156px);font-weight:700;letter-spacing:-0.04em;line-height:0.88;color:#0A0A0A}
+      body{background:#060608;color:#aaaaaa;font-family:'Outfit',system-ui,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+      #nav{position:fixed;top:0;left:0;right:0;z-index:100;height:56px;display:flex;align-items:center;justify-content:space-between;padding-inline:clamp(24px,5vw,64px);background:transparent}
+      #hero{min-height:100svh;position:relative;display:flex;align-items:flex-end;padding-bottom:clamp(56px,8vw,96px);overflow:hidden;background:#060608}
+      #hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(6,6,8,.25) 0%,rgba(6,6,8,.65) 55%,rgba(6,6,8,1) 100%);z-index:1}
+      .hero-inner{position:relative;z-index:2;width:100%;padding-inline:clamp(24px,5vw,64px)}
+      .hero-name{font-family:'Space Grotesk',system-ui,sans-serif;font-size:clamp(80px,15vw,120px);font-weight:700;line-height:.92;color:#ffffff}
     </style>
   </head>
   <body>
-
-    <!-- ── NAV ──────────────────────────────────────────────── -->
+    <!-- NAV -->
     <nav id="nav">
-      <div class="nav-inner">
-        <a class="nav-logo" href="#hero">GUMGO</a>
-        <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
-          <span></span><span></span><span></span>
-        </button>
-        <ul class="nav-links">
-          <li><a href="#about">About</a></li>
-          <li><a href="#press">Press</a></li>
-          <li><a href="#performances">Live</a></li>
-          <li><a href="#listen">Listen</a></li>
-          <li><a href="#contact">Booking</a></li>
-        </ul>
-      </div>
+      <a class="nav-logo" href="#hero">GUMGO</a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#gigs">Gigs</a></li>
+        <li><a href="#mixes">Mixes</a></li>
+        <li><a href="#videos">Videos</a></li>
+        <li><a href="#press">Press</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
     </nav>
 
-    <!-- ── HERO ─────────────────────────────────────────────── -->
+    <!-- HERO -->
     <section id="hero">
-      <div class="hero-img-col" role="img" aria-label="GUMGO holding a FREE TEKNO vinyl record"></div>
-
-      <div class="hero-text-col">
-        <div class="hero-top">
-          <span class="hero-pronoun">she / her</span>
-        </div>
-
-        <div class="hero-mid">
-          <h1 class="hero-name">GUMGO</h1>
-          <span class="hero-korean" lang="ko">검고</span>
-          <p class="hero-tagline">Korean DJ &amp; vinyl selector</p>
-          <p class="hero-location">based nowhere&nbsp;· moving everywhere</p>
-        </div>
-
-        <div class="hero-bottom">
-          <span class="hero-tour">First European Tour&nbsp;· 2026</span>
-          <a href="#about" class="hero-scroll" aria-label="Scroll to About">↓</a>
+      <div class="hero-inner">
+        <p class="hero-tag">DJ &amp; Producer</p>
+        <h1 class="hero-name">GUMGO</h1>
+        <p class="hero-sub">Underground Minimal · Electro</p>
+        <div class="hero-cta">
+          <a href="#gigs" class="btn btn-primary">Upcoming Gigs</a>
+          <a href="#press" class="btn btn-ghost">Press Kit</a>
         </div>
       </div>
     </section>
 
-    <!-- ── ABOUT ─────────────────────────────────────────────── -->
+    <!-- ABOUT -->
     <section id="about">
       <div class="container">
-        <div class="about-eyebrow reveal">검고 / 黑猫</div>
-        <div class="about-grid">
-          <div class="about-left reveal">
-            <div class="about-name-block">
-              <span class="about-name-kr" lang="ko">검고</span>
-              <span class="about-name-gloss">black cat / Seoul</span>
-            </div>
-            <div class="about-meta-list">
-              <div class="about-meta-row"><span>Sound</span><span>Minimal, Electro, Anything Heavy</span></div>
-              <div class="about-meta-row"><span>Format</span><span>Vinyl only</span></div>
-              <div class="about-meta-row"><span>Based</span><span>Nomad — was SG, now EU</span></div>
-            </div>
+        <h2 class="section-label reveal">About</h2>
+        <div id="bio-text" class="about-text reveal">
+          <p class="about-lead">
+            GUMGO is a Seoul-based DJ and producer carving space at the intersection of
+            raw club culture and meticulously crafted electronic sound.
+          </p>
+          <p>
+            Drawing from underground minimal, electro, and experimental club music,
+            GUMGO's sets are precision-engineered journeys — each transition deliberate,
+            each track selection a story beat.
+          </p>
+        </div>
+        <div class="about-stats reveal">
+          <div class="stat">
+            <span class="stat-num" data-count="200">0</span>
+            <span class="stat-label">Performances</span>
           </div>
-          <div class="about-right reveal">
-            <p class="about-lead">GUMGO is a vinyl-only DJ and selector. The name means 'black cat' in Korean.</p>
-            <p>Her sound is textural and groove-driven, rooted in late 90s and early 2000s electronics encountered as a child, and shaped by janggu rhythms she's been immersed in since a young age. Her sets move through minimal, electro, and anything heavy.</p>
-            <p>She has played underground clubs and radio platforms across Asia and Europe, and is currently setting her sights on a debut release in 2027.</p>
-            <p class="about-instag"><a href="https://instagram.com/gumgo._" target="_blank" rel="noopener">@gumgo._</a> on Instagram</p>
+          <div class="stat">
+            <span class="stat-num" data-count="12">0</span>
+            <span class="stat-label">Countries</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num" data-count="8">0</span>
+            <span class="stat-label">Releases</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ── PRESS ─────────────────────────────────────────────── -->
-    <section id="press">
+    <!-- GIGS -->
+    <section id="gigs">
       <div class="container">
-        <div class="section-label reveal">Press</div>
-        <div class="press-feature reveal">
-          <blockquote class="press-quote">
-            "When asked about her music, the word Gumgo keeps coming back to is 'unapologetic' and her music makes good on that."
-          </blockquote>
-          <cite class="press-cite">
-            <a href="#" target="_blank" rel="noopener">
-              Mixmag Asia &nbsp;·&nbsp; Artists Exciting Us In 2026 / April &nbsp;↗
-            </a>
-          </cite>
-        </div>
-        <ul class="press-list reveal">
-          <li><a class="press-link" href="#" target="_blank" rel="noopener">Oslated Special Mix 097 <span class="press-link-arrow">↗</span></a></li>
-          <li><a class="press-link" href="#" target="_blank" rel="noopener">Bangkok Community Radio <span class="press-link-arrow">↗</span></a></li>
-          <li><a class="press-link" href="#" target="_blank" rel="noopener">Seoul Community Radio <span class="press-link-arrow">↗</span></a></li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- ── PERFORMANCES ──────────────────────────────────────── -->
-    <section id="performances">
-      <div class="container">
-        <div class="section-label reveal">Selected Live</div>
-        <div id="gigs-list" class="perf-list">
-          <!-- Placeholder — replaced by Google Sheet data when VITE_GIGS_CSV_URL is set -->
-          <div class="gig-row reveal"><span class="gig-date">Jun 2026</span><div class="gig-info"><div class="gig-venue">HÖR Berlin</div><div class="gig-city">Berlin, DE</div></div><span class="gig-tag upcoming">Upcoming</span></div>
-          <div class="gig-row reveal"><span class="gig-date">May 2026</span><div class="gig-info"><div class="gig-venue">Tresor</div><div class="gig-city">Berlin, DE</div></div><span class="gig-tag upcoming">Upcoming</span></div>
-          <div class="gig-row reveal"><span class="gig-date">Apr 2026</span><div class="gig-info"><div class="gig-venue">Nitsa Club</div><div class="gig-city">Barcelona, ES</div></div><span class="gig-tag upcoming">Upcoming</span></div>
-          <div class="gig-row reveal"><span class="gig-date">Dec 2025</span><div class="gig-info"><div class="gig-venue">Kilo</div><div class="gig-city">Seoul, KR</div></div></div>
-          <div class="gig-row reveal"><span class="gig-date">Oct 2025</span><div class="gig-info"><div class="gig-venue">Goethe Institut</div><div class="gig-city">Singapore, SG</div></div></div>
-          <div class="gig-row reveal"><span class="gig-date">Aug 2025</span><div class="gig-info"><div class="gig-venue">Safe Room</div><div class="gig-city">Bangkok, TH</div></div></div>
-          <div class="gig-row reveal"><span class="gig-date">Jun 2025</span><div class="gig-info"><div class="gig-venue">Drip Bangkok</div><div class="gig-city">Bangkok, TH</div></div></div>
-          <div class="gig-row reveal"><span class="gig-date">Mar 2025</span><div class="gig-info"><div class="gig-venue">BAS</div><div class="gig-city">Singapore, SG</div></div></div>
+        <h2 class="section-label reveal">Upcoming Gigs</h2>
+        <div id="gigs-list" class="gigs-list">
+          <div class="loading-state"><div class="spinner"></div><span>Loading…</span></div>
         </div>
         <p id="gigs-error" class="data-error hidden"></p>
       </div>
     </section>
 
-    <!-- ── MIXES / LISTEN ────────────────────────────────────── -->
-    <section id="listen">
+    <!-- MIXES -->
+    <section id="mixes">
       <div class="container">
-        <div class="section-label reveal">Mixes / Listen</div>
-        <div class="mixes-grid">
-          <div class="mix-card reveal">
-            <div class="mix-card-label">Oslated Special Mix 097</div>
-            <div class="mix-card-sub">SoundCloud</div>
-            <a class="mix-card-link" href="https://soundcloud.com/oslated" target="_blank" rel="noopener">Listen ↗</a>
+        <h2 class="section-label reveal">Mixes</h2>
+        <div id="mixes-list" class="mixes-list">
+          <div class="loading-state"><div class="spinner"></div><span>Loading…</span></div>
+        </div>
+        <p id="mixes-error" class="data-error hidden"></p>
+      </div>
+    </section>
+
+    <!-- VIDEOS -->
+    <section id="videos">
+      <div class="container">
+        <h2 class="section-label reveal">Videos</h2>
+        <div id="videos-grid" class="videos-grid">
+          <div class="loading-state"><div class="spinner"></div><span>Loading…</span></div>
+        </div>
+        <p id="videos-error" class="data-error hidden"></p>
+      </div>
+    </section>
+
+    <!-- PRESS -->
+    <section id="press">
+      <div class="container">
+        <h2 class="section-label reveal">Press</h2>
+
+        <!-- Coverage items from Google Sheets -->
+        <div id="press-coverage" class="press-coverage"></div>
+        <p id="press-coverage-error" class="data-error hidden"></p>
+
+        <!-- Press kit blocks -->
+        <div class="press-kit-label reveal">Press Kit</div>
+        <div class="press-grid reveal">
+          <div class="press-block">
+            <h3>Biography</h3>
+            <p>Short and long-form bios available on request. The above bio may be reproduced with credit.</p>
+            <a href="#contact" class="btn btn-ghost btn-sm">Request Bio</a>
           </div>
-          <div class="mix-card reveal">
-            <div class="mix-card-label">Bangkok Community Radio</div>
-            <div class="mix-card-sub">BCR</div>
-            <a class="mix-card-link" href="https://bangkokcommradio.com" target="_blank" rel="noopener">Listen ↗</a>
+          <div class="press-block">
+            <h3>Technical Rider</h3>
+            <p>Full technical and hospitality rider provided upon confirmed booking.</p>
+            <a href="#contact" class="btn btn-ghost btn-sm">Request Rider</a>
           </div>
-          <div class="mix-card reveal">
-            <div class="mix-card-label">Seoul Community Radio</div>
-            <div class="mix-card-sub">SCR</div>
-            <a class="mix-card-link" href="https://seoulcommunityradio.com" target="_blank" rel="noopener">Listen ↗</a>
+          <div class="press-block">
+            <h3>EPK &amp; Assets</h3>
+            <p>High-resolution press photos, logo files (SVG/PNG), stage visuals, and full EPK for media and promoters.</p>
+            <a href="#contact" class="btn btn-ghost btn-sm">Request EPK</a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ── BOOKING / CONTACT ─────────────────────────────────── -->
+    <!-- CONTACT -->
     <section id="contact">
       <div class="container">
-        <div class="section-label reveal">Booking</div>
-        <div class="contact-main reveal">
-          <a class="contact-email" href="mailto:booking@gumgo.xyz">booking@gumgo.xyz</a>
+        <h2 class="section-label reveal">Contact</h2>
+        <div class="contact-grid reveal">
+          <div class="contact-block">
+            <span class="contact-role">Bookings</span>
+            <a href="mailto:booking@gumgo.xyz" class="contact-link">booking@gumgo.xyz</a>
+          </div>
+          <div class="contact-block">
+            <span class="contact-role">Press &amp; Media</span>
+            <a href="mailto:press@gumgo.xyz" class="contact-link">press@gumgo.xyz</a>
+          </div>
+          <div class="contact-block">
+            <span class="contact-role">General</span>
+            <a href="mailto:hello@gumgo.xyz" class="contact-link">hello@gumgo.xyz</a>
+          </div>
         </div>
-        <div class="contact-links reveal">
-          <a class="contact-link" href="https://instagram.com/gumgo._" target="_blank" rel="noopener">Instagram — @gumgo._</a>
-          <a class="contact-link" href="https://linktr.ee/gumgo" target="_blank" rel="noopener">Linktree</a>
-          <span class="contact-link contact-link--muted">Management — TBA</span>
-        </div>
-        <div class="contact-downloads reveal">
-          <a class="dl-btn" href="#" download>↓ EPK PDF</a>
-          <a class="dl-btn" href="#" download>↓ Press Photos .zip</a>
+        <div class="social-links reveal">
+          <a href="#" class="social-link">Instagram</a>
+          <a href="#" class="social-link">SoundCloud</a>
+          <a href="#" class="social-link">Resident Advisor</a>
+          <a href="#" class="social-link">Bandcamp</a>
         </div>
       </div>
     </section>
 
-    <!-- ── FOOTER ────────────────────────────────────────────── -->
     <footer>
-      <div class="container footer-inner">
-        <span class="footer-copy">© GUMGO 2026</span>
-        <div class="footer-links">
-          <a href="https://instagram.com/gumgo._" target="_blank" rel="noopener">Instagram</a>
-          <a href="mailto:booking@gumgo.xyz">booking@gumgo.xyz</a>
-        </div>
-        <span class="footer-cat" aria-hidden="true">🐈‍⬛</span>
+      <div class="container">
+        <span>© 2026 GUMGO. All rights reserved.</span>
       </div>
     </footer>
 
