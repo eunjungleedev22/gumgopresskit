@@ -32,7 +32,8 @@
       #hero{min-height:100svh;position:relative;display:flex;align-items:flex-end;padding-bottom:clamp(56px,8vw,96px);overflow:hidden;background:#060608}
       #hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(6,6,8,.25) 0%,rgba(6,6,8,.65) 55%,rgba(6,6,8,1) 100%);z-index:1}
       .hero-inner{position:relative;z-index:2;width:100%;padding-inline:clamp(24px,5vw,64px)}
-      .hero-tags{font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(232,234,240,0.4);margin-bottom:16px}
+      .hero-heading{display:inline-block}
+      .hero-tags{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(232,234,240,0.4);margin-bottom:14px;white-space:nowrap;overflow:hidden;width:100%}
       .hero-name{font-family:'Outfit',system-ui,sans-serif;font-size:clamp(80px,15vw,120px);font-weight:800;line-height:.92;color:#ffffff;letter-spacing:-0.04em}
     </style>
   </head>
@@ -56,8 +57,10 @@
     <!-- HERO -->
     <section id="hero">
       <div class="hero-inner">
-        <p class="hero-tags">House &nbsp;·&nbsp; Minimal &nbsp;·&nbsp; Techno &nbsp;·&nbsp; Vinyl</p>
-        <h1 class="hero-name">GUMGO</h1>
+        <div class="hero-heading">
+          <p class="hero-tags">House · Minimal · Techno · Vinyl</p>
+          <h1 class="hero-name">GUMGO</h1>
+        </div>
       </div>
     </section>
 

@@ -281,18 +281,25 @@ section { padding-block: var(--gap); }
 @keyframes fade-up {
   to { opacity: 1; transform: translateY(0); }
 }
+.hero-heading {
+  display: inline-block;
+}
+
 .hero-tags {
   font-family: var(--mono);
   font-size: 10px;
-  letter-spacing: 0.25em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: rgba(232, 234, 240, 0.4);
-  margin-bottom: 16px;
+  margin-bottom: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
   opacity: 0;
   animation: fade-up 0.8s ease 0.15s forwards;
 }
 
-.hero-tag, .hero-name, .hero-tags {
+.hero-tag, .hero-name, .hero-heading {
   transform: translateY(16px);
 }
 
