@@ -25,27 +25,42 @@ interface PressItem {
   needsMeta: boolean;
 }
 
+function safeText(s: string | null | undefined, maxLen: number): string {
+  if (!s) return '';
+  // Strip any HTML tags that might appear in meta content values
+  return s.replace(/<[^>]*>/g, '').slice(0, maxLen).trim();
+}
+
 async function fetchMeta(url: string): Promise<{ title: string; summary: string }> {
   if (metaCache.has(url)) return metaCache.get(url)!;
   try {
+    // Validate URL before sending to proxy — only http/https allowed
+    const parsed = new URL(url);
+    if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') return fallback(url);
+
     const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
     const res = await fetch(proxy, { signal: AbortSignal.timeout(5_000) });
     if (!res.ok) return fallback(url);
     const data = await res.json() as { contents: string };
+
+    // Parse in an inert document — scripts don't execute, resources don't load
     const doc = new DOMParser().parseFromString(data.contents ?? '', 'text/html');
 
-    const title =
+    // Read only attribute/text content — never innerHTML
+    const title = safeText(
       doc.querySelector('meta[property="og:title"]')?.getAttribute('content') ||
       doc.querySelector('meta[name="twitter:title"]')?.getAttribute('content') ||
-      doc.querySelector('title')?.textContent?.trim() ||
-      '';
+      doc.querySelector('title')?.textContent,
+      200,
+    );
 
-    const rawDesc =
+    const summary = safeText(
       doc.querySelector('meta[property="og:description"]')?.getAttribute('content') ||
-      doc.querySelector('meta[name="description"]')?.getAttribute('content') ||
-      '';
+      doc.querySelector('meta[name="description"]')?.getAttribute('content'),
+      200,
+    );
 
-    const result = { title: title.trim(), summary: rawDesc.slice(0, 200).trim() };
+    const result = { title, summary };
     metaCache.set(url, result);
     return result;
   } catch {
