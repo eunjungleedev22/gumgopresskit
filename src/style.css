@@ -205,7 +205,7 @@ section { padding-block: var(--gap); }
   position: absolute;
   inset: 0;
   background-image: var(--hero-img-url, none);
-  background-position: center top;
+  background-position: 50% 18%;
   background-size: cover;
   background-repeat: no-repeat;
   z-index: 0;
@@ -298,6 +298,14 @@ section { padding-block: var(--gap); }
   color: var(--text-hi) !important;
   font-weight: 400 !important;
   line-height: 1.65 !important;
+}
+.bio-topline {
+  font-family: var(--display);
+  font-size: clamp(18px, 2.6vw, 22px);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  display: block;
 }
 
 .about-stats {
