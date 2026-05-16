@@ -397,11 +397,47 @@ section { padding-block: var(--gap); }
 .gig-ticket:hover { color: #ffffff; border-color: rgba(255, 255, 255, 0.35); }
 .gig-ticket.sold-out { opacity: 0.3; pointer-events: none; }
 
+/* ── Highlights ──────────────────────────────────────────── */
+.highlights-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(32px, 6vw, 96px);
+}
+@media (max-width: 600px) {
+  .highlights-grid { grid-template-columns: 1fr; gap: 48px; }
+}
+.highlights-col-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+.highlights-list { list-style: none; }
+.highlights-item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: clamp(15px, 2vw, 18px);
+  color: var(--text-hi);
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.highlights-item:first-child { border-top: 1px solid rgba(255,255,255,0.06); }
+.hl-city {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
 /* ── Videos ──────────────────────────────────────────────── */
 .videos-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
-  gap: 20px;
+  display: block;
 }
 
 .video-card {
@@ -490,11 +526,6 @@ section { padding-block: var(--gap); }
   transition: color 0.2s;
 }
 .video-modal-close:hover { color: #ffffff; }
-
-/* ── Video card in carousel ──────────────────────────────── */
-.mixes-track .video-card {
-  flex: 0 0 clamp(240px, 28vw, 320px);
-}
 
 /* ── Mixes subsections ───────────────────────────────────── */
 .mixes-sub {

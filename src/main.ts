@@ -218,7 +218,7 @@ async function initSheetData(): Promise<void> {
   if (VIDEOS_CSV_URL) tasks.push(renderVideos(VIDEOS_CSV_URL));
   else {
     const el = document.getElementById('videos-grid');
-    if (el) el.innerHTML = `<div class="empty-state" style="grid-column:1/-1">Set VITE_VIDEOS_CSV_URL in .env</div>`;
+    if (el) el.innerHTML = `<div class="empty-state">Set VITE_VIDEOS_CSV_URL in .env</div>`;
   }
   if (PRESS_CSV_URL)  tasks.push(renderPressCoverage(PRESS_CSV_URL));
 
