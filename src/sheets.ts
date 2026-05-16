@@ -15,13 +15,13 @@
 export type Row = Record<string, string>;
 
 function parseCSV(raw: string): Row[] {
-  const lines = raw.trim().split(/\r?\n/);
-  if (lines.length < 2) return [];
+  const rows = splitCSVRows(raw.trim());
+  if (rows.length < 2) return [];
 
-  const headers = splitCSVLine(lines[0]).map((h) => h.trim().toLowerCase());
+  const headers = splitCSVLine(rows[0]).map((h) => h.trim().toLowerCase());
 
-  return lines.slice(1).map((line) => {
-    const values = splitCSVLine(line);
+  return rows.slice(1).map((row) => {
+    const values = splitCSVLine(row);
     return headers.reduce<Row>((acc, header, i) => {
       acc[header] = (values[i] ?? '').trim();
       return acc;
@@ -29,7 +29,35 @@ function parseCSV(raw: string): Row[] {
   });
 }
 
-/** Handles quoted fields with commas inside them. */
+/** Splits CSV into rows, respecting quoted fields that span multiple lines. */
+function splitCSVRows(raw: string): string[] {
+  const rows: string[] = [];
+  let current = '';
+  let inQuote = false;
+
+  for (let i = 0; i < raw.length; i++) {
+    const ch = raw[i];
+    if (ch === '"') {
+      if (inQuote && raw[i + 1] === '"') {
+        current += '"';
+        i++;
+      } else {
+        inQuote = !inQuote;
+        current += ch;
+      }
+    } else if (!inQuote && (ch === '\r' || ch === '\n')) {
+      if (ch === '\r' && raw[i + 1] === '\n') i++;
+      rows.push(current);
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  if (current) rows.push(current);
+  return rows;
+}
+
+/** Handles quoted fields with commas or newlines inside them. */
 function splitCSVLine(line: string): string[] {
   const result: string[] = [];
   let current = '';
