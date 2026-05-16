@@ -34,7 +34,10 @@ export async function renderBio(csvUrl: string): Promise<void> {
         parts.push(`<p class="about-lead"><strong class="bio-topline">${escHtml(topline)}</strong></p>`);
       }
       if (description) {
-        parts.push(`<p>${escHtml(description)}</p>`);
+        description.split(/\n{2,}/).forEach((para) => {
+          const trimmed = para.trim();
+          if (trimmed) parts.push(`<p>${escHtml(trimmed)}</p>`);
+        });
       }
       // Legacy fallback column
       if (!topline && !description && text) {
