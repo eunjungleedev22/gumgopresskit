@@ -49,7 +49,26 @@ export async function renderBio(csvUrl: string): Promise<void> {
     }
 
     if (parts.length > 0) {
-      container.innerHTML = parts.join('');
+      if (parts.length <= 2) {
+        container.innerHTML = parts.join('');
+      } else {
+        const bodyHtml = parts.slice(1).join('');
+        container.innerHTML =
+          parts[0] +
+          `<div class="about-body collapsed">${bodyHtml}</div>` +
+          `<button class="bio-expand-btn" aria-expanded="false">Read more</button>`;
+
+        const btn  = container.querySelector<HTMLButtonElement>('.bio-expand-btn')!;
+        const body = container.querySelector<HTMLElement>('.about-body')!;
+
+        const open = () => {
+          body.style.maxHeight = body.scrollHeight + 'px';
+          body.classList.remove('collapsed');
+          btn.remove();
+        };
+
+        btn.addEventListener('click', open);
+      }
     }
   } catch (e) {
     console.error('[bio] failed to load:', e);

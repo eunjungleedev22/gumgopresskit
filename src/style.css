@@ -298,6 +298,37 @@ section { padding-block: var(--gap); }
 }
 .about-text p:last-child { margin-bottom: 0; }
 
+.about-body {
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.about-body.collapsed { max-height: 0; }
+
+.bio-expand-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.2s;
+}
+.bio-expand-btn:hover { color: var(--text-hi); }
+.bio-expand-btn::before {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 1px;
+  background: currentColor;
+}
+
 .about-lead {
   font-size: clamp(16px, 2.2vw, 19px) !important;
   color: var(--text-hi) !important;
