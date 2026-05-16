@@ -18,7 +18,7 @@ function parseCSV(raw: string): Row[] {
   const lines = raw.trim().split(/\r?\n/);
   if (lines.length < 2) return [];
 
-  const headers = splitCSVLine(lines[0]).map((h) => h.trim());
+  const headers = splitCSVLine(lines[0]).map((h) => h.trim().toLowerCase());
 
   return lines.slice(1).map((line) => {
     const values = splitCSVLine(line);

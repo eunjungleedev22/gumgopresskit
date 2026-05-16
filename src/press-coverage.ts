@@ -80,6 +80,9 @@ export async function renderPressCoverage(csvUrl: string): Promise<void> {
 
   try {
     const rows = await fetchSheet(csvUrl);
+    const headers = rows[0] ? Object.keys(rows[0]) : [];
+    console.log('[press] rows:', rows.length, 'columns:', headers);
+
     const items: PressItem[] = rows
       .filter((r: Row) => r['url'])
       .map((r: Row) => {
@@ -98,7 +101,10 @@ export async function renderPressCoverage(csvUrl: string): Promise<void> {
       .sort((a, b) => a.order - b.order);
 
     if (items.length === 0) {
-      container.innerHTML = '';
+      const hint = headers.length && !headers.includes('url')
+        ? `(columns found: ${headers.join(', ')} — expected "url")`
+        : rows.length === 0 ? '(sheet appears empty)' : '';
+      container.innerHTML = `<div class="empty-state" style="margin-bottom:32px">No press coverage yet. ${hint}</div>`;
       return;
     }
 

@@ -121,6 +121,9 @@ export async function renderMixes(csvUrl: string): Promise<void> {
 
   try {
     const rows = await fetchSheet(csvUrl);
+    const headers = rows[0] ? Object.keys(rows[0]) : [];
+    console.log('[mixes] rows:', rows.length, 'columns:', headers);
+
     const mixes: Mix[] = rows
       .filter((r: Row) => r['url'])
       .map((r: Row) => ({
@@ -134,7 +137,10 @@ export async function renderMixes(csvUrl: string): Promise<void> {
       .sort((a, b) => (b.isHighlight ? 1 : 0) - (a.isHighlight ? 1 : 0) || a.order - b.order);
 
     if (mixes.length === 0) {
-      list.innerHTML = `<div class="empty-state">No mixes yet.</div>`;
+      const hint = headers.length && !headers.includes('url')
+        ? `(sheet columns found: ${headers.join(', ')} — expected "url")`
+        : rows.length === 0 ? '(sheet appears empty)' : '';
+      list.innerHTML = `<div class="empty-state">No mixes yet. ${hint}</div>`;
       return;
     }
 
