@@ -863,18 +863,18 @@ section { padding-block: var(--gap); }
 
 /* ── Contact ─────────────────────────────────────────────── */
 .contact-email {
-  display: block;
-  font-family: var(--display);
-  font-size: clamp(40px, 8vw, 88px);
-  font-weight: 700;
-  color: #ffffff;
-  letter-spacing: -0.03em;
-  line-height: 1;
+  display: inline-block;
+  font-size: clamp(22px, 3.5vw, 36px);
+  font-weight: 400;
+  color: var(--text-hi);
+  letter-spacing: 0.01em;
   text-decoration: none;
-  margin-bottom: clamp(48px, 8vw, 88px);
-  transition: opacity 0.2s;
+  margin-bottom: clamp(40px, 6vw, 64px);
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  padding-bottom: 3px;
+  transition: color 0.2s, border-color 0.2s;
 }
-.contact-email:hover { opacity: 0.6; }
+.contact-email:hover { color: #fff; border-color: #fff; }
 
 .contact-info {
   display: grid;
@@ -884,19 +884,23 @@ section { padding-block: var(--gap); }
 }
 @media (max-width: 600px) {
   .contact-info { grid-template-columns: 1fr; }
-  .contact-info-block--epk { border-left: none; border-top: 1px solid rgba(255,255,255,0.08); }
+  .contact-info-block--epk {
+    border-left: none;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-left: 0;
+    padding-top: clamp(28px, 5vw, 44px);
+  }
 }
 
 .contact-info-block {
-  padding: clamp(32px, 5vw, 52px) clamp(0px, 4vw, 52px) clamp(32px, 5vw, 52px) 0;
+  padding: clamp(28px, 4vw, 44px) clamp(24px, 4vw, 48px) clamp(28px, 4vw, 44px) 0;
 }
 .contact-info-block--epk {
-  padding-left: clamp(24px, 5vw, 52px);
+  padding-left: clamp(24px, 4vw, 48px);
   padding-right: 0;
   border-left: 1px solid rgba(255,255,255,0.08);
   display: flex;
   flex-direction: column;
-  gap: 0;
 }
 
 .contact-info-label {
@@ -905,15 +909,15 @@ section { padding-block: var(--gap); }
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--text-muted);
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
-.contact-regions { display: flex; flex-direction: column; gap: 0; }
+.contact-regions { display: flex; flex-direction: column; }
 .contact-region {
   display: flex;
   align-items: baseline;
   gap: 20px;
-  padding: 14px 0;
+  padding: 12px 0;
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 .contact-region:first-child { border-top: 1px solid rgba(255,255,255,0.05); }
@@ -927,16 +931,15 @@ section { padding-block: var(--gap); }
   flex-shrink: 0;
 }
 .contact-region-date {
-  font-size: clamp(16px, 2.2vw, 20px);
+  font-size: 15px;
   color: var(--text-hi);
-  font-weight: 400;
 }
 
 .contact-info-desc {
   font-size: 14px;
   color: var(--text-mid);
   line-height: 1.75;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
   flex: 1;
 }
 

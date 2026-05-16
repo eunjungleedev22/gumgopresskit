@@ -25,7 +25,8 @@ export async function renderBio(csvUrl: string): Promise<void> {
 
     for (const r of rows) {
       const topline     = (r['topline']     ?? '').trim();
-      const description = (r['description'] ?? '').trim();
+      // Accept common column name variants for body text
+      const description = (r['description'] ?? r['desc'] ?? r['body'] ?? r['content'] ?? '').trim();
       const text        = (r['text']        ?? '').trim();
       const type        = (r['type']        ?? '').trim();
 
