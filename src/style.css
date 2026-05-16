@@ -862,6 +862,56 @@ section { padding-block: var(--gap); }
 }
 
 /* ── Contact ─────────────────────────────────────────────── */
+.contact-main-email {
+  display: block;
+  font-family: var(--display);
+  font-size: clamp(28px, 5.5vw, 56px);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  margin-bottom: clamp(48px, 7vw, 80px);
+  text-decoration: none;
+  position: relative;
+  width: fit-content;
+  padding-bottom: 2px;
+  transition: opacity 0.2s;
+}
+.contact-main-email::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 0; height: 1px;
+  background: #ffffff;
+  transition: width 0.25s ease;
+}
+.contact-main-email:hover { opacity: 0.8; }
+.contact-main-email:hover::after { width: 100%; }
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(32px, 6vw, 96px);
+  margin-bottom: clamp(48px, 7vw, 72px);
+}
+@media (max-width: 600px) {
+  .contact-grid { grid-template-columns: 1fr; gap: 48px; }
+}
+.contact-col-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+.contact-col-desc {
+  font-size: 15px;
+  color: var(--text-mid);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+.contact-epk-btn { align-self: flex-start; }
+
 .booking-block {
   border: 1px solid rgba(255,255,255,0.07);
   margin-bottom: clamp(40px, 6vw, 64px);

@@ -197,8 +197,10 @@ export async function renderVideos(csvUrl: string): Promise<void> {
     results.forEach((res, i) => {
       const oe = res.status === 'fulfilled' ? res.value : null;
       if (!videos[i].title) videos[i].title = oe?.title ?? urlFallbackTitle(videos[i].url);
-      videos[i].thumbUrl = oe?.thumbnail_url
-        ?? (videos[i].youtubeId ? `https://img.youtube.com/vi/${videos[i].youtubeId}/hqdefault.jpg` : '');
+      // mqdefault (320x180) is always native 16:9 — no letterbox black bars
+      videos[i].thumbUrl = videos[i].youtubeId
+        ? `https://img.youtube.com/vi/${videos[i].youtubeId}/mqdefault.jpg`
+        : '';
     });
 
     const cards = videos.map(videoCard).join('');
