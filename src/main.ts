@@ -169,6 +169,21 @@ async function initSheetData(): Promise<void> {
   await Promise.allSettled(tasks);
 }
 
+// ── Mixes / Videos tab switcher ───────────────────────────────────────────────
+function initMixesTabs(): void {
+  const tabs = document.querySelectorAll<HTMLButtonElement>('.section-tab');
+  tabs.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      tabs.forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      const id = btn.dataset.tab!;
+      document.querySelectorAll<HTMLElement>('.section-panel').forEach((panel) => {
+        panel.hidden = !panel.id.endsWith(id);
+      });
+    });
+  });
+}
+
 // ── Boot ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initHero();
@@ -177,5 +192,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initActiveNav();
   initCounters();
   initReveal();
+  initMixesTabs();
   initSheetData();
 });

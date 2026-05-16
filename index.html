@@ -44,7 +44,6 @@
         <li><a href="#about">Biography</a></li>
         <li><a href="#gigs">Gigs</a></li>
         <li><a href="#mixes">Mixes</a></li>
-        <li><a href="#videos">Videos</a></li>
         <li><a href="#press">Press</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
@@ -53,9 +52,8 @@
     <!-- HERO -->
     <section id="hero">
       <div class="hero-inner">
-        <p class="hero-tag">DJ &amp; Producer</p>
         <h1 class="hero-name">GUMGO</h1>
-        <p class="hero-sub">Underground Minimal · Electro</p>
+        <p class="hero-sub">Vinyl Curator with an unapologetic yet sophisticated energy</p>
         <div class="hero-cta">
           <a href="#gigs" class="btn btn-primary">Upcoming Gigs</a>
           <a href="#press" class="btn btn-ghost">Press Kit</a>
@@ -95,22 +93,25 @@
     <!-- MIXES -->
     <section id="mixes">
       <div class="container">
-        <h2 class="section-label reveal">Mixes</h2>
-        <div id="mixes-list" class="mixes-list">
-          <div class="loading-state"><div class="spinner"></div><span>Loading…</span></div>
+        <div class="section-tabs-row reveal">
+          <h2 class="section-label">Mixes</h2>
+          <div class="section-tab-bar">
+            <button class="section-tab active" data-tab="sc">SoundCloud</button>
+            <button class="section-tab" data-tab="yt">YouTube</button>
+          </div>
         </div>
-        <p id="mixes-error" class="data-error hidden"></p>
-      </div>
-    </section>
-
-    <!-- VIDEOS -->
-    <section id="videos">
-      <div class="container">
-        <h2 class="section-label reveal">Videos</h2>
-        <div id="videos-grid" class="videos-grid">
-          <div class="loading-state"><div class="spinner"></div><span>Loading…</span></div>
+        <div id="mixes-panel-sc" class="section-panel">
+          <div id="mixes-list" class="mixes-list">
+            <div class="loading-state"><div class="spinner"></div><span>Loading…</span></div>
+          </div>
+          <p id="mixes-error" class="data-error hidden"></p>
         </div>
-        <p id="videos-error" class="data-error hidden"></p>
+        <div id="mixes-panel-yt" class="section-panel" hidden>
+          <div id="videos-grid" class="videos-grid">
+            <div class="loading-state"><div class="spinner"></div><span>Loading…</span></div>
+          </div>
+          <p id="videos-error" class="data-error hidden"></p>
+        </div>
       </div>
     </section>
 
@@ -123,17 +124,15 @@
         <div id="press-coverage" class="press-coverage"></div>
         <p id="press-coverage-error" class="data-error hidden"></p>
 
-        <!-- Press kit -->
-        <div class="press-kit-label reveal">Press Kit</div>
+        <!-- Presskit -->
+        <div class="press-kit-label reveal">Presskit</div>
         <div class="press-grid reveal">
           <div class="epk-block">
             <div class="epk-content">
               <p class="epk-title">EPK &amp; Assets</p>
-              <p class="epk-desc">High-resolution press photos, logo files (SVG/PNG), stage visuals, and full electronic press kit for media and promoters.</p>
             </div>
             <div class="epk-actions">
               <a href="mailto:press@gumgo.xyz?subject=EPK%20Request" class="btn btn-primary">Request EPK</a>
-              <a href="mailto:press@gumgo.xyz" class="btn btn-ghost">press@gumgo.xyz</a>
             </div>
           </div>
         </div>
@@ -150,16 +149,17 @@
             <span class="booking-label">Bookings &amp; Inquiry</span>
             <a href="mailto:booking@gumgo.xyz" class="booking-email">booking@gumgo.xyz</a>
           </div>
-          <div class="booking-windows">
-            <div class="booking-window">
-              <span class="window-tag">Europe</span>
-              <p class="window-desc">Booking open<br>June – August 2026</p>
-              <a href="mailto:booking@gumgo.xyz?subject=Europe%20Booking%20Inquiry" class="btn btn-ghost btn-sm">Book Now ↗</a>
-            </div>
-            <div class="booking-window">
-              <span class="window-tag">Asia</span>
-              <p class="window-desc">Booking open<br>October 2026</p>
-              <a href="mailto:booking@gumgo.xyz?subject=Asia%20Booking%20Inquiry" class="btn btn-ghost btn-sm">Book Now ↗</a>
+          <div class="booking-body">
+            <p class="booking-open-title">Booking Open</p>
+            <div class="booking-regions">
+              <div class="booking-region">
+                <span class="region-code">EUR</span>
+                <span class="region-period">June – August 2026</span>
+              </div>
+              <div class="booking-region">
+                <span class="region-code">ASIA</span>
+                <span class="region-period">October 2026</span>
+              </div>
             </div>
           </div>
         </div>
