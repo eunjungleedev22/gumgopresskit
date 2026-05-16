@@ -1,52 +1,82 @@
 /**
- * Videos tab — expected sheet columns (row 1 = headers):
- *
- *   youtube_id   YouTube video ID (the part after ?v= or youtu.be/)
- *   title        Display title
- *   description  Short caption (optional)
- *   order        Integer sort order, ascending (optional, default 0)
- *
- * Supports YouTube IDs only. Embed uses youtube-nocookie.com for privacy.
+ * Videos — expected sheet columns:
+ *   url           YouTube URL (watch?v= or youtu.be/)   (required)
+ *   title         Override title                         (optional — falls back to oEmbed)
+ *   genre         Genre tag                              (optional)
+ *   order         Integer sort order                     (optional)
+ *   is_highlight  "true" → featured card                 (optional)
  */
 
 import { fetchSheet, type Row } from './sheets';
 
+const oEmbedCache = new Map<string, { title: string; thumbnail_url: string }>();
+
 interface Video {
+  url: string;
   youtubeId: string;
   title: string;
-  description: string;
+  genre: string;
   order: number;
+  isHighlight: boolean;
+  thumbUrl: string;
 }
 
-function rowToVideo(row: Row): Video | null {
-  if (!row['youtube_id'] || !row['title']) return null;
-  return {
-    youtubeId: row['youtube_id'].trim(),
-    title: row['title'],
-    description: row['description'] ?? '',
-    order: parseInt(row['order'] ?? '0', 10) || 0,
-  };
+function extractYoutubeId(url: string): string | null {
+  try {
+    const u = new URL(url);
+    if (u.hostname.includes('youtu.be')) return u.pathname.slice(1).split('?')[0];
+    return u.searchParams.get('v');
+  } catch {
+    return null;
+  }
+}
+
+async function fetchOEmbed(url: string): Promise<{ title: string; thumbnail_url: string } | null> {
+  if (oEmbedCache.has(url)) return oEmbedCache.get(url)!;
+  try {
+    const ep = `https://www.youtube.com/oembed?format=json&url=${encodeURIComponent(url)}`;
+    const res = await fetch(ep, { signal: AbortSignal.timeout(6_000) });
+    if (!res.ok) return null;
+    const data = await res.json() as { title: string; thumbnail_url: string };
+    oEmbedCache.set(url, data);
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+function urlFallbackTitle(url: string): string {
+  const id = extractYoutubeId(url);
+  return id ?? url;
+}
+
+function trunc(s: string, max = 10): string {
+  return s.length <= max ? s : s.slice(0, max).trimEnd() + '…';
 }
 
 function escHtml(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-function playIcon(): string {
-  return `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>`;
-}
-
 function videoCard(v: Video): string {
-  const thumb = `https://img.youtube.com/vi/${v.youtubeId}/mqdefault.jpg`;
+  const label = trunc(v.title, 10);
   return `
-    <div class="video-card reveal" data-ytid="${escHtml(v.youtubeId)}">
-      <div class="video-thumb" role="button" tabindex="0" aria-label="Play ${escHtml(v.title)}">
-        <img src="${thumb}" alt="${escHtml(v.title)}" loading="lazy" decoding="async" />
-        <div class="video-play">${playIcon()}</div>
+    <div class="mix-card video-card${v.isHighlight ? ' mix-card--hl' : ''} reveal"
+         role="button" tabindex="0"
+         aria-label="Play: ${escHtml(v.title)}"
+         data-ytid="${escHtml(v.youtubeId)}">
+      <div class="mix-cover">
+        ${v.thumbUrl
+          ? `<img src="${escHtml(v.thumbUrl)}" alt="" loading="lazy" decoding="async" />`
+          : `<div class="mix-cover__empty"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="rgba(255,255,255,0.12)"/></svg></div>`}
+        <div class="mix-cover__overlay">
+          <span class="mix-play">▶</span>
+        </div>
+        ${v.isHighlight ? '<span class="mix-badge">Featured</span>' : ''}
       </div>
-      <div class="video-meta">
-        <div class="video-title">${escHtml(v.title)}</div>
-        ${v.description ? `<div class="video-desc">${escHtml(v.description)}</div>` : ''}
+      <div class="mix-meta">
+        <div class="mix-label">${escHtml(label)}</div>
+        ${v.genre ? `<div class="mix-genre">${escHtml(v.genre)}</div>` : ''}
       </div>
     </div>`;
 }
@@ -95,8 +125,8 @@ function initCarousel(wrapper: HTMLElement): void {
   let pos = 0;
 
   const step = () => {
-    const card = track.querySelector<HTMLElement>('.video-card');
-    if (!card) return 320;
+    const card = track.querySelector<HTMLElement>('.mix-card');
+    if (!card) return 240;
     const gap = parseFloat(getComputedStyle(track).gap) || 16;
     return (card.offsetWidth + gap) * 2;
   };
@@ -133,15 +163,43 @@ export async function renderVideos(csvUrl: string): Promise<void> {
 
   try {
     const rows = await fetchSheet(csvUrl);
-    const videos = rows
-      .map(rowToVideo)
-      .filter((v): v is Video => v !== null)
-      .sort((a, b) => a.order - b.order);
+    const headers = rows[0] ? Object.keys(rows[0]) : [];
+    console.log('[videos] rows:', rows.length, 'columns:', headers);
+
+    const videos: Video[] = rows
+      .filter((r: Row) => r['url'])
+      .map((r: Row) => {
+        const url = r['url'].trim();
+        const youtubeId = extractYoutubeId(url) ?? '';
+        return {
+          url,
+          youtubeId,
+          title:       r['title'] ?? '',
+          genre:       r['genre'] ?? '',
+          order:       parseInt(r['order'] ?? '0', 10) || 0,
+          isHighlight: (r['is_highlight'] ?? '').trim().toLowerCase() === 'true',
+          thumbUrl:    '',
+        };
+      })
+      .filter(v => v.youtubeId)
+      .sort((a, b) => (b.isHighlight ? 1 : 0) - (a.isHighlight ? 1 : 0) || a.order - b.order);
 
     if (videos.length === 0) {
-      grid.innerHTML = `<div class="empty-state">No videos yet. Check back soon.</div>`;
+      const hint = headers.length && !headers.includes('url')
+        ? `(columns found: ${headers.join(', ')} — expected "url")`
+        : rows.length === 0 ? '(sheet appears empty)' : '';
+      grid.innerHTML = `<div class="empty-state">No videos yet. ${hint}</div>`;
       return;
     }
+
+    // Fetch oEmbed titles + thumbnails
+    const results = await Promise.allSettled(videos.map(v => fetchOEmbed(v.url)));
+    results.forEach((res, i) => {
+      const oe = res.status === 'fulfilled' ? res.value : null;
+      if (!videos[i].title) videos[i].title = oe?.title ?? urlFallbackTitle(videos[i].url);
+      videos[i].thumbUrl = oe?.thumbnail_url
+        ?? (videos[i].youtubeId ? `https://img.youtube.com/vi/${videos[i].youtubeId}/hqdefault.jpg` : '');
+    });
 
     const cards = videos.map(videoCard).join('');
     const showExpand = videos.length > 2;
@@ -158,11 +216,11 @@ export async function renderVideos(csvUrl: string): Promise<void> {
       </div>
       ${showExpand ? '<button class="mixes-expand-btn" id="videos-expand-btn">Explore more</button>' : ''}`;
 
-    grid.querySelectorAll<HTMLElement>('.video-thumb').forEach((thumb) => {
-      const ytid = (thumb.closest('.video-card') as HTMLElement).dataset.ytid!;
+    grid.querySelectorAll<HTMLElement>('.video-card').forEach((card) => {
+      const ytid = card.dataset.ytid!;
       const play = () => openVideo(ytid);
-      thumb.addEventListener('click', play);
-      thumb.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') play(); });
+      card.addEventListener('click', play);
+      card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') play(); });
     });
 
     initCarousel(document.getElementById('videos-carousel')!);
