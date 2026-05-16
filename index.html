@@ -41,7 +41,7 @@
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-links">
-        <li><a href="#about">About</a></li>
+        <li><a href="#about">Biography</a></li>
         <li><a href="#gigs">Gigs</a></li>
         <li><a href="#mixes">Mixes</a></li>
         <li><a href="#videos">Videos</a></li>
@@ -63,10 +63,10 @@
       </div>
     </section>
 
-    <!-- ABOUT -->
+    <!-- BIOGRAPHY -->
     <section id="about">
       <div class="container">
-        <h2 class="section-label reveal">About</h2>
+        <h2 class="section-label reveal">Biography</h2>
         <div id="bio-text" class="about-text reveal">
           <p class="about-lead">
             GUMGO is a Seoul-based DJ and producer carving space at the intersection of
@@ -77,20 +77,6 @@
             GUMGO's sets are precision-engineered journeys — each transition deliberate,
             each track selection a story beat.
           </p>
-        </div>
-        <div class="about-stats reveal">
-          <div class="stat">
-            <span class="stat-num" data-count="200">0</span>
-            <span class="stat-label">Performances</span>
-          </div>
-          <div class="stat">
-            <span class="stat-num" data-count="12">0</span>
-            <span class="stat-label">Countries</span>
-          </div>
-          <div class="stat">
-            <span class="stat-num" data-count="8">0</span>
-            <span class="stat-label">Releases</span>
-          </div>
         </div>
       </div>
     </section>
@@ -137,23 +123,18 @@
         <div id="press-coverage" class="press-coverage"></div>
         <p id="press-coverage-error" class="data-error hidden"></p>
 
-        <!-- Press kit blocks -->
+        <!-- Press kit -->
         <div class="press-kit-label reveal">Press Kit</div>
         <div class="press-grid reveal">
-          <div class="press-block">
-            <h3>Biography</h3>
-            <p>Short and long-form bios available on request. The above bio may be reproduced with credit.</p>
-            <a href="#contact" class="btn btn-ghost btn-sm">Request Bio</a>
-          </div>
-          <div class="press-block">
-            <h3>Technical Rider</h3>
-            <p>Full technical and hospitality rider provided upon confirmed booking.</p>
-            <a href="#contact" class="btn btn-ghost btn-sm">Request Rider</a>
-          </div>
-          <div class="press-block">
-            <h3>EPK &amp; Assets</h3>
-            <p>High-resolution press photos, logo files (SVG/PNG), stage visuals, and full EPK for media and promoters.</p>
-            <a href="#contact" class="btn btn-ghost btn-sm">Request EPK</a>
+          <div class="epk-block">
+            <div class="epk-content">
+              <p class="epk-title">EPK &amp; Assets</p>
+              <p class="epk-desc">High-resolution press photos, logo files (SVG/PNG), stage visuals, and full electronic press kit for media and promoters.</p>
+            </div>
+            <div class="epk-actions">
+              <a href="mailto:press@gumgo.xyz?subject=EPK%20Request" class="btn btn-primary">Request EPK</a>
+              <a href="mailto:press@gumgo.xyz" class="btn btn-ghost">press@gumgo.xyz</a>
+            </div>
           </div>
         </div>
       </div>
@@ -163,24 +144,54 @@
     <section id="contact">
       <div class="container">
         <h2 class="section-label reveal">Contact</h2>
-        <div class="contact-grid reveal">
-          <div class="contact-block">
-            <span class="contact-role">Bookings</span>
-            <a href="mailto:booking@gumgo.xyz" class="contact-link">booking@gumgo.xyz</a>
+
+        <div class="booking-block reveal">
+          <div class="booking-header">
+            <span class="booking-label">Bookings &amp; Inquiry</span>
+            <a href="mailto:booking@gumgo.xyz" class="booking-email">booking@gumgo.xyz</a>
           </div>
-          <div class="contact-block">
-            <span class="contact-role">Press &amp; Media</span>
-            <a href="mailto:press@gumgo.xyz" class="contact-link">press@gumgo.xyz</a>
-          </div>
-          <div class="contact-block">
-            <span class="contact-role">General</span>
-            <a href="mailto:hello@gumgo.xyz" class="contact-link">hello@gumgo.xyz</a>
+          <div class="booking-windows">
+            <div class="booking-window">
+              <span class="window-tag">Europe</span>
+              <p class="window-desc">Booking open<br>June – August 2026</p>
+              <a href="mailto:booking@gumgo.xyz?subject=Europe%20Booking%20Inquiry" class="btn btn-ghost btn-sm">Book Now ↗</a>
+            </div>
+            <div class="booking-window">
+              <span class="window-tag">Asia</span>
+              <p class="window-desc">Booking open<br>October 2026</p>
+              <a href="mailto:booking@gumgo.xyz?subject=Asia%20Booking%20Inquiry" class="btn btn-ghost btn-sm">Book Now ↗</a>
+            </div>
           </div>
         </div>
+
         <div class="social-links reveal">
-          <a href="https://www.instagram.com/gumgo._" class="social-link" target="_blank" rel="noopener">Instagram</a>
-          <a href="https://soundcloud.com/gumgo" class="social-link" target="_blank" rel="noopener">SoundCloud</a>
-          <a href="https://ra.co/dj/gumgo" class="social-link" target="_blank" rel="noopener">Resident Advisor</a>
+          <a href="https://www.instagram.com/gumgo._" class="social-link" target="_blank" rel="noopener">
+            <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5"/>
+              <circle cx="12" cy="12" r="4.5"/>
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+            </svg>
+            Instagram
+          </a>
+          <a href="https://soundcloud.com/gumgo" class="social-link" target="_blank" rel="noopener">
+            <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <rect x="1" y="10" width="2" height="9" rx="1"/>
+              <rect x="5" y="7" width="2" height="12" rx="1"/>
+              <rect x="9" y="4" width="2" height="15" rx="1"/>
+              <rect x="13" y="8" width="2" height="11" rx="1"/>
+              <rect x="17" y="11" width="2" height="8" rx="1"/>
+              <rect x="21" y="13" width="2" height="6" rx="1" opacity=".45"/>
+            </svg>
+            SoundCloud
+          </a>
+          <a href="https://ra.co/dj/gumgo" class="social-link" target="_blank" rel="noopener">
+            <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+              <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z"/>
+              <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+            </svg>
+            Resident Advisor
+          </a>
         </div>
       </div>
     </section>

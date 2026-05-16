@@ -205,10 +205,16 @@ section { padding-block: var(--gap); }
   position: absolute;
   inset: 0;
   background-image: var(--hero-img-url, none);
-  background-position: 50% 18%;
-  background-size: cover;
+  background-position: 50% 40%;
+  background-size: auto 105%;
   background-repeat: no-repeat;
   z-index: 0;
+}
+@media (max-width: 767px) {
+  #hero::before {
+    background-size: cover;
+    background-position: 50% 20%;
+  }
 }
 
 #hero::after {
@@ -524,7 +530,7 @@ section { padding-block: var(--gap); }
 
 /* ── Mix card ─────────────────────────────────────── */
 .mix-card {
-  flex: 0 0 200px;
+  flex: 0 0 clamp(160px, 20vw, 220px);
   display: block;
   cursor: pointer;
   text-decoration: none;
@@ -581,20 +587,22 @@ section { padding-block: var(--gap); }
 
 /* ── Highlight ────────────────────────────────────── */
 .mix-card--hl .mix-cover {
-  box-shadow: 0 0 0 1px var(--accent), 0 0 20px rgba(139,167,199,0.12);
+  outline: 1px solid rgba(255,255,255,0.22);
+}
+.mix-card--hl .mix-cover img {
+  filter: grayscale(0.1) brightness(0.78);
 }
 .mix-badge {
   position: absolute;
-  top: 10px; left: 10px;
+  top: 8px; left: 8px;
   font-family: var(--mono);
   font-size: 9px;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--accent);
-  border: 1px solid var(--accent);
-  padding: 3px 7px;
-  background: rgba(6,6,8,0.75);
-  backdrop-filter: blur(4px);
+  color: rgba(255,255,255,0.55);
+  border: 1px solid rgba(255,255,255,0.18);
+  padding: 3px 6px;
+  background: rgba(6,6,8,0.7);
 }
 
 /* ── Meta ─────────────────────────────────────────── */
@@ -731,105 +739,141 @@ section { padding-block: var(--gap); }
   margin-bottom: 28px;
 }
 
-.press-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: rgba(255, 255, 255, 0.06);
+.press-grid { display: contents; }
+
+.epk-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(24px, 4vw, 48px);
+  padding: clamp(28px, 5vw, 48px);
+  border: 1px solid rgba(255,255,255,0.08);
+  background: var(--surface);
 }
 @media (max-width: 640px) {
-  .press-grid { grid-template-columns: 1fr; }
+  .epk-block { flex-direction: column; align-items: flex-start; }
 }
-
-.press-block {
-  padding: clamp(24px, 4vw, 36px);
-  background: var(--bg);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.press-block h3 {
+.epk-content { flex: 1; min-width: 0; }
+.epk-title {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 500;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--text-hi);
+  margin-bottom: 10px;
 }
-.press-block p {
+.epk-desc {
   font-size: 15px;
   line-height: 1.7;
   color: var(--text-mid);
-  flex: 1;
+}
+.epk-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+  align-items: stretch;
+  min-width: 160px;
 }
 
 /* ── Contact ─────────────────────────────────────────────── */
-.contact-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(32px, 5vw, 64px);
-  margin-bottom: 56px;
+.booking-block {
+  border: 1px solid rgba(255,255,255,0.07);
+  margin-bottom: clamp(40px, 6vw, 64px);
 }
-@media (max-width: 640px) {
-  .contact-grid { grid-template-columns: 1fr; gap: 28px; }
-}
-
-.contact-block {
+.booking-header {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: clamp(20px, 3vw, 28px) clamp(24px, 4vw, 36px);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
 }
-.contact-role {
+.booking-label {
   font-family: var(--mono);
   font-size: 11px;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--text-muted);
 }
-.contact-link {
+.booking-email {
   font-size: 15px;
-  font-weight: 400;
   color: var(--text-hi);
   transition: color 0.2s;
   position: relative;
-  width: fit-content;
-  padding-bottom: 2px;
+  padding-bottom: 1px;
 }
-.contact-link::after {
+.booking-email::after {
   content: '';
   position: absolute;
   bottom: 0; left: 0;
   width: 0; height: 1px;
-  background: #ffffff;
+  background: #fff;
   transition: width 0.22s ease;
 }
-.contact-link:hover { color: #ffffff; }
-.contact-link:hover::after { width: 100%; }
+.booking-email:hover { color: #fff; }
+.booking-email:hover::after { width: 100%; }
 
+.booking-windows {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+@media (max-width: 560px) {
+  .booking-windows { grid-template-columns: 1fr; }
+  .booking-window:first-child { border-bottom: 1px solid rgba(255,255,255,0.07); }
+}
+.booking-window {
+  padding: clamp(24px, 4vw, 36px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.booking-window:first-child {
+  border-right: 1px solid rgba(255,255,255,0.07);
+}
+.window-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.window-desc {
+  font-size: 15px;
+  color: var(--text-hi);
+  line-height: 1.5;
+}
+.booking-window .btn { align-self: flex-start; margin-top: 6px; }
+
+/* ── Social ──────────────────────────────────────────────── */
 .social-links {
   display: flex;
-  gap: clamp(24px, 4vw, 40px);
+  gap: clamp(20px, 4vw, 36px);
   flex-wrap: wrap;
+  align-items: center;
+  padding-top: 4px;
 }
 .social-link {
+  display: flex;
+  align-items: center;
+  gap: 9px;
   font-family: var(--mono);
-  font-size: 13px;
-  letter-spacing: 0.08em;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: var(--text-mid);
-  position: relative;
-  padding-bottom: 3px;
   transition: color 0.2s;
 }
-.social-link::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0;
-  width: 0; height: 1px;
-  background: #ffffff;
-  transition: width 0.22s ease;
-}
 .social-link:hover { color: #ffffff; }
-.social-link:hover::after { width: 100%; }
+.social-icon {
+  width: 16px; height: 16px;
+  flex-shrink: 0;
+  opacity: 0.65;
+  transition: opacity 0.2s;
+}
+.social-link:hover .social-icon { opacity: 1; }
 
 /* ── Footer ──────────────────────────────────────────────── */
 footer {
