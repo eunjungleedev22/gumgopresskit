@@ -309,6 +309,7 @@ section { padding-block: var(--gap); }
   color: #ffffff;
   letter-spacing: -0.01em;
   display: block;
+  text-transform: uppercase;
 }
 
 .about-stats {
@@ -487,6 +488,24 @@ section { padding-block: var(--gap); }
   transition: color 0.2s;
 }
 .video-modal-close:hover { color: #ffffff; }
+
+/* ── Video card in carousel ──────────────────────────────── */
+.mixes-track .video-card {
+  flex: 0 0 clamp(240px, 28vw, 320px);
+}
+
+/* ── Mixes subsections ───────────────────────────────────── */
+.mixes-sub {
+  margin-bottom: clamp(48px, 7vw, 72px);
+}
+.mixes-sublabel {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
 
 /* ── Section tab bar ─────────────────────────────────────── */
 .section-tabs-row {
@@ -677,7 +696,10 @@ section { padding-block: var(--gap); }
     transition: none;
     transform: none !important;
   }
-  .mixes-track.collapsed .mix-card:nth-child(n+5) {
+  .mixes-track.collapsed .mix-card:nth-child(n+3) {
+    display: none;
+  }
+  .mixes-track.collapsed .video-card:nth-child(n+3) {
     display: none;
   }
   .mix-card { flex: unset; }

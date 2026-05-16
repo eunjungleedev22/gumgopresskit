@@ -153,7 +153,7 @@ export async function renderMixes(csvUrl: string): Promise<void> {
     });
 
     const cards = mixes.map(mixCard).join('');
-    const showExpand = mixes.length > 4;
+    const showExpand = mixes.length > 2;
 
     list.innerHTML = `
       <div class="mixes-wrapper" id="mixes-carousel">
@@ -165,7 +165,7 @@ export async function renderMixes(csvUrl: string): Promise<void> {
           <button class="mix-btn mix-btn--next" aria-label="Next">→</button>
         </div>
       </div>
-      ${showExpand ? `<button class="mixes-expand-btn" id="mixes-expand-btn">+ Show all</button>` : ''}`;
+      ${showExpand ? `<button class="mixes-expand-btn" id="mixes-expand-btn">Explore more</button>` : ''}`;
 
     initCarousel(document.getElementById('mixes-carousel')!);
     initExpand(list);

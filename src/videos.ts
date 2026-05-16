@@ -87,8 +87,46 @@ function openVideo(youtubeId: string): void {
   modal.classList.add('open');
 }
 
+function initCarousel(wrapper: HTMLElement): void {
+  const viewport = wrapper.querySelector<HTMLElement>('.mixes-viewport')!;
+  const track    = wrapper.querySelector<HTMLElement>('.mixes-track')!;
+  const btnPrev  = wrapper.querySelector<HTMLButtonElement>('.mix-btn--prev')!;
+  const btnNext  = wrapper.querySelector<HTMLButtonElement>('.mix-btn--next')!;
+  let pos = 0;
+
+  const step = () => {
+    const card = track.querySelector<HTMLElement>('.video-card');
+    if (!card) return 320;
+    const gap = parseFloat(getComputedStyle(track).gap) || 16;
+    return (card.offsetWidth + gap) * 2;
+  };
+
+  const clamp = () => {
+    const max = -(track.scrollWidth - viewport.offsetWidth);
+    pos = Math.min(0, Math.max(max, pos));
+    track.style.transform = `translateX(${pos}px)`;
+    btnPrev.disabled = pos >= 0;
+    btnNext.disabled = pos <= max + 1;
+  };
+
+  btnPrev.addEventListener('click', () => { pos += step(); clamp(); });
+  btnNext.addEventListener('click', () => { pos -= step(); clamp(); });
+
+  clamp();
+  window.addEventListener('resize', clamp, { passive: true });
+}
+
+function initExpand(container: HTMLElement): void {
+  const btn = container.querySelector<HTMLButtonElement>('#videos-expand-btn');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    container.querySelector('.mixes-track')!.classList.remove('collapsed');
+    btn.remove();
+  });
+}
+
 export async function renderVideos(csvUrl: string): Promise<void> {
-  const grid = document.getElementById('videos-grid')!;
+  const grid  = document.getElementById('videos-grid')!;
   const errEl = document.getElementById('videos-error')!;
 
   buildModal();
@@ -101,11 +139,24 @@ export async function renderVideos(csvUrl: string): Promise<void> {
       .sort((a, b) => a.order - b.order);
 
     if (videos.length === 0) {
-      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">No videos yet. Check back soon.</div>`;
+      grid.innerHTML = `<div class="empty-state">No videos yet. Check back soon.</div>`;
       return;
     }
 
-    grid.innerHTML = videos.map(videoCard).join('');
+    const cards = videos.map(videoCard).join('');
+    const showExpand = videos.length > 2;
+
+    grid.innerHTML = `
+      <div class="mixes-wrapper" id="videos-carousel">
+        <div class="mixes-viewport">
+          <div class="mixes-track${showExpand ? ' collapsed' : ''}">${cards}</div>
+        </div>
+        <div class="mix-carousel-controls">
+          <button class="mix-btn mix-btn--prev" aria-label="Previous" disabled>←</button>
+          <button class="mix-btn mix-btn--next" aria-label="Next">→</button>
+        </div>
+      </div>
+      ${showExpand ? '<button class="mixes-expand-btn" id="videos-expand-btn">Explore more</button>' : ''}`;
 
     grid.querySelectorAll<HTMLElement>('.video-thumb').forEach((thumb) => {
       const ytid = (thumb.closest('.video-card') as HTMLElement).dataset.ytid!;
@@ -113,6 +164,9 @@ export async function renderVideos(csvUrl: string): Promise<void> {
       thumb.addEventListener('click', play);
       thumb.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') play(); });
     });
+
+    initCarousel(document.getElementById('videos-carousel')!);
+    initExpand(grid);
   } catch (e) {
     grid.innerHTML = '';
     errEl.textContent = `Could not load videos. (${e instanceof Error ? e.message : String(e)})`;
