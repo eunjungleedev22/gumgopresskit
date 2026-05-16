@@ -862,55 +862,83 @@ section { padding-block: var(--gap); }
 }
 
 /* ── Contact ─────────────────────────────────────────────── */
-.contact-main-email {
+.contact-email {
   display: block;
   font-family: var(--display);
-  font-size: clamp(28px, 5.5vw, 56px);
+  font-size: clamp(40px, 8vw, 88px);
   font-weight: 700;
   color: #ffffff;
-  letter-spacing: -0.02em;
-  margin-bottom: clamp(48px, 7vw, 80px);
+  letter-spacing: -0.03em;
+  line-height: 1;
   text-decoration: none;
-  position: relative;
-  width: fit-content;
-  padding-bottom: 2px;
+  margin-bottom: clamp(48px, 8vw, 88px);
   transition: opacity 0.2s;
 }
-.contact-main-email::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0;
-  width: 0; height: 1px;
-  background: #ffffff;
-  transition: width 0.25s ease;
-}
-.contact-main-email:hover { opacity: 0.8; }
-.contact-main-email:hover::after { width: 100%; }
+.contact-email:hover { opacity: 0.6; }
 
-.contact-grid {
+.contact-info {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: clamp(32px, 6vw, 96px);
-  margin-bottom: clamp(48px, 7vw, 72px);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: clamp(48px, 8vw, 80px);
 }
 @media (max-width: 600px) {
-  .contact-grid { grid-template-columns: 1fr; gap: 48px; }
+  .contact-info { grid-template-columns: 1fr; }
+  .contact-info-block--epk { border-left: none; border-top: 1px solid rgba(255,255,255,0.08); }
 }
-.contact-col-label {
+
+.contact-info-block {
+  padding: clamp(32px, 5vw, 52px) clamp(0px, 4vw, 52px) clamp(32px, 5vw, 52px) 0;
+}
+.contact-info-block--epk {
+  padding-left: clamp(24px, 5vw, 52px);
+  padding-right: 0;
+  border-left: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.contact-info-label {
   font-family: var(--mono);
   font-size: 10px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--text-muted);
-  margin-bottom: 20px;
-}
-.contact-col-desc {
-  font-size: 15px;
-  color: var(--text-mid);
-  line-height: 1.7;
   margin-bottom: 24px;
 }
-.contact-epk-btn { align-self: flex-start; }
+
+.contact-regions { display: flex; flex-direction: column; gap: 0; }
+.contact-region {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.contact-region:first-child { border-top: 1px solid rgba(255,255,255,0.05); }
+.contact-region-code {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  width: 44px;
+  flex-shrink: 0;
+}
+.contact-region-date {
+  font-size: clamp(16px, 2.2vw, 20px);
+  color: var(--text-hi);
+  font-weight: 400;
+}
+
+.contact-info-desc {
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 1.75;
+  margin-bottom: 28px;
+  flex: 1;
+}
 
 .booking-block {
   border: 1px solid rgba(255,255,255,0.07);
