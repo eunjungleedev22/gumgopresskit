@@ -32,11 +32,11 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_GIGS_CSV_URL: https://docs.google.com/spreadsheets/d/e/2PACX-1vQJYlWV_4UwwvW2FMbMEy26lBnQbTKulCOMTTHHL10LUQPagy-DYWXL8bEXrBH28lPUe0LYTlDBc4dv/pub?gid=0&single=true&output=csv
-          VITE_VIDEOS_CSV_URL: https://docs.google.com/spreadsheets/d/e/2PACX-1vQJYlWV_4UwwvW2FMbMEy26lBnQbTKulCOMTTHHL10LUQPagy-DYWXL8bEXrBH28lPUe0LYTlDBc4dv/pub?gid=2093848781&single=true&output=csv
-          VITE_MIXES_CSV_URL: https://docs.google.com/spreadsheets/d/e/2PACX-1vQJYlWV_4UwwvW2FMbMEy26lBnQbTKulCOMTTHHL10LUQPagy-DYWXL8bEXrBH28lPUe0LYTlDBc4dv/pub?output=csv
-          VITE_PRESS_CSV_URL: https://docs.google.com/spreadsheets/d/e/2PACX-1vQJYlWV_4UwwvW2FMbMEy26lBnQbTKulCOMTTHHL10LUQPagy-DYWXL8bEXrBH28lPUe0LYTlDBc4dv/pub?gid=553984899&single=true&output=csv
-          VITE_BIO_CSV_URL: https://docs.google.com/spreadsheets/d/e/2PACX-1vQJYlWV_4UwwvW2FMbMEy26lBnQbTKulCOMTTHHL10LUQPagy-DYWXL8bEXrBH28lPUe0LYTlDBc4dv/pub?gid=107729554&single=true&output=csv
+          VITE_GIGS_CSV_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJYlWV_4UwwvW2FMbMEy26lBnQbTKulCOMTTHHL10LUQPagy-DYWXL8bEXrBH28lPUe0LYTlDBc4dv/pub?gid=0&single=true&output=csv"
+          VITE_VIDEOS_CSV_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJYlWV_4UwwvW2FMbMEy26lBnQbTKulCOMTTHHL10LUQPagy-DYWXL8bEXrBH28lPUe0LYTlDBc4dv/pub?gid=2093848781&single=true&output=csv"
+          VITE_MIXES_CSV_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJYlWV_4UwwvW2FMbMEy26lBnQbTKulCOMTTHHL10LUQPagy-DYWXL8bEXrBH28lPUe0LYTlDBc4dv/pub?gid=1543928922&single=true&output=csv"
+          VITE_PRESS_CSV_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJYlWV_4UwwvW2FMbMEy26lBnQbTKulCOMTTHHL10LUQPagy-DYWXL8bEXrBH28lPUe0LYTlDBc4dv/pub?gid=553984899&single=true&output=csv"
+          VITE_BIO_CSV_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJYlWV_4UwwvW2FMbMEy26lBnQbTKulCOMTTHHL10LUQPagy-DYWXL8bEXrBH28lPUe0LYTlDBc4dv/pub?gid=107729554&single=true&output=csv"
 
       - uses: actions/upload-pages-artifact@v3
         with:
