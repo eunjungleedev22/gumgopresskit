@@ -914,6 +914,14 @@ section { padding-block: var(--gap); }
 }
 
 /* ── Contact ─────────────────────────────────────────────── */
+.contact-intro {
+  max-width: 540px;
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--text);
+  margin-bottom: clamp(36px, 5vw, 56px);
+}
+
 .contact-email {
   display: inline-block;
   font-size: clamp(22px, 3.5vw, 36px);
