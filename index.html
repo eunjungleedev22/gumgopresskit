@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@100..900&display=swap"
     />
 
     <!-- Critical CSS — prevents flash on first paint -->
@@ -32,7 +32,7 @@
       #hero{min-height:100svh;position:relative;display:flex;align-items:flex-end;padding-bottom:clamp(56px,8vw,96px);overflow:hidden;background:#060608}
       #hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(6,6,8,.25) 0%,rgba(6,6,8,.65) 55%,rgba(6,6,8,1) 100%);z-index:1}
       .hero-inner{position:relative;z-index:2;width:100%;padding-inline:clamp(24px,5vw,64px)}
-      .hero-name{font-family:'Space Grotesk',system-ui,sans-serif;font-size:clamp(80px,15vw,120px);font-weight:700;line-height:.92;color:#ffffff}
+      .hero-name{font-family:'Outfit',system-ui,sans-serif;font-size:clamp(80px,15vw,120px);font-weight:800;line-height:.92;color:#ffffff;letter-spacing:-0.04em}
     </style>
   </head>
   <body>
@@ -56,11 +56,6 @@
     <section id="hero">
       <div class="hero-inner">
         <h1 class="hero-name">GUMGO</h1>
-        <p class="hero-sub">Vinyl Curator with an unapologetic yet sophisticated energy</p>
-        <div class="hero-cta">
-          <a href="#gigs" class="btn btn-primary">Upcoming Gigs</a>
-          <a href="#press" class="btn btn-ghost">Press Kit</a>
-        </div>
       </div>
     </section>
 
@@ -157,8 +152,6 @@
       <div class="container">
         <h2 class="section-label reveal">Contact</h2>
 
-        <a href="mailto:gumgoya@gmail.com" class="contact-email reveal">gumgoya@gmail.com</a>
-
         <div class="contact-info reveal">
           <div class="contact-info-block">
             <p class="contact-info-label">Booking Open</p>
@@ -173,12 +166,9 @@
               </div>
             </div>
           </div>
-          <div class="contact-info-block contact-info-block--epk">
-            <p class="contact-info-label">EPK &amp; Assets</p>
-            <p class="contact-info-desc">Full press kit, bio, high-res photos, and mixes — available on request.</p>
-            <a href="mailto:gumgoya@gmail.com?subject=EPK%20Request" class="btn btn-primary">Request EPK</a>
-          </div>
         </div>
+
+        <a href="mailto:gumgoya@gmail.com" class="contact-email reveal">gumgoya@gmail.com</a>
 
         <div class="social-links reveal">
           <a href="https://www.instagram.com/gumgo._" class="social-link" target="_blank" rel="noopener">

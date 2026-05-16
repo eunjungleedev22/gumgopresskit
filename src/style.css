@@ -8,7 +8,7 @@
   --text-muted: #666666;
   --text-hi:    #e8eaf0;
   --text-max:   #ffffff;
-  --display:    'Space Grotesk', system-ui, sans-serif;
+  --display:    'Outfit', system-ui, sans-serif;
   --mono:       'DM Mono', ui-monospace, monospace;
   --body:       'Outfit', system-ui, sans-serif;
   --nav-h:      56px;
@@ -250,11 +250,11 @@ section { padding-block: var(--gap); }
 .hero-name {
   font-family: var(--display);
   font-size: clamp(80px, 15vw, 120px);
-  font-weight: 700;
+  font-weight: 800;
   line-height: 0.92;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.04em;
   color: #ffffff;
-  margin-bottom: 20px;
+  margin-bottom: 0;
   opacity: 0;
   animation: fade-up 0.8s ease 0.3s forwards;
 }
@@ -281,7 +281,7 @@ section { padding-block: var(--gap); }
 @keyframes fade-up {
   to { opacity: 1; transform: translateY(0); }
 }
-.hero-tag, .hero-name, .hero-sub, .hero-cta {
+.hero-tag, .hero-name {
   transform: translateY(16px);
 }
 
