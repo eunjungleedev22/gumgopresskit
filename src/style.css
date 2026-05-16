@@ -203,17 +203,20 @@ section { padding-block: var(--gap); }
 #hero::before {
   content: '';
   position: absolute;
-  inset: 0;
+  inset: -10% 0;
   background-image: var(--hero-img-url, none);
-  background-position: 50% 40%;
-  background-size: auto 105%;
+  background-position: 50% var(--hero-parallax-y, 40%);
+  background-size: auto 115%;
   background-repeat: no-repeat;
   z-index: 0;
+  filter: grayscale(1) brightness(0.75) contrast(1.05);
+  will-change: background-position;
 }
 @media (max-width: 767px) {
   #hero::before {
     background-size: cover;
-    background-position: 50% 20%;
+    background-position: 50% var(--hero-parallax-y, 20%);
+    inset: 0;
   }
 }
 

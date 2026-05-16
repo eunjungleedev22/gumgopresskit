@@ -20,6 +20,62 @@ function initHero(): void {
   );
 }
 
+// ── Haptic helper ─────────────────────────────────────────────────────────────
+function vibrate(pattern: number | number[]): void {
+  if ('vibrate' in navigator) navigator.vibrate(pattern);
+}
+
+// ── Hero parallax + haptic on scroll ─────────────────────────────────────────
+function initHeroInteractions(): void {
+  const hero = document.getElementById('hero');
+  if (!hero) return;
+
+  const heroH = () => hero.offsetHeight;
+  let lastSection = -1;
+  let ticking = false;
+
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const y = window.scrollY;
+      const h = heroH();
+
+      // Parallax: background drifts slower than scroll (30% rate)
+      const pct = 40 + (y / h) * 18;
+      document.documentElement.style.setProperty('--hero-parallax-y', `${Math.min(pct, 60)}%`);
+
+      // Haptic: single short pulse when scrolling past 25%, 50%, 75% of hero
+      const section = Math.floor((y / h) * 4);
+      if (section !== lastSection && section > 0 && section <= 3) {
+        vibrate(8);
+        lastSection = section;
+      }
+
+      // Reset when scrolled back to top
+      if (y < 10) lastSection = -1;
+
+      ticking = false;
+    });
+  };
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Haptic on primary CTA clicks
+  document.querySelectorAll<HTMLElement>('.btn-primary').forEach((btn) => {
+    btn.addEventListener('pointerdown', () => vibrate(12));
+  });
+
+  // Subtle haptic when sections snap into view
+  const sections = document.querySelectorAll<HTMLElement>('section[id]');
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting && e.intersectionRatio >= 0.15) vibrate([6, 30, 6]);
+    });
+  }, { threshold: 0.15 });
+  sections.forEach((s) => sectionObserver.observe(s));
+}
+
 // ── Nav: scroll state + mobile toggle ────────────────────────────────────────
 function initNav(): void {
   const nav    = document.getElementById('nav')!;
@@ -177,5 +233,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initActiveNav();
   initCounters();
   initReveal();
+  initHeroInteractions();
   initSheetData();
 });

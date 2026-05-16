@@ -9,18 +9,7 @@
     <meta name="theme-color" content="#060608" />
 
     <!-- Security headers via meta (GitHub Pages doesn't support HTTP headers) -->
-    <meta http-equiv="Content-Security-Policy" content="
-      default-src 'none';
-      script-src 'self';
-      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-      font-src https://fonts.gstatic.com;
-      img-src 'self' https://img.youtube.com https://i1.sndcdn.com https://i2.sndcdn.com https://i3.sndcdn.com https://i4.sndcdn.com data:;
-      connect-src 'self' https://soundcloud.com https://www.youtube.com https://api.allorigins.win https://docs.google.com;
-      frame-src https://www.youtube-nocookie.com;
-      base-uri 'self';
-      form-action 'none';
-      object-src 'none';
-    " />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://*.ytimg.com https://*.sndcdn.com data:; connect-src 'self' https://soundcloud.com https://www.youtube.com https://*.google.com https://api.allorigins.win; frame-src https://www.youtube-nocookie.com; base-uri 'self'; form-action 'none'; object-src 'none';" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>GUMGO — Press Kit</title>
