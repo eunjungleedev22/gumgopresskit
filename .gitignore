@@ -23,5 +23,10 @@ dist-ssr
 *.sln
 *.sw?
 
-# Local env — never commit real credentials 
+# Local env — never commit real credentials
 .env
+.env.local
+
+# Next.js build output
+.next/
+out/
