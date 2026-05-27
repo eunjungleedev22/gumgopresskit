@@ -30,3 +30,6 @@ dist-ssr
 # Next.js build output
 .next/
 out/
+
+# Vercel local config
+.vercel/
