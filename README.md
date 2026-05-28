@@ -1,168 +1,196 @@
-# Remote Job Search Machine
+# Remote Job Search Machine — Telegram Bot
 
-A production-ready job aggregation platform for remote-first international roles.
-Optimized for Korean-speaking professionals in music, web3, tech, and startup ecosystems.
+매일 오전 8시 (KST) 리모트 잡 10개를 Telegram으로 전송합니다.  
+지원여부를 카드별 체크박스로 한 번에 하나씩 확인합니다.
 
-## Stack
+---
 
-- **Next.js 14** (App Router, Server Components)
-- **TypeScript** — strict mode
-- **Tailwind CSS** — dark mode first, Linear/Raycast aesthetic
-- **Supabase** — PostgreSQL + pgvector for semantic search
-- **Prisma ORM** — type-safe DB access
-- **TanStack Query** — server state, caching, pagination
-- **Vercel** — deployment + built-in cron (every 6h)
+## 예시 메시지
 
-## Job Sources
+```
+☀️ 2025년 6월 3일 (화)
 
-| Source | Coverage | Auth |
-|--------|----------|------|
-| JSearch (RapidAPI) | Global, large volume | RapidAPI key |
-| Adzuna | EU, UK, AU, US | App ID + Key |
-| Arbeitnow | Europe, remote-first | None (public) |
+10개의 리모트 잡 — 지원 여부를 하나씩 체크하세요:
+```
 
-## Features
+```
+3/10
 
-- Multi-source aggregation with deduplication
-- Smart keyword tagging (Customer Success, Music, Web3, Community, etc.)
-- Advanced filtering: region, seniority, visa, Korean-speaking, tags
-- Bookmarks + "Applied" tracker (session-based, no login required)
-- Job detail slide-in panel
-- Cron sync every 6 hours via Vercel
-- Auto-expire jobs after 45 days
-- pgvector-ready schema for semantic search (OpenAI ada-002)
+Senior Community Manager
+Spotify · Remote (Europe)
 
-## Quick Start
+🏷 community · music · growth
+💰 $80k–$100k
+🇰🇷 Korean
+🕐 2 days ago
 
-### 1. Install
+[🔗 View Job]  [⬜ Applied?]
+         ↓ 클릭
+[🔗 View Job]  [✅ Applied!]
+```
+
+---
+
+## 스택
+
+- **Node.js** + **TypeScript** (tsx)
+- **Telegraf** — Telegram Bot framework
+- **node-cron** — 08:00 KST 스케줄링
+- **Prisma** + **Supabase** (PostgreSQL) — 잡 DB + 지원 트래킹
+- **JSearch** / **Adzuna** / **Arbeitnow** API 연동
+
+---
+
+## 빠른 시작
+
+### 1. 클론
 
 ```bash
+git clone https://github.com/eunjungleedev22/gumgopresskit
+cd gumgopresskit
+git checkout claude/remote-job-search-mvp-tBttA
 npm install
 ```
 
-### 2. Environment
+### 2. 환경변수
 
 ```bash
 cp .env.example .env
-# Fill in your keys (see below)
 ```
 
-### 3. Database setup
+`.env` 파일 수정:
 
-Create a [Supabase](https://supabase.com) project, then:
+```env
+# 필수
+TELEGRAM_BOT_TOKEN=   # @BotFather에서 발급
+DATABASE_URL=         # Supabase 접속 주소
+DIRECT_URL=           # 동일
+
+# 선택 (API 동기화)
+RAPIDAPI_KEY=         # jsearch.p.rapidapi.com
+ADZUNA_APP_ID=
+ADZUNA_APP_KEY=
+```
+
+### 3. Telegram Bot 만들기
+
+1. Telegram에서 **@BotFather** 찾기
+2. `/newbot` 명령 실행
+3. 이름 + username 설정
+4. 수령한 **token** 을 `TELEGRAM_BOT_TOKEN`에 법어 넣기
+
+### 4. 데이터베이스 세팅
+
+[supabase.com](https://supabase.com)에서 프로젝트 생성 후:
 
 ```bash
-# Push Prisma schema to Supabase
 npm run db:push
-
-# Or run the raw SQL migration
-# Paste supabase/migrations/001_initial.sql into Supabase SQL Editor
 ```
 
-### 4. Run locally
+또는 Supabase SQL Editor에 `supabase/migrations/001_initial.sql` 전체 붙여넣기.
+
+### 5. 보트 실행
 
 ```bash
-npm run dev
-```
-
-### 5. Manual sync
-
-```bash
+# 일회성 잡 동기화 (API 키 존재 시)
 npm run sync
+
+# 봇 실행
+npm run bot
 ```
 
-## API Keys
+---
 
-### JSearch (RapidAPI)
-1. Sign up at [rapidapi.com](https://rapidapi.com)
-2. Subscribe to **JSearch** API
-3. Copy your `X-RapidAPI-Key` → `RAPIDAPI_KEY`
+## 커맨드
 
-### Adzuna
-1. Register at [developer.adzuna.com](https://developer.adzuna.com)
-2. Create an app → get `App ID` + `App Key`
-3. Set `ADZUNA_APP_ID` and `ADZUNA_APP_KEY`
+| Command | 설명 |
+|---|---|
+| `/start` | 일일 다이제스트 구독 |
+| `/stop` | 구독 해제 |
+| `/jobs` | 지금 바로 10개 받기 |
+| `/applied` | 지원 표시한 잡 목록 |
+| `/sync` | 모든 API에서 새 잡 가져오기 |
+| `/help` | 도움말 |
 
-### Arbeitnow
-No authentication needed. Public API, EU-focused remote jobs.
+---
 
-### OpenAI (optional)
-Set `OPENAI_API_KEY` to enable semantic search indexing via `src/lib/embeddings.ts`.
+## 동작 방식
 
-## Deployment (Vercel)
+```
+[일일 08:00 KST]
+    │
+    ├─ DB에서 최신 잡 10개 조회
+    ├─ 인트로 메시지 전송
+    └─ 잡 카드 10개 개별 전송 (0.5초 간격)
+
+[사용자 클릭: ⬜ Applied?]
+    │
+    ├─ DB에 applied=true 저장
+    ├─ 메시지 수정: ⬜ → ✅
+    └─ 체크 피드백 팔업
+
+[/applied]
+    └─ 지원한 전체 목록 표시
+```
+
+---
+
+## Job Sources
+
+| 소스 | 대상 | 인증 |
+|---|---|---|
+| JSearch (RapidAPI) | 글로벌, 대량 | RapidAPI key |
+| Adzuna | EU, UK, AU, US | App ID + Key |
+| Arbeitnow | 유럽 리모트 | 무인증 (public) |
+
+잡 비교 스마트 태깅 자동 분류:
+- Customer Success / Community / Partnerships / Growth
+- Music / Web3 / AI / Startup
+- Artist Relations / A&R / Label
+- Korean speaking / Visa sponsorship
+
+---
+
+## 서버로 운영하기 (24/7)
+
+로컈에서 지속 실행하려면 **Railway** 또는 **Render** 를 권장합니다.
 
 ```bash
-npm i -g vercel
-vercel
+# Railway
+npm install -g @railway/cli
+railway login
+railway init
+railway up
+# Railway 대시보드에서 환경변수 설정
+# Start command: npm run bot
 ```
 
-Set all env vars in Vercel dashboard, then:
-- Cron runs automatically every 6 hours via `vercel.json`
-- Set `CRON_SECRET` to a secure random string
-- The cron hits `GET /api/cron/sync` with `Authorization: Bearer <CRON_SECRET>`
+또는 VPS에서 pm2 사용:
 
-## Project Structure
-
-```
-src/
-├── app/
-│   ├── api/
-│   │   ├── jobs/          # GET jobs with filters
-│   │   ├── sync/          # POST to trigger sync
-│   │   ├── bookmarks/     # GET/POST/DELETE bookmarks
-│   │   ├── applications/  # GET/POST/DELETE applied jobs
-│   │   └── cron/sync/     # Vercel cron handler
-│   ├── page.tsx           # Main dashboard
-│   ├── bookmarks/page.tsx # Saved jobs view
-│   └── layout.tsx
-├── components/
-│   ├── SearchBar.tsx
-│   ├── FilterSidebar.tsx
-│   ├── JobCard.tsx
-│   ├── JobList.tsx
-│   ├── JobDetailPanel.tsx
-│   ├── StatsBar.tsx
-│   ├── SourceBadge.tsx
-│   ├── TagBadge.tsx
-│   └── providers/
-├── hooks/
-│   ├── useJobs.ts
-│   ├── useBookmarks.ts
-│   └── useApplications.ts
-├── lib/
-│   ├── fetchers/          # JSearch, Adzuna, Arbeitnow
-│   ├── tagger.ts          # Keyword-based tag/classify engine
-│   ├── deduplicator.ts    # URL-based dedup + expiry
-│   ├── embeddings.ts      # OpenAI pgvector integration
-│   ├── prisma.ts
-│   ├── supabase.ts
-│   └── utils.ts
-└── types/
-    └── job.ts             # All shared types
-prisma/
-└── schema.prisma
-supabase/migrations/
-└── 001_initial.sql
-scripts/
-└── sync.ts              # CLI sync runner
-vercel.json                 # Cron schedule
+```bash
+npm install -g pm2
+pm2 start --interpreter tsx bot/index.ts --name remote-job-bot
+pm2 save
+pm2 startup
 ```
 
-## Semantic Search (pgvector)
+---
 
-The schema is embedding-ready. To activate:
+## 프로젝트 구조
 
-1. Enable pgvector in Supabase (already in migration SQL)
-2. Set `OPENAI_API_KEY`
-3. After syncing jobs, call `indexJobEmbedding(jobId, text)` from `src/lib/embeddings.ts`
-4. Use the `match_jobs()` SQL function for cosine similarity search
+```
+bot/
+├── index.ts        # 진입점: 커맨드 + 콜백 + 시작
+├── digest.ts       # 데일리 다이제스트 전송 + cron 스케줄러
+├── formatter.ts    # 메시지 포맷 + 인라인 키보드
+└── storage.ts      # DB 조작 (subscribe, toggle apply, get jobs)
 
-Query examples the system is tuned for:
-- `"music industry jobs in Europe"`
-- `"Korean speaking remote startup roles"`
-- `"community web3 APAC"`
-- `"artist success partnerships"`
+src/lib/
+├── fetchers/       # JSearch / Adzuna / Arbeitnow API
+├── tagger.ts       # 키워드 기반 자동 태깅
+├── deduplicator.ts # URL 기반 중복 제거 + 45일 만료
+└── prisma.ts       # Prisma 클라이언트
 
-## License
-
-MIT
+prisma/schema.prisma  # Job, ChatSubscription, BotApply, SyncLog
+scripts/sync.ts       # CLI 수동 동기화
+```
