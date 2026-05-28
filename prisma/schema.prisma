@@ -9,31 +9,32 @@ datasource db {
 }
 
 model Job {
-  id               String    @id @default(cuid())
-  externalId       String?   // original ID from source API
+  id               String     @id @default(cuid())
+  externalId       String?
   title            String
   company          String
   location         String
   remoteType       RemoteType @default(REMOTE)
   salaryMin        Int?
   salaryMax        Int?
-  salaryCurrency   String?   @default("USD")
-  url              String    @unique
-  description      String?   @db.Text
-  tags             String[]  @default([])
-  seniority        Seniority @default(MID)
-  visaSponsorship  Boolean   @default(false)
-  koreanSpeaking   Boolean   @default(false)
-  industry         Industry  @default(TECH)
+  salaryCurrency   String?    @default("USD")
+  url              String     @unique
+  description      String?    @db.Text
+  tags             String[]   @default([])
+  seniority        Seniority  @default(MID)
+  visaSponsorship  Boolean    @default(false)
+  koreanSpeaking   Boolean    @default(false)
+  industry         Industry   @default(TECH)
   source           Source
   postedAt         DateTime
   expiresAt        DateTime?
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-  embedding        Float[]   @default([]) // pgvector ready
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  embedding        Float[]    @default([])
 
-  bookmarks        Bookmark[]
-  applications     Application[]
+  bookmarks    Bookmark[]
+  applications Application[]
+  botApplies   BotApply[]
 
   @@index([source])
   @@index([tags])
@@ -47,7 +48,7 @@ model Job {
 model Bookmark {
   id        String   @id @default(cuid())
   jobId     String
-  sessionId String   // anonymous session-based bookmarks
+  sessionId String
   createdAt DateTime @default(now())
 
   job Job @relation(fields: [jobId], references: [id], onDelete: Cascade)
@@ -68,52 +69,46 @@ model Application {
   @@index([sessionId])
 }
 
+// ─── Telegram Bot ────────────────────────────────────────────────────────────
+
+model ChatSubscription {
+  id        String    @id @default(cuid())
+  chatId    BigInt    @unique
+  username  String?
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+
+  applies BotApply[]
+}
+
+model BotApply {
+  id        String           @id @default(cuid())
+  chatId    BigInt
+  jobId     String
+  applied   Boolean          @default(false)
+  appliedAt DateTime?
+  createdAt DateTime         @default(now())
+
+  subscription ChatSubscription @relation(fields: [chatId], references: [chatId])
+  job          Job              @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@unique([chatId, jobId])
+  @@index([chatId])
+}
+
 model SyncLog {
-  id        String     @id @default(cuid())
-  source    Source
-  status    SyncStatus
-  jobsAdded Int        @default(0)
-  jobsSkipped Int      @default(0)
-  error     String?
-  startedAt DateTime   @default(now())
+  id         String     @id @default(cuid())
+  source     Source
+  status     SyncStatus
+  jobsAdded  Int        @default(0)
+  jobsSkipped Int       @default(0)
+  error      String?
+  startedAt  DateTime   @default(now())
   finishedAt DateTime?
 }
 
-enum RemoteType {
-  REMOTE
-  HYBRID
-  ONSITE
-}
-
-enum Seniority {
-  ENTRY
-  MID
-  SENIOR
-  LEAD
-  EXECUTIVE
-}
-
-enum Industry {
-  TECH
-  MUSIC
-  WEB3
-  CRYPTO
-  GAMING
-  MEDIA
-  FINANCE
-  EDUCATION
-  HEALTHCARE
-  OTHER
-}
-
-enum Source {
-  JSEARCH
-  ADZUNA
-  ARBEITNOW
-}
-
-enum SyncStatus {
-  RUNNING
-  SUCCESS
-  FAILED
-}
+enum RemoteType  { REMOTE HYBRID ONSITE }
+enum Seniority   { ENTRY MID SENIOR LEAD EXECUTIVE }
+enum Industry    { TECH MUSIC WEB3 CRYPTO GAMING MEDIA FINANCE EDUCATION HEALTHCARE OTHER }
+enum Source      { JSEARCH ADZUNA ARBEITNOW }
+enum SyncStatus  { RUNNING SUCCESS FAILED }
