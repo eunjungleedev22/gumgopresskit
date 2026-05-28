@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Job {
+  id               String    @id @default(cuid())
+  externalId       String?   // original ID from source API
+  title            String
+  company          String
+  location         String
+  remoteType       RemoteType @default(REMOTE)
+  salaryMin        Int?
+  salaryMax        Int?
+  salaryCurrency   String?   @default("USD")
+  url              String    @unique
+  description      String?   @db.Text
+  tags             String[]  @default([])
+  seniority        Seniority @default(MID)
+  visaSponsorship  Boolean   @default(false)
+  koreanSpeaking   Boolean   @default(false)
+  industry         Industry  @default(TECH)
+  source           Source
+  postedAt         DateTime
+  expiresAt        DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  embedding        Float[]   @default([]) // pgvector ready
+
+  bookmarks        Bookmark[]
+  applications     Application[]
+
+  @@index([source])
+  @@index([tags])
+  @@index([industry])
+  @@index([postedAt(sort: Desc)])
+  @@index([remoteType])
+  @@index([koreanSpeaking])
+  @@index([visaSponsorship])
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  jobId     String
+  sessionId String   // anonymous session-based bookmarks
+  createdAt DateTime @default(now())
+
+  job Job @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@unique([jobId, sessionId])
+  @@index([sessionId])
+}
+
+model Application {
+  id        String   @id @default(cuid())
+  jobId     String
+  sessionId String
+  appliedAt DateTime @default(now())
+
+  job Job @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@unique([jobId, sessionId])
+  @@index([sessionId])
+}
+
+model SyncLog {
+  id        String     @id @default(cuid())
+  source    Source
+  status    SyncStatus
+  jobsAdded Int        @default(0)
+  jobsSkipped Int      @default(0)
+  error     String?
+  startedAt DateTime   @default(now())
+  finishedAt DateTime?
+}
+
+enum RemoteType {
+  REMOTE
+  HYBRID
+  ONSITE
+}
+
+enum Seniority {
+  ENTRY
+  MID
+  SENIOR
+  LEAD
+  EXECUTIVE
+}
+
+enum Industry {
+  TECH
+  MUSIC
+  WEB3
+  CRYPTO
+  GAMING
+  MEDIA
+  FINANCE
+  EDUCATION
+  HEALTHCARE
+  OTHER
+}
+
+enum Source {
+  JSEARCH
+  ADZUNA
+  ARBEITNOW
+}
+
+enum SyncStatus {
+  RUNNING
+  SUCCESS
+  FAILED
+}
