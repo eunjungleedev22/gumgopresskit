@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    background-color: #0a0a0a;
+    color: #f0f0f0;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #0a0a0a;
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #111111;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #333333;
+    border-radius: 2px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #444444;
+  }
+
+  ::selection {
+    background: rgba(124, 106, 247, 0.3);
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-bg-secondary border border-border-subtle rounded-lg;
+  }
+
+  .card-hover {
+    @apply card transition-all duration-150 hover:border-border-default hover:bg-bg-tertiary;
+  }
+
+  .btn-primary {
+    @apply bg-accent-purple text-white px-4 py-2 rounded text-sm font-medium
+           hover:bg-accent-purple-dim transition-colors duration-150;
+  }
+
+  .btn-ghost {
+    @apply text-text-secondary px-3 py-1.5 rounded text-sm
+           hover:bg-bg-tertiary hover:text-text-primary transition-colors duration-150;
+  }
+
+  .filter-chip {
+    @apply px-3 py-1 rounded-full text-xs font-medium border border-border-subtle
+           text-text-secondary hover:border-border-default hover:text-text-primary
+           transition-all duration-150 cursor-pointer select-none;
+  }
+
+  .filter-chip-active {
+    @apply filter-chip border-accent-purple text-accent-purple bg-accent-purple/10;
+  }
+
+  .input-base {
+    @apply bg-bg-tertiary border border-border-subtle rounded-md px-3 py-2
+           text-text-primary placeholder-text-muted text-sm
+           focus:outline-none focus:border-accent-purple focus:ring-1 focus:ring-accent-purple/30
+           transition-colors duration-150;
+  }
+}
