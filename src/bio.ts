@@ -49,14 +49,14 @@ export async function renderBio(csvUrl: string): Promise<void> {
     }
 
     if (parts.length > 0) {
-      if (parts.length <= 2) {
+      if (parts.length <= 1) {
         container.innerHTML = parts.join('');
       } else {
         const bodyHtml = parts.slice(1).join('');
         container.innerHTML =
           parts[0] +
           `<div class="about-body collapsed">${bodyHtml}</div>` +
-          `<button class="bio-expand-btn" aria-expanded="false">Read more</button>`;
+          `<button class="bio-expand-btn" aria-expanded="false">— Read more</button>`;
 
         const btn  = container.querySelector<HTMLButtonElement>('.bio-expand-btn')!;
         const body = container.querySelector<HTMLElement>('.about-body')!;
