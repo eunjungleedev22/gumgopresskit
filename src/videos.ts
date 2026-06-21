@@ -2,6 +2,7 @@
  * Videos — expected sheet columns:
  *   url           YouTube URL (watch?v= or youtu.be/)   (required)
  *   title         Override title                         (optional — falls back to oEmbed)
+ *   caption       Short description shown under card     (optional)
  *   genre         Genre tag                              (optional)
  *   order         Integer sort order                     (optional)
  *   is_highlight  "true" → featured card                 (optional)
@@ -15,6 +16,7 @@ interface Video {
   url: string;
   youtubeId: string;
   title: string;
+  caption: string;
   genre: string;
   order: number;
   isHighlight: boolean;
@@ -58,8 +60,11 @@ function escHtml(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
+const LOREM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.';
+
 function videoCard(v: Video): string {
-  const label = trunc(v.title, 10);
+  const label   = trunc(v.title, 10);
+  const caption = v.caption || LOREM;
   return `
     <div class="mix-card video-card${v.isHighlight ? ' mix-card--hl' : ''} reveal"
          role="button" tabindex="0"
@@ -70,13 +75,14 @@ function videoCard(v: Video): string {
           ? `<img src="${escHtml(v.thumbUrl)}" alt="" loading="lazy" decoding="async" />`
           : `<div class="mix-cover__empty"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="rgba(255,255,255,0.12)"/></svg></div>`}
         <div class="mix-cover__overlay">
-          <span class="mix-play">▶</span>
+          <span class="mix-play">&#9654;</span>
         </div>
         ${v.isHighlight ? '<span class="mix-badge">Featured</span>' : ''}
       </div>
       <div class="mix-meta">
         <div class="mix-label">${escHtml(label)}</div>
         ${v.genre ? `<div class="mix-genre">${escHtml(v.genre)}</div>` : ''}
+        <p class="mix-caption">${escHtml(caption)}</p>
       </div>
     </div>`;
 }
@@ -175,6 +181,7 @@ export async function renderVideos(csvUrl: string): Promise<void> {
           url,
           youtubeId,
           title:       r['title'] ?? '',
+          caption:     r['caption'] ?? '',
           genre:       r['genre'] ?? '',
           order:       parseInt(r['order'] ?? '0', 10) || 0,
           isHighlight: (r['is_highlight'] ?? '').trim().toLowerCase() === 'true',
@@ -212,8 +219,8 @@ export async function renderVideos(csvUrl: string): Promise<void> {
           <div class="mixes-track${showExpand ? ' collapsed' : ''}">${cards}</div>
         </div>
         <div class="mix-carousel-controls">
-          <button class="mix-btn mix-btn--prev" aria-label="Previous" disabled>←</button>
-          <button class="mix-btn mix-btn--next" aria-label="Next">→</button>
+          <button class="mix-btn mix-btn--prev" aria-label="Previous" disabled>&#8592;</button>
+          <button class="mix-btn mix-btn--next" aria-label="Next">&#8594;</button>
         </div>
       </div>
       ${showExpand ? '<button class="mixes-expand-btn" id="videos-expand-btn">Explore more</button>' : ''}`;

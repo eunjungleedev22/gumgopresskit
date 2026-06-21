@@ -49,12 +49,13 @@ export async function renderBio(csvUrl: string): Promise<void> {
     }
 
     if (parts.length > 0) {
-      if (parts.length <= 1) {
+      if (parts.length <= 2) {
         container.innerHTML = parts.join('');
       } else {
-        const bodyHtml = parts.slice(1).join('');
+        const visibleHtml = parts.slice(0, 2).join('');
+        const bodyHtml    = parts.slice(2).join('');
         container.innerHTML =
-          parts[0] +
+          visibleHtml +
           `<div class="about-body collapsed">${bodyHtml}</div>` +
           `<button class="bio-expand-btn" aria-expanded="false">— Read more</button>`;
 
