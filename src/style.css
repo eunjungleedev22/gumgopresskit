@@ -756,6 +756,17 @@ section { padding-block: var(--gap); }
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.mix-caption {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* ── Mobile expand ──────────────────────────────────────────────── */
@@ -784,6 +795,23 @@ section { padding-block: var(--gap); }
     gap: 12px;
     transition: none;
     transform: none !important;
+  }
+  /* Video cards: single column so captions are readable */
+  #videos-carousel .mixes-track {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  #videos-carousel .mix-card {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  #videos-carousel .mix-cover {
+    aspect-ratio: 16 / 9;
+  }
+  #videos-carousel .mix-meta {
+    padding: 0;
   }
   .mixes-track.collapsed .mix-card:nth-child(n+3) {
     display: none;
