@@ -70,16 +70,15 @@ function videoCard(v: Video): string {
          role="button" tabindex="0"
          aria-label="Play: ${escHtml(v.title)}"
          data-ytid="${escHtml(v.youtubeId)}">
+      <div class="mix-caption-bar">
+        <p class="mix-caption-text">${escHtml(caption)}</p>
+      </div>
       <div class="mix-cover">
         ${v.thumbUrl
           ? `<img src="${escHtml(v.thumbUrl)}" alt="" loading="lazy" decoding="async" />`
           : `<div class="mix-cover__empty"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="rgba(255,255,255,0.12)"/></svg></div>`}
         <div class="mix-cover__overlay">
           <span class="mix-play">&#9654;</span>
-        </div>
-        <div class="mix-caption-bar">
-          <div class="mix-label-bar">${escHtml(label)}</div>
-          <p class="mix-caption-text">${escHtml(caption)}</p>
         </div>
         ${v.isHighlight ? '<span class="mix-badge">Featured</span>' : ''}
       </div>

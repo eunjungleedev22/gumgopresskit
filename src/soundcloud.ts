@@ -2,7 +2,7 @@
  * Mixes — expected sheet columns:
  *   url           SoundCloud track/set URL  (required)
  *   title         Override title            (optional — falls back to oEmbed)
- *   caption       Description shown as overlay on mobile (optional)
+ *   caption       Hook text shown above thumbnail on mobile (optional)
  *   genre         Genre tag                 (optional)
  *   order         Integer sort order        (optional)
  *   is_highlight  "true" → featured card    (optional)
@@ -66,16 +66,15 @@ function mixCard(mix: Mix): string {
     <a class="mix-card${mix.isHighlight ? ' mix-card--hl' : ''} reveal"
        href="${escHtml(mix.url)}" target="_blank" rel="noopener"
        aria-label="Listen: ${escHtml(mix.title)}">
+      <div class="mix-caption-bar">
+        <p class="mix-caption-text">${escHtml(caption)}</p>
+      </div>
       <div class="mix-cover">
         ${mix.thumbUrl
           ? `<img src="${escHtml(mix.thumbUrl)}" alt="" loading="lazy" decoding="async" />`
           : `<div class="mix-cover__empty">${waveIcon()}</div>`}
         <div class="mix-cover__overlay">
           <span class="mix-play">&#9654;</span>
-        </div>
-        <div class="mix-caption-bar">
-          <div class="mix-label-bar">${escHtml(label)}</div>
-          <p class="mix-caption-text">${escHtml(caption)}</p>
         </div>
         ${mix.isHighlight ? '<span class="mix-badge">Featured</span>' : ''}
       </div>
