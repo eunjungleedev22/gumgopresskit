@@ -77,12 +77,15 @@ function videoCard(v: Video): string {
         <div class="mix-cover__overlay">
           <span class="mix-play">&#9654;</span>
         </div>
+        <div class="mix-caption-bar">
+          <div class="mix-label-bar">${escHtml(label)}</div>
+          <p class="mix-caption-text">${escHtml(caption)}</p>
+        </div>
         ${v.isHighlight ? '<span class="mix-badge">Featured</span>' : ''}
       </div>
       <div class="mix-meta">
         <div class="mix-label">${escHtml(label)}</div>
         ${v.genre ? `<div class="mix-genre">${escHtml(v.genre)}</div>` : ''}
-        <p class="mix-caption">${escHtml(caption)}</p>
       </div>
     </div>`;
 }

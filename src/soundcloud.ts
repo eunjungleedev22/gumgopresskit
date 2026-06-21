@@ -2,6 +2,7 @@
  * Mixes — expected sheet columns:
  *   url           SoundCloud track/set URL  (required)
  *   title         Override title            (optional — falls back to oEmbed)
+ *   caption       Description shown as overlay on mobile (optional)
  *   genre         Genre tag                 (optional)
  *   order         Integer sort order        (optional)
  *   is_highlight  "true" → featured card    (optional)
@@ -11,9 +12,12 @@ import { fetchSheet, type Row } from './sheets';
 
 const oEmbedCache = new Map<string, { title: string; thumbnail_url: string }>();
 
+const LOREM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.';
+
 interface Mix {
   url: string;
   title: string;
+  caption: string;
   genre: string;
   order: number;
   isHighlight: boolean;
@@ -56,7 +60,8 @@ function waveIcon(): string {
 }
 
 function mixCard(mix: Mix): string {
-  const label = trunc(mix.title, 10);
+  const label   = trunc(mix.title, 10);
+  const caption = mix.caption || LOREM;
   return `
     <a class="mix-card${mix.isHighlight ? ' mix-card--hl' : ''} reveal"
        href="${escHtml(mix.url)}" target="_blank" rel="noopener"
@@ -66,7 +71,11 @@ function mixCard(mix: Mix): string {
           ? `<img src="${escHtml(mix.thumbUrl)}" alt="" loading="lazy" decoding="async" />`
           : `<div class="mix-cover__empty">${waveIcon()}</div>`}
         <div class="mix-cover__overlay">
-          <span class="mix-play">▶</span>
+          <span class="mix-play">&#9654;</span>
+        </div>
+        <div class="mix-caption-bar">
+          <div class="mix-label-bar">${escHtml(label)}</div>
+          <p class="mix-caption-text">${escHtml(caption)}</p>
         </div>
         ${mix.isHighlight ? '<span class="mix-badge">Featured</span>' : ''}
       </div>
@@ -129,6 +138,7 @@ export async function renderMixes(csvUrl: string): Promise<void> {
       .map((r: Row) => ({
         url:         r['url'].trim(),
         title:       r['title'] ?? '',
+        caption:     r['caption'] ?? '',
         genre:       r['genre'] ?? '',
         order:       parseInt(r['order'] ?? '0', 10) || 0,
         isHighlight: (r['is_highlight'] ?? '').trim().toLowerCase() === 'true',
@@ -144,7 +154,6 @@ export async function renderMixes(csvUrl: string): Promise<void> {
       return;
     }
 
-    // Fetch oEmbed titles + thumbnails
     const results = await Promise.allSettled(mixes.map(m => fetchOEmbed(m.url)));
     results.forEach((res, i) => {
       const oe = res.status === 'fulfilled' ? res.value : null;
@@ -161,8 +170,8 @@ export async function renderMixes(csvUrl: string): Promise<void> {
           <div class="mixes-track${showExpand ? ' collapsed' : ''}">${cards}</div>
         </div>
         <div class="mix-carousel-controls">
-          <button class="mix-btn mix-btn--prev" aria-label="Previous" disabled>←</button>
-          <button class="mix-btn mix-btn--next" aria-label="Next">→</button>
+          <button class="mix-btn mix-btn--prev" aria-label="Previous" disabled>&#8592;</button>
+          <button class="mix-btn mix-btn--next" aria-label="Next">&#8594;</button>
         </div>
       </div>
       ${showExpand ? `<button class="mixes-expand-btn" id="mixes-expand-btn">Explore more</button>` : ''}`;
