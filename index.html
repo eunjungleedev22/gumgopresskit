@@ -6,6 +6,10 @@
     <meta name="description" content="GUMGO — DJ &amp; Producer Press Kit. Underground Minimal · Electro. Seoul." />
     <meta property="og:title" content="GUMGO — Press Kit" />
     <meta property="og:description" content="Official press kit for DJ &amp; producer GUMGO." />
+    <meta property="og:image" content="https://gumgo.art/hero.webp" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://gumgo.art/hero.webp" />
     <meta name="theme-color" content="#060608" />
 
     <meta name="referrer" content="strict-origin-when-cross-origin" />
@@ -132,9 +136,12 @@
         <h2 class="section-label reveal">Mixes</h2>
         <div class="mixes-sub reveal">
           <p class="mixes-sublabel">SoundCloud</p>
-          <div id="mixes-list" class="mixes-list">
-            <div class="loading-state"><div class="spinner"></div><span>Loading…</span></div>
+          <div id="mixes-sc-fallback" class="mixes-sc-fallback">
+            <iframe scrolling="no" frameborder="no" allow="autoplay"
+              src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/gumgo&color=%23aaaaaa&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
+            </iframe>
           </div>
+          <div id="mixes-list" class="mixes-list"></div>
           <p id="mixes-error" class="data-error hidden"></p>
         </div>
         <div class="mixes-sub reveal">
@@ -151,8 +158,6 @@
     <section id="press">
       <div class="container">
         <h2 class="section-label reveal">Press</h2>
-
-        <!-- Coverage items from Google Sheets -->
         <div id="press-coverage" class="press-coverage"></div>
         <p id="press-coverage-error" class="data-error hidden"></p>
       </div>
@@ -162,9 +167,7 @@
     <section id="contact">
       <div class="container">
         <h2 class="section-label reveal">Contact</h2>
-
         <p class="contact-intro reveal">Philosophy and art history graduate, five years in tech — now fully dedicated to the music. Open to gigs, radio appearances, and any project worth doing.</p>
-
         <div class="contact-info reveal">
           <div class="contact-info-block">
             <p class="contact-info-label">Bookings Open</p>
@@ -180,9 +183,7 @@
             </div>
           </div>
         </div>
-
         <a href="mailto:gumgoya@gmail.com" class="contact-email reveal">gumgoya@gmail.com</a>
-
         <div class="social-links reveal">
           <a href="https://www.instagram.com/gumgo._" class="social-link" target="_blank" rel="noopener">
             <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

@@ -124,8 +124,9 @@ function initExpand(list: HTMLElement): void {
 }
 
 export async function renderMixes(csvUrl: string): Promise<void> {
-  const list  = document.getElementById('mixes-list')!;
-  const errEl = document.getElementById('mixes-error')!;
+  const list     = document.getElementById('mixes-list')!;
+  const errEl    = document.getElementById('mixes-error')!;
+  const fallback = document.getElementById('mixes-sc-fallback') as HTMLElement | null;
 
   try {
     const rows = await fetchSheet(csvUrl);
@@ -175,6 +176,7 @@ export async function renderMixes(csvUrl: string): Promise<void> {
       </div>
       ${showExpand ? `<button class="mixes-expand-btn" id="mixes-expand-btn">Explore more</button>` : ''}`;
 
+    if (fallback) fallback.style.display = 'none';
     initCarousel(document.getElementById('mixes-carousel')!);
     initExpand(list);
   } catch (e) {

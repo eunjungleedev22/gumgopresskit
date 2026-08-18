@@ -769,6 +769,15 @@ section { padding-block: var(--gap); }
   overflow: hidden;
 }
 
+/* SoundCloud static fallback — visible without JS, hidden after dynamic carousel loads */
+.mixes-sc-fallback iframe {
+  display: block;
+  width: 100%;
+  height: 450px;
+  border: none;
+  margin-bottom: 8px;
+}
+
 /* Caption bar — hidden on desktop, shown on mobile above the thumbnail as a hook phrase */
 .mix-caption-bar {
   display: none;
