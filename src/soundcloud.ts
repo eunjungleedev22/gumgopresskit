@@ -12,7 +12,6 @@ import { fetchSheet, type Row } from './sheets';
 
 const oEmbedCache = new Map<string, { title: string; thumbnail_url: string }>();
 
-const LOREM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.';
 
 interface Mix {
   url: string;
@@ -60,15 +59,12 @@ function waveIcon(): string {
 }
 
 function mixCard(mix: Mix): string {
-  const label   = trunc(mix.title, 10);
-  const caption = mix.caption || LOREM;
+  const label = trunc(mix.title, 10);
   return `
     <a class="mix-card${mix.isHighlight ? ' mix-card--hl' : ''} reveal"
        href="${escHtml(mix.url)}" target="_blank" rel="noopener"
        aria-label="Listen: ${escHtml(mix.title)}">
-      <div class="mix-caption-bar">
-        <p class="mix-caption-text">${escHtml(caption)}</p>
-      </div>
+      ${mix.caption ? `<div class="mix-caption-bar"><p class="mix-caption-text">${escHtml(mix.caption)}</p></div>` : ''}
       <div class="mix-cover">
         ${mix.thumbUrl
           ? `<img src="${escHtml(mix.thumbUrl)}" alt="" loading="lazy" decoding="async" />`
