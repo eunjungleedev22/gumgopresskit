@@ -4,6 +4,8 @@ import { renderVideos } from './videos';
 import { renderMixes } from './soundcloud';
 import { renderPressCoverage } from './press-coverage';
 import { renderBio } from './bio';
+import { initAnalytics } from './analytics';
+import { initPlayerLinks } from './player';
 
 // ── Config ───────────────────────────────────────────────────────────────────
 const GIGS_CSV_URL   = import.meta.env.VITE_GIGS_CSV_URL   as string | undefined;
@@ -11,23 +13,6 @@ const VIDEOS_CSV_URL = import.meta.env.VITE_VIDEOS_CSV_URL as string | undefined
 const MIXES_CSV_URL  = import.meta.env.VITE_MIXES_CSV_URL  as string | undefined;
 const PRESS_CSV_URL  = import.meta.env.VITE_PRESS_CSV_URL  as string | undefined;
 const BIO_CSV_URL    = import.meta.env.VITE_BIO_CSV_URL    as string | undefined;
-
-const GA_ID = 'G-CKNF5FXSW6';
-
-// ── Analytics ────────────────────────────────────────────────────────────────
-// Kept out of index.html as an inline <script> so the CSP can refuse
-// 'unsafe-inline' for script-src. The gtag.js loader tag stays in the markup.
-declare global {
-  interface Window { dataLayer: unknown[] }
-}
-
-function initAnalytics(): void {
-  window.dataLayer = window.dataLayer || [];
-  // gtag pushes `arguments` itself — a rest array is not equivalent
-  function gtag(..._args: unknown[]) { window.dataLayer.push(arguments); }
-  gtag('js', new Date());
-  gtag('config', GA_ID);
-}
 
 // ── Nav ──────────────────────────────────────────────────────────────────────
 function initNav(): void {
@@ -129,6 +114,7 @@ function initSheetData(): void {
 // ── Boot ─────────────────────────────────────────────────────────────────────
 function boot(): void {
   initAnalytics();
+  initPlayerLinks();
   initNav();
   initActiveNav();
   initReveal();

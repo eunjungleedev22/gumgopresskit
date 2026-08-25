@@ -150,32 +150,40 @@
 
             <div class="masthead-block reveal">
               <div class="numbered">
+                <!-- data-player opens these in the in-app modal; the href stays
+                     so no-JS and cmd-click still reach the real page. Mixmag has
+                     no embed (news sites refuse framing), so it keeps the arrow. -->
                 <a class="numbered-item" href="https://www.youtube.com/watch?v=HDx12Hh6JfY"
-                   target="_blank" rel="noopener noreferrer">
+                   target="_blank" rel="noopener noreferrer"
+                   data-player="youtube" data-player-id="HDx12Hh6JfY"
+                   data-track="HÖR Berlin">
                   <span class="numbered-num">01</span>
                   <div>
                     <p class="numbered-title">HÖR Berlin</p>
                     <p class="numbered-sub">Berlin / 2026</p>
                   </div>
-                  <span class="numbered-arrow" aria-hidden="true">↗</span>
+                  <span class="numbered-icon numbered-icon--play" aria-hidden="true">&#9654;</span>
                 </a>
                 <a class="numbered-item" href="https://mixmag.asia/feature/artists-exciting-us-in-2026-april"
-                   target="_blank" rel="noopener noreferrer">
+                   target="_blank" rel="noopener noreferrer"
+                   data-track="Mixmag Asia — Artists Exciting Us 2026">
                   <span class="numbered-num">02</span>
                   <div>
                     <p class="numbered-title">Mixmag Asia</p>
                     <p class="numbered-sub">Featured in Artists Exciting Us 2026 — April</p>
                   </div>
-                  <span class="numbered-arrow" aria-hidden="true">↗</span>
+                  <span class="numbered-icon" aria-hidden="true">↗</span>
                 </a>
                 <a class="numbered-item" href="https://soundcloud.com/oslated/oslated-special-mix-097-gumgo"
-                   target="_blank" rel="noopener noreferrer">
+                   target="_blank" rel="noopener noreferrer"
+                   data-player="soundcloud"
+                   data-track="Oslated Special Mix 097">
                   <span class="numbered-num">03</span>
                   <div>
                     <p class="numbered-title">Oslated Special Mix</p>
                     <p class="numbered-sub">Special Mix Series 097</p>
                   </div>
-                  <span class="numbered-arrow" aria-hidden="true">↗</span>
+                  <span class="numbered-icon numbered-icon--play" aria-hidden="true">&#9654;</span>
                 </a>
               </div>
             </div>

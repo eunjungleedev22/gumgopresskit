@@ -65,7 +65,8 @@ function mixCard(mix: Mix): string {
   return `
     <a class="card reveal${mix.isHighlight ? ' card--hl' : ''}"
        href="${hrefAttr(mix.url)}" target="_blank" rel="noopener noreferrer"
-       aria-label="Listen on SoundCloud: ${escAttr(mix.title)}">
+       data-player="soundcloud" data-track="${escAttr(mix.title)}"
+       aria-label="Play: ${escAttr(mix.title)}">
       <div class="card-cover">
         ${thumb
           ? `<img src="${thumb}" alt="" loading="lazy" decoding="async" />`

@@ -10,6 +10,8 @@
 
 import { fetchSheet, type Row } from './sheets';
 import { escHtml, escAttr, srcAttr } from './safe';
+import { openYouTube, youtubeId as extractYoutubeId } from './player';
+import { trackEvent } from './analytics';
 
 const oEmbedCache = new Map<string, { title: string; thumbnail_url: string }>();
 
@@ -27,27 +29,6 @@ interface Video {
   thumbUrl: string;
   /** false when the title is a stand-in (the id), so oEmbed may replace it */
   titleFromSheet: boolean;
-}
-
-function extractYoutubeId(url: string): string | null {
-  try {
-    const u = new URL(url);
-    if (u.protocol !== 'https:' && u.protocol !== 'http:') return null;
-
-    const host = u.hostname.replace(/^www\./, '');
-    let id: string | null = null;
-
-    if (host === 'youtu.be')                       id = u.pathname.slice(1).split('/')[0];
-    else if (host === 'youtube.com' || host === 'm.youtube.com' || host === 'youtube-nocookie.com') {
-      id = u.searchParams.get('v')
-        ?? (u.pathname.startsWith('/embed/') ? u.pathname.slice(7).split('/')[0] : null)
-        ?? (u.pathname.startsWith('/shorts/') ? u.pathname.slice(8).split('/')[0] : null);
-    }
-
-    return id && YT_ID.test(id) ? id : null;
-  } catch {
-    return null;
-  }
 }
 
 /** Coerce an unvalidated JSON field to a string — upstream is not trusted to be well-typed. */
@@ -100,59 +81,10 @@ function videoCard(v: Video): string {
     </div>`;
 }
 
-function buildModal(): void {
-  if (document.getElementById('video-modal')) return;
-
-  const modal = document.createElement('div');
-  modal.id = 'video-modal';
-  modal.className = 'video-modal';
-  modal.setAttribute('role', 'dialog');
-  modal.setAttribute('aria-modal', 'true');
-  modal.setAttribute('aria-label', 'Video player');
-  modal.innerHTML = `
-    <div class="video-modal-inner">
-      <button class="video-modal-close" aria-label="Close video">[ Esc / Close ]</button>
-      <div id="video-modal-frame"></div>
-    </div>`;
-  document.body.appendChild(modal);
-
-  const close = () => {
-    modal.classList.remove('open');
-    const frame = document.getElementById('video-modal-frame');
-    if (frame) frame.textContent = '';
-  };
-
-  modal.addEventListener('click', (e) => { if (e.target === modal) close(); });
-  modal.querySelector('.video-modal-close')!.addEventListener('click', close);
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
-}
-
-function openVideo(youtubeId: string): void {
-  // Re-validate at use time: the id round-trips through a DOM dataset attribute
-  if (!YT_ID.test(youtubeId)) return;
-
-  const modal = document.getElementById('video-modal');
-  const frame = document.getElementById('video-modal-frame');
-  if (!modal || !frame) return;
-
-  // Built as a DOM node rather than an HTML string so the id can never be markup
-  const iframe = document.createElement('iframe');
-  iframe.src = `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&rel=0`;
-  iframe.allow = 'autoplay; encrypted-media; fullscreen';
-  iframe.allowFullscreen = true;
-  iframe.title = 'YouTube video player';
-
-  frame.textContent = '';
-  frame.appendChild(iframe);
-  modal.classList.add('open');
-}
-
 export async function renderVideos(csvUrl: string): Promise<void> {
   const grid    = document.getElementById('videos-grid');
   const section = document.getElementById('mixes-yt-section');
   if (!grid) return;
-
-  buildModal();
 
   try {
     const rows = await fetchSheet(csvUrl);
@@ -225,7 +157,15 @@ export async function renderVideos(csvUrl: string): Promise<void> {
 
     grid.querySelectorAll<HTMLElement>('.card--video').forEach((card) => {
       const id = card.dataset.ytid ?? '';
-      const play = () => openVideo(id);
+      const play = () => {
+        if (!openYouTube(id)) return;
+        trackEvent('media_open', {
+          provider: 'youtube',
+          item_name: card.querySelector('.card-title')?.textContent?.trim() ?? '',
+          link_url: `https://www.youtube.com/watch?v=${id}`,
+          method: 'in_app',
+        });
+      };
       card.addEventListener('click', play);
       card.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(); }
