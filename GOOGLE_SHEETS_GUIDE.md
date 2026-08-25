@@ -1,157 +1,163 @@
 # Google Sheets Integration Guide
 
-The website fetches live data from two Google Sheets tabs — one for **Gigs** and one for **Videos**.
-No backend required. Sheets are served as public CSV, so the site remains fully static.
+The site pulls live content from **five tabs** of one Google Sheet, published as public
+CSV. No backend and no API key — the site stays fully static.
+
+| Tab | Env var | Renders |
+|-----|---------|---------|
+| Bio | `VITE_BIO_CSV_URL` | Biography section (EN + KR columns) |
+| SoundCloud | `VITE_MIXES_CSV_URL` | Mixes grid |
+| Videos | `VITE_VIDEOS_CSV_URL` | YouTube grid |
+| Press | `VITE_PRESS_CSV_URL` | Press coverage list |
+| Gigs | `VITE_GIGS_CSV_URL` | Upcoming section (hidden when empty) |
+
+Header row must be row 1. Header names are lower-cased and trimmed on read, so
+`Title` and `title` both work. Unknown columns are ignored.
 
 ---
 
-## 1. Create the Google Sheet
+## 1. Bio tab
 
-1. Go to [sheets.google.com](https://sheets.google.com) and create a new spreadsheet.
-2. Rename the first tab **Gigs** and add a second tab named **Videos**.
+| Column | Required | Notes |
+|--------|----------|-------|
+| `lang` | | `en` (default) or `ko` / `kr` / `korean` — picks which column the row fills |
+| `topline` | | Bold headline, rendered with the peach marker highlight |
+| `description` | | Body copy. A **blank line** starts a new paragraph. |
+| `text` | | Used when `description` is absent |
 
----
+Everything past the first two blocks collapses behind a "Read more" button.
 
-## 2. Gigs tab — column structure
+If this tab is empty or fails to load, the copy hard-coded in `index.html` (taken
+straight from the 2026 EPK PDF) stays on the page — the section is never blank.
 
-Row 1 must be **exactly** these headers (case-sensitive):
+**Example:**
 
-| Column | Type | Required | Notes |
-|--------|------|----------|-------|
-| `date` | ISO date `YYYY-MM-DD` | ✅ | e.g. `2026-06-14` |
-| `venue` | Text | ✅ | Club / venue name |
-| `city` | Text | | e.g. `Seoul, South Korea` |
-| `ticket_url` | URL | | Full URL. Leave blank for TBA. |
-| `status` | Text | | `upcoming` (default) · `sold_out` · `cancelled` |
-
-**Example rows:**
-
-| date | venue | city | ticket_url | status |
-|------|-------|------|------------|--------|
-| 2026-06-14 | Fuse | Brussels, Belgium | https://fuse.be/tickets/... | upcoming |
-| 2026-07-04 | Fabric | London, UK | | upcoming |
-| 2026-05-01 | Club XYZ | Berlin, Germany | | sold_out |
-
-Rules:
-- Past dates are automatically hidden by the site.
-- Rows with `status = cancelled` are hidden.
-- Rows are sorted by date ascending automatically.
+| lang | topline | description |
+|------|---------|-------------|
+| en | A top pick in Mixmag Asia's Artists Exciting Us 2026 | From Singapore's dancefloors to clubs across Europe… |
+| ko | 2026년 Mixmag Asia 'Artists Exciting Us' Top Pick 선정 | 싱가포르의 플로어에서 출발한 GUMGO는… |
 
 ---
 
-## 3. Videos tab — column structure
+## 2. SoundCloud tab
 
-Row 1 must be **exactly** these headers:
+| Column | Required | Notes |
+|--------|----------|-------|
+| `url` | ✅ | Full track or set URL, e.g. `https://soundcloud.com/gumgo/track-name` |
+| `title` | | Overrides the oEmbed title |
+| `caption` | | Short description under the card. **Left blank → no caption is shown.** |
+| `genre` | | Small uppercase tag |
+| `order` | | Integer, ascending |
+| `is_highlight` | | `true` → "Featured" badge, sorted to the front |
 
-| Column | Type | Required | Notes |
-|--------|------|----------|-------|
-| `youtube_id` | Text | ✅ | The ID after `?v=` or `youtu.be/` |
-| `title` | Text | ✅ | Display title |
-| `description` | Text | | Short caption shown under the card |
-| `order` | Integer | | Sort order, ascending. Lower = first. |
-
-**How to find a YouTube ID:**
-- URL `https://www.youtube.com/watch?v=dQw4w9WgXcQ` → ID is `dQw4w9WgXcQ`
-- URL `https://youtu.be/dQw4w9WgXcQ` → ID is `dQw4w9WgXcQ`
-
-**Example rows:**
-
-| youtube_id | title | description | order |
-|------------|-------|-------------|-------|
-| dQw4w9WgXcQ | GUMGO @ Fabric 2025 | 90 min live recording | 1 |
-| xxxxxxxxxxx | GUMGO — Studio Mix Vol. 3 | | 2 |
+Title and cover art are fetched from SoundCloud's oEmbed endpoint when `title` is blank.
 
 ---
 
-## 4. Publish the Sheet as CSV (no API key needed)
+## 3. Videos tab
 
-This method makes sheets publicly readable as CSV without any API key.
+| Column | Required | Notes |
+|--------|----------|-------|
+| `url` | ✅ | Full YouTube URL — `watch?v=`, `youtu.be/`, `/embed/` and `/shorts/` all work |
+| `title` | | Overrides the oEmbed title |
+| `caption` | | Short description under the card |
+| `genre` | | Small uppercase tag |
+| `order` | | Integer, ascending |
+| `is_highlight` | | `true` → "Featured" badge, sorted to the front |
 
-1. In your Google Sheet, go to **File → Share → Publish to web**.
-2. In the first dropdown, select the **Gigs** tab.
-3. In the second dropdown, select **Comma-separated values (.csv)**.
-4. Click **Publish** and confirm.
-5. Copy the URL — it looks like:
+Rows whose URL does not yield a valid 11-character YouTube ID are dropped.
+
+---
+
+## 4. Press tab
+
+| Column | Required | Notes |
+|--------|----------|-------|
+| `url` | ✅ | Article URL (must be `http(s)`) |
+| `title` | | Headline. **Supplying it skips the CORS proxy entirely — recommended.** |
+| `publication` | | Outlet name, e.g. `Mixmag Asia` |
+| `date` | | e.g. `2026-04` |
+| `summary` | | Short excerpt |
+| `order` | | Integer, ascending |
+
+When `title` is blank the site fetches the article's `og:title` through
+`api.allorigins.win` in the background. Filling `title` in the sheet avoids that
+third-party round trip.
+
+---
+
+## 5. Gigs tab
+
+| Column | Required | Notes |
+|--------|----------|-------|
+| `date` | ✅ | ISO `YYYY-MM-DD`, e.g. `2026-06-14` |
+| `venue` | ✅ | Club / venue name |
+| `city` | | e.g. `Seoul, South Korea` |
+| `ticket_url` | | Full URL. Blank → shows "TBA". |
+| `status` | | `upcoming` (default) · `sold_out` · `cancelled` |
+
+Past dates and `cancelled` rows are dropped. **The whole Upcoming section stays
+hidden unless at least one gig survives**, so an empty tab costs nothing.
+
+---
+
+## 6. Publish each tab as CSV
+
+1. **File → Share → Publish to web**
+2. First dropdown: pick the tab. Second dropdown: **Comma-separated values (.csv)**.
+3. **Publish**, then copy the URL:
    ```
-   https://docs.google.com/spreadsheets/d/SHEET_ID/pub?gid=0&single=true&output=csv
+   https://docs.google.com/spreadsheets/d/e/SHEET_ID/pub?gid=0&single=true&output=csv
    ```
-6. Repeat for the **Videos** tab (different `gid` value).
+4. Repeat for each of the five tabs — each has its own `gid`.
 
-> **Tip:** The `gid` (tab ID) appears in the sheet URL when you click the tab.
-> Example URL: `...spreadsheets/d/SHEET_ID/edit#gid=1234567890`
-
----
-
-## 5. Alternative: export URL (no publish step)
-
-If you don't want to use "Publish to web", you can use the export URL pattern — but the
-sheet must be set to **"Anyone with the link can view"** (Share → General access).
-
-```
-https://docs.google.com/spreadsheets/d/SHEET_ID/export?format=csv&gid=GID
-```
+> The `gid` appears in the sheet URL when the tab is selected:
+> `…/edit#gid=1234567890`
 
 ---
 
-## 6. Add the URLs to your project
+## 7. Wire up the env vars
 
-Copy `.env.example` to `.env` (never commit `.env`):
+Copy `.env.example` to `.env` (which is git-ignored) and fill in the five URLs:
 
 ```bash
 cp .env.example .env
-```
-
-Edit `.env`:
-
-```env
-VITE_GIGS_CSV_URL=https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/pub?gid=0&single=true&output=csv
-VITE_VIDEOS_CSV_URL=https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/pub?gid=1234567890&single=true&output=csv
-```
-
-Then run the dev server:
-
-```bash
 npm run dev
 ```
 
----
-
-## 7. Deployment note
-
-When deploying (Netlify, Vercel, GitHub Pages + Actions, etc.), set the two environment
-variables in the platform's dashboard — **not** in the committed code. Vite bakes
-`VITE_*` variables into the bundle at build time, so they are not secret, but they
-should still be managed via env config to avoid committing sheet URLs to the repo.
+For deployment, the URLs live in `.github/workflows/deploy.yml` under the build
+step's `env:` block. Vite inlines `VITE_*` values into the bundle at build time,
+so **these URLs are public** — that is fine, because a published sheet is public
+by definition. Never put anything private in these tabs.
 
 ---
 
-## 8. Keeping data fresh
+## 8. Security notes
 
-The site fetches data on every page load (`cache: 'no-store'`). Since Google Sheets
-publishes update within a few minutes, edits show up on the next visitor load with
-no rebuild required.
+A few constraints are enforced in code; they are worth knowing before you edit the sheet.
 
-If you want to force a rebuild after editing (e.g. to bust CDN caches), trigger a
-deploy from your hosting platform.
+- **Only `docs.google.com` is accepted** as a CSV host (`src/sheets.ts`). Pointing an
+  env var anywhere else throws. Google redirects the CSV to
+  `*.googleusercontent.com`; the browser follows that hop, which is why the CSP
+  allows it.
+- **Every value from the sheet is escaped before it reaches the DOM** — text and
+  attribute contexts use different escapers (`src/safe.ts`).
+- **Link columns are protocol-checked.** `javascript:`, `data:` and `blob:` URLs in
+  `url` / `ticket_url` are rejected, so a malicious link in the sheet cannot run script.
+- **Sheet responses over 2 MB are rejected mid-stream** to bound memory.
+- **Press proxy lookups are capped** at 20 per page load and 256 KB per article, so a
+  long sheet cannot turn each visitor into a request amplifier.
+- A [Content Security Policy](https://developer.mozilla.org/docs/Web/HTTP/CSP) meta tag
+  in `index.html` restricts which origins the page may talk to. **If you add a new data
+  source or embed, its origin must be added there or the browser will block it.**
+
+Anyone with edit access to the sheet can change what the site displays — treat sheet
+access as equivalent to site-content access.
 
 ---
 
-## 9. Optional: Google Sheets API v4 (private sheets)
+## 9. Keeping data fresh
 
-If you need private sheets (e.g. sheets not shared publicly), use the
-[Google Sheets API v4](https://developers.google.com/sheets/api/guides/concepts):
-
-1. Create a project in [Google Cloud Console](https://console.cloud.google.com).
-2. Enable the **Google Sheets API**.
-3. Create an **API key** (restrict it to your domain for security).
-4. Fetch data with:
-   ```
-   https://sheets.googleapis.com/v4/spreadsheets/{SHEET_ID}/values/{RANGE}?key={API_KEY}
-   ```
-   Example range: `Gigs!A:E` (all rows, columns A–E).
-
-The response is JSON with a `values` array. You would replace the CSV fetch in
-`src/sheets.ts` with a JSON fetch and map the array rows to objects.
-
-For a fully public presskit this complexity is unnecessary — the CSV approach
-(sections 4–6 above) is simpler and has zero API quotas.
+The site fetches on every page load and respects Google's cache headers, so edits
+appear within a few minutes with no rebuild. Push to the deploy branch only when
+code or hard-coded copy changes.

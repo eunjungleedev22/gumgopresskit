@@ -3,228 +3,402 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="GUMGO — DJ &amp; Producer Press Kit. Underground Minimal · Electro. Seoul." />
-    <meta property="og:title" content="GUMGO — Press Kit" />
-    <meta property="og:description" content="Official press kit for DJ &amp; producer GUMGO." />
-    <meta property="og:image" content="https://gumgo.art/hero.webp" />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="https://gumgo.art/hero.webp" />
-    <meta name="theme-color" content="#060608" />
 
+    <!--
+      Content Security Policy. GitHub Pages cannot set response headers, so the
+      policy is declared here. No 'unsafe-inline' for scripts — the GA bootstrap
+      lives in main.ts so script-src stays strict. style-src does allow inline
+      because element .style writes and the critical CSS block need it.
+
+      connect-src must include *.googleusercontent.com: a published-sheet CSV URL
+      answers with a redirect to doc-XX-XX-sheets.googleusercontent.com, and CSP
+      re-checks fetch directives on every redirect hop. Without it every sheet
+      request fails and the whole data layer goes dark.
+
+      Note that frame-ancestors is silently ignored in a meta-tag CSP, so
+      clickjacking protection is not available on this host.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src 'self' https://www.googletagmanager.com;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src 'self' https://fonts.gstatic.com;
+        img-src 'self' https://i1.sndcdn.com https://i.sndcdn.com https://img.youtube.com https://i.ytimg.com https://www.google-analytics.com;
+        frame-src https://w.soundcloud.com https://www.youtube-nocookie.com;
+        connect-src 'self' https://docs.google.com https://*.googleusercontent.com https://soundcloud.com https://www.youtube.com https://api.allorigins.win https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com;
+        base-uri 'self';
+        form-action 'none';
+        object-src 'none';
+        upgrade-insecure-requests
+      "
+    />
+
+    <meta name="description" content="GUMGO — Korean vinyl DJ. Minimal / Dub / Electro. Electronic press kit 2026." />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="canonical" href="https://gumgo.art/" />
+
+    <meta property="og:title" content="GUMGO — Electronic Press Kit" />
+    <meta property="og:description" content="Korean vinyl DJ. Minimal / Dub / Electro. Berlin · Barcelona · Seoul." />
+    <meta property="og:image" content="https://gumgo.art/portrait.jpg" />
+    <meta property="og:url" content="https://gumgo.art/" />
+    <meta property="og:type" content="profile" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://gumgo.art/portrait.jpg" />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>GUMGO — Press Kit</title>
+    <title>GUMGO — Electronic Press Kit</title>
 
-    <!-- Preload hero image -->
-    <link rel="preload" as="image" href="/hero.webp" type="image/webp" />
+    <link rel="preload" as="image" href="/portrait.webp" type="image/webp" />
 
-    <!-- Google tag (gtag.js) -->
+    <!-- Google tag loader; the config call runs from main.ts so no inline script is needed -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-CKNF5FXSW6"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-CKNF5FXSW6');
-    </script>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <!-- Inter + Noto Sans KR — both SIL Open Font License, same faces as the EPK PDF -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@100..900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap"
     />
 
-    <!-- Critical CSS — prevents flash on first paint -->
+    <!-- Critical CSS — first paint before the bundle lands -->
     <style>
       *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-      html{scroll-behavior:smooth}
-      body{background:#060608;color:#aaaaaa;font-family:'Outfit',system-ui,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-      #nav{position:fixed;top:0;left:0;right:0;z-index:100;height:56px;display:flex;align-items:center;justify-content:space-between;padding-inline:clamp(24px,5vw,64px);background:transparent}
-      #hero{min-height:100svh;position:relative;display:flex;align-items:flex-end;padding-bottom:clamp(56px,8vw,96px);overflow:hidden;background:#060608}
-      #hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(6,6,8,.25) 0%,rgba(6,6,8,.65) 55%,rgba(6,6,8,1) 100%);z-index:1}
-      .hero-inner{position:relative;z-index:2;width:100%;padding-inline:clamp(24px,5vw,64px)}
-      .hero-heading{display:inline-block}
-      .hero-tags{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(232,234,240,0.4);margin-bottom:14px;white-space:nowrap;overflow:hidden;width:100%}
-      .hero-name{font-family:'Outfit',system-ui,sans-serif;font-size:clamp(80px,15vw,120px);font-weight:800;line-height:.92;color:#ffffff;letter-spacing:-0.04em}
+      body{background:#fff;color:#0a0a0a;font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.62;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+      #nav{position:fixed;inset:0 0 auto 0;z-index:100;height:52px;display:flex;align-items:center;justify-content:space-between;padding-inline:clamp(20px,4.5vw,56px);background:rgba(255,255,255,.86)}
+      .nav-logo{font-size:14px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+      .container{width:min(1240px,100%);margin-inline:auto;padding-inline:clamp(20px,4.5vw,56px)}
+      #masthead{padding-top:calc(52px + clamp(28px,5vw,60px));padding-bottom:clamp(52px,7vw,96px)}
+      .masthead-name{font-size:clamp(52px,12vw,108px);font-weight:800;letter-spacing:-.05em;line-height:.86;margin-bottom:18px}
     </style>
   </head>
+
   <body>
-    <!-- NAV -->
+    <!-- ── NAV ──────────────────────────────────────────────────────────── -->
     <nav id="nav">
-      <a class="nav-logo" href="#hero">GUMGO</a>
-      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <a class="nav-logo" href="#masthead">GUMGO</a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
         <span></span><span></span><span></span>
       </button>
-      <ul class="nav-links">
-        <li><a href="#about">Biography</a></li>
-        <li><a href="#highlights">Highlights</a></li>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#masthead">Highlights</a></li>
+        <li><a href="#biography">Biography</a></li>
         <li><a href="#mixes">Mixes</a></li>
         <li><a href="#press">Press</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
     </nav>
 
-    <!-- HERO -->
-    <section id="hero">
-      <div class="hero-inner">
-        <div class="hero-heading">
-          <p class="hero-tags">House · Minimal · Techno · Vinyl</p>
-          <h1 class="hero-name">GUMGO</h1>
-        </div>
-      </div>
-    </section>
-
-    <!-- BIOGRAPHY -->
-    <section id="about">
+    <!-- ── SHEET 01 · HIGHLIGHTS ────────────────────────────────────────── -->
+    <section class="sheet" id="masthead">
       <div class="container">
-        <h2 class="section-label reveal">Biography</h2>
-        <div id="bio-text" class="about-text reveal">
-          <p class="about-lead"><strong class="bio-topline">Featured as a top pick in Mixmag Asia's Artists Exciting Us In 2026 and selected for Oslated's Special Mix 097</strong></p>
-        </div>
-      </div>
-    </section>
+        <header class="sheet-head">
+          <h1 class="sheet-title">Highlights</h1>
+          <p class="sheet-tag">GUMGO / 2026</p>
+        </header>
 
-    <!-- HIGHLIGHTS -->
-    <section id="highlights">
-      <div class="container">
-        <h2 class="section-label reveal">Highlights</h2>
-        <div class="highlights-grid">
-          <div class="highlights-col reveal">
-            <p class="highlights-col-label">Radio</p>
-            <ul class="highlights-list">
-              <li class="highlights-item">Oslated Special Mix</li>
-              <li class="highlights-item">Seoul Community Radio</li>
-              <li class="highlights-item">Bangkok Community Radio</li>
-              <li class="highlights-item">Headstream</li>
-              <li class="highlights-item">Toha Radio</li>
-            </ul>
+        <div class="masthead-grid">
+          <figure class="portrait reveal">
+            <picture>
+              <source srcset="/portrait.webp" type="image/webp" />
+              <img src="/portrait.jpg" alt="Portrait of GUMGO" width="1200" height="1494" fetchpriority="high" />
+            </picture>
+          </figure>
+
+          <div>
+            <div class="reveal">
+              <p class="masthead-name">GUMGO</p>
+              <p class="masthead-role">
+                <span>Korean Vinyl DJ</span>
+                <span>Minimal / Dub / Electro</span>
+              </p>
+              <p class="masthead-note">Singapore debut 2024 / Vinyl-focused</p>
+            </div>
+
+            <div class="masthead-block reveal">
+              <p class="label">Selected Highlights</p>
+              <div class="numbered">
+                <div class="numbered-item">
+                  <span class="numbered-num">01</span>
+                  <div>
+                    <p class="numbered-title">HÖR Berlin</p>
+                    <p class="numbered-sub">Berlin / 2026</p>
+                  </div>
+                </div>
+                <div class="numbered-item">
+                  <span class="numbered-num">02</span>
+                  <div>
+                    <p class="numbered-title">Mixmag Asia</p>
+                    <p class="numbered-sub">Featured in Artists Exciting Us 2026 — April</p>
+                  </div>
+                </div>
+                <div class="numbered-item">
+                  <span class="numbered-num">03</span>
+                  <div>
+                    <p class="numbered-title">Europe</p>
+                    <p class="numbered-sub">Berlin / Barcelona / Lviv</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="masthead-block reveal">
+              <p class="label">Profile</p>
+              <p class="profile-text">
+                Born in Korea and debuted in Singapore, GUMGO has played across Asia and
+                Europe with a sound built on heavy bass, minimal synths and continuous grooves.
+              </p>
+            </div>
           </div>
-          <div class="highlights-col reveal">
-            <p class="highlights-col-label">Selected Venues</p>
-            <ul class="highlights-list">
-              <li class="highlights-item">Headquarters <span class="hl-city">Singapore</span></li>
-              <li class="highlights-item">Rasa <span class="hl-city">Singapore</span></li>
-              <li class="highlights-item">Santai <span class="hl-city">Singapore</span></li>
-              <li class="highlights-item">Faust <span class="hl-city">Seoul</span></li>
-              <li class="highlights-item">Output <span class="hl-city">Busan</span></li>
-              <li class="highlights-item">Bartemp <span class="hl-city">Bangkok</span></li>
-              <li class="highlights-item">Noise <span class="hl-city">Chiang Mai</span></li>
-              <li class="highlights-item">Hope Records <span class="hl-city">Bali</span></li>
-              <li class="highlights-item">Studio Stereo <span class="hl-city">Barcelona</span></li>
-            </ul>
+        </div>
+
+        <!-- Selected venues — 1 / 2 / 3 columns -->
+        <div class="venues reveal">
+          <p class="label">Selected Venues</p>
+          <div class="venue-grid">
+            <div class="venue"><p class="venue-name"><span class="chip">HÖR</span></p><p class="venue-city">Berlin</p></div>
+            <div class="venue"><p class="venue-name"><span class="chip">Ganok</span></p><p class="venue-city">Lviv, Ukraine</p></div>
+            <div class="venue"><p class="venue-name">Studio Stereo</p><p class="venue-city">Barcelona</p></div>
+            <div class="venue"><p class="venue-name">Switch Pocket Club</p><p class="venue-city">Barcelona</p></div>
+            <div class="venue"><p class="venue-name"><span class="chip">Headquarters</span></p><p class="venue-city">Singapore</p></div>
+            <div class="venue"><p class="venue-name"><span class="chip">RASA</span></p><p class="venue-city">Singapore</p></div>
+            <div class="venue"><p class="venue-name"><span class="chip">Santai</span></p><p class="venue-city">Singapore</p></div>
+            <div class="venue"><p class="venue-name"><span class="chip">Faust</span></p><p class="venue-city">Seoul</p></div>
+            <div class="venue"><p class="venue-name">Nue</p><p class="venue-city">Seoul</p></div>
+            <div class="venue"><p class="venue-name">Dumb</p><p class="venue-city">Seoul</p></div>
+            <div class="venue"><p class="venue-name">MTL Hannam</p><p class="venue-city">Seoul</p></div>
+            <div class="venue"><p class="venue-name"><span class="chip">Output</span></p><p class="venue-city">Busan</p></div>
+            <div class="venue"><p class="venue-name"><span class="chip">Bar Temp (All Night Long)</span></p><p class="venue-city">Bangkok</p></div>
+            <div class="venue"><p class="venue-name">Noise</p><p class="venue-city">Chiang Mai</p></div>
+            <div class="venue"><p class="venue-name">Headstream</p><p class="venue-city">Bali</p></div>
+            <div class="venue"><p class="venue-name">Hope Records</p><p class="venue-city">Bali</p></div>
+            <div class="venue"><p class="venue-name">Millers Records</p><p class="venue-city">Bali</p></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- GIGS -->
-    <section id="gigs">
+    <!-- ── SHEET 02 · BIOGRAPHY ─────────────────────────────────────────── -->
+    <section class="sheet" id="biography">
       <div class="container">
-        <h2 class="section-label reveal">Upcoming Gigs</h2>
-        <div id="gigs-list" class="gigs-list">
-          <div class="loading-state"><div class="spinner"></div><span>Loading…</span></div>
+        <header class="sheet-head">
+          <h2 class="sheet-title">Biography</h2>
+          <p class="sheet-tag">Adapted from Resident Advisor</p>
+        </header>
+
+        <div class="grid-2">
+          <!-- English — replaced by the Bio sheet when it has rows -->
+          <div class="reveal">
+            <p class="bio-col-label">English / Adapted from RA</p>
+            <div id="bio-en" class="bio-body">
+              <p class="bio-lead">
+                <span class="bio-topline">A top pick in Mixmag Asia's Artists Exciting Us 2026 series</span>
+              </p>
+              <p>
+                From Singapore's dancefloors to clubs and radio platforms across Europe, GUMGO
+                continues to build a distinct cross-border presence.
+              </p>
+              <p>
+                Featured in Mixmag Asia's Artists Exciting Us in 2026 and heard on HÖR Berlin and
+                Oslated's Special Mix Series, GUMGO is a vinyl-focused selector whose sound was
+                shaped long before she ever touched a turntable. For her, vinyl is about selection.
+                Good music, a good dancefloor and happy moments are never limited by equipment.
+                Trained in samulnori, a Korean traditional percussion band, from the age of nine,
+                she spent her childhood inside repetition and resonance: cyclical rhythms played on
+                the janggu drum, built to entrance rather than perform. That grammar never left.
+              </p>
+              <p>
+                Today it drives sets built on heavy bass, minimal synths, and continuous grooves
+                that hold a dancefloor in motion; dark, hypnotic, and slightly eerie, pulling the
+                floor into SAMADHI, a state of deep absorption. Less a performance than a release.
+              </p>
+              <p>
+                Since her 2024 debut in Singapore, she has carried crates from her then home
+                Singapore to various cities such as Berlin, playing HÖR, Faust Seoul, Headquarters
+                and RASA Singapore, Output Busan, Bartemp Bangkok, including all-night sets. Also
+                touched down at local anchors including Hope Records Bali and Studio Stereo
+                Barcelona. She also hosts her own parties in Seoul and Singapore — warm, intimate
+                nights that feel like the flip side of her dark sets. Now relocating to Barcelona,
+                she is expected to expand her presence in both local and global scenes, along with
+                her first EP release in 2027.
+              </p>
+            </div>
+          </div>
+
+          <!-- Korean -->
+          <div class="reveal">
+            <p class="bio-col-label">한국어</p>
+            <div id="bio-kr" class="bio-body bio-kr" lang="ko">
+              <p class="bio-lead">
+                <span class="bio-topline">2026년 Mixmag Asia ‘Artists Exciting Us’ 시리즈 Top Pick 선정</span>
+              </p>
+              <p>
+                싱가포르의 플로어에서 출발한 GUMGO는 유럽의 클럽과 라디오 플랫폼으로 활동을 넓히며
+                국경을 넘나드는 독자적인 입지를 구축하고 있다.
+              </p>
+              <p>
+                2026년 Mixmag Asia ‘Artists Exciting Us’에 소개되고 HÖR Berlin과 Oslated Special Mix
+                Series에서 셋을 선보인 GUMGO는, 턴테이블을 처음 만지기 훨씬 전부터 사운드의 기반을
+                쌓아온 바이닐 중심의 셀렉터다. 그녀에게 바이닐은 형식에 대한 규칙이 아니라 셀렉션을
+                위한 선택이다. 좋은 음악과 좋은 플로어, 그 안에서 만들어지는 행복한 순간은 장비에
+                한정되지 않는다. 아홉 살부터 한국 전통 타악 합주인 사물놀이를 배운 그녀는 장구의
+                순환적인 가락과 반복, 울림 속에서 어린 시절을 보냈다. 보여주기 위한 연주보다 듣는 이를
+                빠져들게 하는 연주였으며, 그 감각은 지금까지 이어진다.
+              </p>
+              <p>
+                이 감각은 묵직한 베이스와 미니멀 신스, 플로어를 계속 움직이게 하는 끊김 없는 그루브로
+                구성된 세트에 반영된다. 어둡고 최면적이며 조금은 기이한 흐름은 플로어를 깊은 몰입의
+                경지인 삼매(SAMADHI)로 이끈다. 공연보다는 해방에 가깝다.
+              </p>
+              <p>
+                2024년 싱가포르에서 데뷔한 뒤, 당시 거주지였던 싱가포르에서 베를린을 비롯한 여러
+                도시로 레코드를 들고 이동하며 HÖR, Faust Seoul, Headquarters와 RASA Singapore,
+                Output Busan, Bartemp Bangkok에서 플레이했고 올나이트 세트도 진행했다. Hope Records
+                Bali와 Studio Stereo Barcelona 같은 로컬 거점에서도 플레이했다. 서울과 싱가포르에서는
+                직접 파티를 열었으며, 어두운 세트와는 또 다른 따뜻하고 친밀한 밤을 만들었다. 현재
+                바르셀로나로 활동 거점을 옮기는 중이며, 이를 계기로 로컬과 글로벌 신 모두에서 활동
+                범위를 넓혀갈 예정이다. 첫 EP는 2027년 발매할 예정이다.
+              </p>
+            </div>
+          </div>
         </div>
-        <p id="gigs-error" class="data-error hidden"></p>
       </div>
     </section>
 
-    <!-- MIXES -->
-    <section id="mixes">
+    <!-- ── SHEET 03 · MIXES ─────────────────────────────────────────────── -->
+    <section class="sheet" id="mixes">
       <div class="container">
-        <h2 class="section-label reveal">Mixes</h2>
-        <div class="mixes-sub reveal">
-          <p class="mixes-sublabel">SoundCloud</p>
-          <div id="mixes-sc-fallback" class="mixes-sc-fallback">
-            <iframe scrolling="no" frameborder="no" allow="autoplay"
-              src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/gumgo&color=%23aaaaaa&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
+        <header class="sheet-head">
+          <h2 class="sheet-title">Mixes</h2>
+          <p class="sheet-tag">SoundCloud / YouTube</p>
+        </header>
+
+        <div class="subsection reveal">
+          <p class="label label--muted">SoundCloud</p>
+          <div id="mixes-sc-fallback" class="sc-fallback">
+            <iframe
+              title="GUMGO on SoundCloud"
+              scrolling="no" frameborder="no" allow="autoplay" loading="lazy"
+              src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/gumgo&color=%230a0a0a&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
             </iframe>
           </div>
-          <div id="mixes-list" class="mixes-list"></div>
+          <div id="mixes-list"></div>
           <p id="mixes-error" class="data-error hidden"></p>
         </div>
-        <div class="mixes-sub reveal">
-          <p class="mixes-sublabel">YouTube</p>
-          <div id="videos-grid" class="videos-grid">
-            <div class="loading-state"><div class="spinner"></div><span>Loading…</span></div>
+
+        <div class="subsection reveal">
+          <p class="label label--muted">YouTube</p>
+          <div id="videos-grid">
+            <div class="loading-state"><span class="spinner"></span><span>Loading</span></div>
           </div>
           <p id="videos-error" class="data-error hidden"></p>
         </div>
       </div>
     </section>
 
-    <!-- PRESS -->
-    <section id="press">
+    <!-- ── SHEET 04 · UPCOMING (hidden until the sheet has rows) ────────── -->
+    <section class="sheet hidden" id="gigs">
       <div class="container">
-        <h2 class="section-label reveal">Press</h2>
-
-        <!-- Coverage items from Google Sheets -->
-        <div id="press-coverage" class="press-coverage"></div>
-        <p id="press-coverage-error" class="data-error hidden"></p>
+        <header class="sheet-head">
+          <h2 class="sheet-title">Upcoming</h2>
+          <p class="sheet-tag">Live dates</p>
+        </header>
+        <div id="gigs-list"></div>
       </div>
     </section>
 
-    <!-- CONTACT -->
-    <section id="contact">
+    <!-- ── SHEET 05 · PRESS ─────────────────────────────────────────────── -->
+    <section class="sheet" id="press">
       <div class="container">
-        <h2 class="section-label reveal">Contact</h2>
+        <header class="sheet-head">
+          <h2 class="sheet-title">Press</h2>
+          <p class="sheet-tag">Media / Radio / Mixes</p>
+        </header>
 
-        <p class="contact-intro reveal">Philosophy and art history graduate, five years in tech — now fully dedicated to the music. Open to gigs, radio appearances, and any project worth doing.</p>
+        <div class="grid-2">
+          <div class="reveal">
+            <p class="label">Media / Radio / Mixes</p>
+            <div class="media-list">
+              <div class="media-item"><span class="chip">Mixmag Asia</span></div>
+              <div class="media-item"><span class="chip">HÖR Berlin</span></div>
+              <div class="media-item"><span class="chip">Oslated Special Mix 097</span></div>
+              <div class="media-item">Seoul Community Radio</div>
+              <div class="media-item">Aaja Music — Usual Suspects</div>
+              <div class="media-item"><span class="chip">Headstream</span></div>
+              <div class="media-item">Shutter Rhythms</div>
+              <div class="media-item">TOHA Radio</div>
+              <div class="media-item"><span class="chip">20ft Radio</span></div>
+            </div>
+          </div>
 
-        <div class="contact-info reveal">
-          <div class="contact-info-block">
-            <p class="contact-info-label">Bookings Open</p>
-            <div class="contact-regions">
-              <div class="contact-region">
-                <span class="contact-region-code">EUR</span>
-                <span class="contact-region-date">June – August 2026</span>
+          <div class="reveal">
+            <p class="label">Coverage</p>
+            <div id="press-coverage" class="press-list"></div>
+            <p id="press-coverage-error" class="data-error hidden"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SHEET 06 · CONTACT ───────────────────────────────────────────── -->
+    <section class="sheet" id="contact">
+      <div class="container">
+        <header class="sheet-head">
+          <h2 class="sheet-title">Listen / Contact</h2>
+          <p class="sheet-tag">Bookings 2026</p>
+        </header>
+
+        <div class="grid-2">
+          <div class="reveal">
+            <div class="contact-list">
+              <div class="contact-row">
+                <span class="contact-key">Resident Advisor</span>
+                <a class="contact-val" href="https://ra.co/dj/gumgo" target="_blank" rel="noopener noreferrer">ra.co/dj/gumgo</a>
               </div>
-              <div class="contact-region">
-                <span class="contact-region-code">ASIA</span>
-                <span class="contact-region-date">October 2026</span>
+              <div class="contact-row">
+                <span class="contact-key">SoundCloud</span>
+                <a class="contact-val" href="https://soundcloud.com/gumgo" target="_blank" rel="noopener noreferrer">soundcloud.com/gumgo</a>
+              </div>
+              <div class="contact-row">
+                <span class="contact-key">Instagram</span>
+                <a class="contact-val" href="https://www.instagram.com/gumgo._" target="_blank" rel="noopener noreferrer">@gumgo._</a>
+              </div>
+              <div class="contact-row">
+                <span class="contact-key">Email</span>
+                <a class="contact-val" href="mailto:gumgoya@gmail.com">gumgoya@gmail.com</a>
               </div>
             </div>
           </div>
-        </div>
 
-        <a href="mailto:gumgoya@gmail.com" class="contact-email reveal">gumgoya@gmail.com</a>
-
-        <div class="social-links reveal">
-          <a href="https://www.instagram.com/gumgo._" class="social-link" target="_blank" rel="noopener">
-            <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect x="2" y="2" width="20" height="20" rx="5"/>
-              <circle cx="12" cy="12" r="4.5"/>
-              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
-            </svg>
-            Instagram
-          </a>
-          <a href="https://soundcloud.com/gumgo" class="social-link" target="_blank" rel="noopener">
-            <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <rect x="1" y="10" width="2" height="9" rx="1"/>
-              <rect x="5" y="7" width="2" height="12" rx="1"/>
-              <rect x="9" y="4" width="2" height="15" rx="1"/>
-              <rect x="13" y="8" width="2" height="11" rx="1"/>
-              <rect x="17" y="11" width="2" height="8" rx="1"/>
-              <rect x="21" y="13" width="2" height="6" rx="1" opacity=".45"/>
-            </svg>
-            SoundCloud
-          </a>
-          <a href="https://ra.co/dj/gumgo" class="social-link" target="_blank" rel="noopener">
-            <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
-              <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z"/>
-              <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
-            </svg>
-            Resident Advisor
-          </a>
+          <div class="reveal">
+            <p class="label">Bookings Open</p>
+            <div class="booking-windows">
+              <div class="booking-window">
+                <span class="booking-region">EUR</span>
+                <span class="booking-when">June – August 2026</span>
+              </div>
+              <div class="booking-window">
+                <span class="booking-region">Asia</span>
+                <span class="booking-when">October 2026</span>
+              </div>
+            </div>
+            <p class="booking-note">
+              Philosophy and art history graduate, five years in tech — now fully dedicated to the
+              music. Open to gigs, radio appearances, and any project worth doing. Currently
+              relocating to Barcelona; first EP due 2027.
+            </p>
+          </div>
         </div>
       </div>
     </section>
 
     <footer>
-      <div class="container">
-        <span>© 2026 GUMGO. All rights reserved.</span>
+      <div class="container footer-row">
+        <span>GUMGO — Electronic Press Kit</span>
+        <span>© 2026</span>
       </div>
     </footer>
 

@@ -7,232 +7,136 @@ import { renderBio } from './bio';
 
 // ── Config ───────────────────────────────────────────────────────────────────
 const GIGS_CSV_URL   = import.meta.env.VITE_GIGS_CSV_URL   as string | undefined;
-const VIDEOS_CSV_URL = import.meta.env.VITE_VIDEOS_CSV_URL  as string | undefined;
-const MIXES_CSV_URL  = import.meta.env.VITE_MIXES_CSV_URL   as string | undefined;
-const PRESS_CSV_URL  = import.meta.env.VITE_PRESS_CSV_URL   as string | undefined;
-const BIO_CSV_URL    = import.meta.env.VITE_BIO_CSV_URL     as string | undefined;
+const VIDEOS_CSV_URL = import.meta.env.VITE_VIDEOS_CSV_URL as string | undefined;
+const MIXES_CSV_URL  = import.meta.env.VITE_MIXES_CSV_URL  as string | undefined;
+const PRESS_CSV_URL  = import.meta.env.VITE_PRESS_CSV_URL  as string | undefined;
+const BIO_CSV_URL    = import.meta.env.VITE_BIO_CSV_URL    as string | undefined;
 
-// ── Hero background — uses Vite BASE_URL so dev + prod both work ──────────────
-function initHero(): void {
-  document.documentElement.style.setProperty(
-    '--hero-img-url',
-    `url('${import.meta.env.BASE_URL}hero.webp')`
-  );
+const GA_ID = 'G-CKNF5FXSW6';
+
+// ── Analytics ────────────────────────────────────────────────────────────────
+// Kept out of index.html as an inline <script> so the CSP can refuse
+// 'unsafe-inline' for script-src. The gtag.js loader tag stays in the markup.
+declare global {
+  interface Window { dataLayer: unknown[] }
 }
 
-// ── Haptic helper ─────────────────────────────────────────────────────────────
-function vibrate(pattern: number | number[]): void {
-  if ('vibrate' in navigator) navigator.vibrate(pattern);
+function initAnalytics(): void {
+  window.dataLayer = window.dataLayer || [];
+  // gtag pushes `arguments` itself — a rest array is not equivalent
+  function gtag(..._args: unknown[]) { window.dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', GA_ID);
 }
 
-// ── Hero parallax + haptic on scroll ─────────────────────────────────────────
-function initHeroInteractions(): void {
-  const hero = document.getElementById('hero');
-  if (!hero) return;
-
-  const heroH = () => hero.offsetHeight;
-  let lastSection = -1;
-  let ticking = false;
-
-  const onScroll = () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => {
-      const y = window.scrollY;
-      const h = heroH();
-
-      // Parallax: background drifts slower than scroll (30% rate)
-      const pct = 40 + (y / h) * 18;
-      document.documentElement.style.setProperty('--hero-parallax-y', `${Math.min(pct, 60)}%`);
-
-      // Haptic: single short pulse when scrolling past 25%, 50%, 75% of hero
-      const section = Math.floor((y / h) * 4);
-      if (section !== lastSection && section > 0 && section <= 3) {
-        vibrate(8);
-        lastSection = section;
-      }
-
-      // Reset when scrolled back to top
-      if (y < 10) lastSection = -1;
-
-      ticking = false;
-    });
-  };
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-
-  // Haptic on primary CTA clicks
-  document.querySelectorAll<HTMLElement>('.btn-primary').forEach((btn) => {
-    btn.addEventListener('pointerdown', () => vibrate(12));
-  });
-
-  // Subtle haptic when sections snap into view
-  const sections = document.querySelectorAll<HTMLElement>('section[id]');
-  const sectionObserver = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-      if (e.isIntersecting && e.intersectionRatio >= 0.15) vibrate([6, 30, 6]);
-    });
-  }, { threshold: 0.15 });
-  sections.forEach((s) => sectionObserver.observe(s));
-}
-
-// ── Nav: scroll state + mobile toggle ────────────────────────────────────────
+// ── Nav ──────────────────────────────────────────────────────────────────────
 function initNav(): void {
-  const nav    = document.getElementById('nav')!;
-  const toggle = nav.querySelector<HTMLButtonElement>('.nav-toggle')!;
-  const links  = nav.querySelector<HTMLUListElement>('.nav-links')!;
+  const nav = document.getElementById('nav');
+  if (!nav) return;
+
+  const toggle = nav.querySelector<HTMLButtonElement>('.nav-toggle');
+  const links  = nav.querySelector<HTMLUListElement>('.nav-links');
 
   window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 40);
+    nav.classList.toggle('scrolled', window.scrollY > 24);
   }, { passive: true });
 
+  if (!toggle || !links) return;
+
+  const setOpen = (open: boolean) => {
+    toggle.setAttribute('aria-expanded', String(open));
+    links.classList.toggle('open', open);
+  };
+
   toggle.addEventListener('click', () => {
-    const open = toggle.getAttribute('aria-expanded') === 'true';
-    toggle.setAttribute('aria-expanded', String(!open));
-    links.classList.toggle('open', !open);
+    setOpen(toggle.getAttribute('aria-expanded') !== 'true');
   });
 
   links.querySelectorAll('a').forEach((a) => {
-    a.addEventListener('click', () => {
-      toggle.setAttribute('aria-expanded', 'false');
-      links.classList.remove('open');
-    });
+    a.addEventListener('click', () => setOpen(false));
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') setOpen(false);
   });
 }
 
-// ── Active nav link on scroll ─────────────────────────────────────────────────
+// ── Active nav link ──────────────────────────────────────────────────────────
 function initActiveNav(): void {
   const sections = document.querySelectorAll<HTMLElement>('section[id]');
-  const navLinks = document.querySelectorAll<HTMLAnchorElement>('.nav-links a');
-  const navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 56;
+  const links    = document.querySelectorAll<HTMLAnchorElement>('.nav-links a');
+  if (sections.length === 0 || links.length === 0) return;
+
+  const navH = parseInt(
+    getComputedStyle(document.documentElement).getPropertyValue('--nav-h'), 10,
+  ) || 52;
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
-      navLinks.forEach((a) => {
+      links.forEach((a) => {
         a.classList.toggle('active', a.getAttribute('href') === `#${entry.target.id}`);
       });
     });
-  }, { rootMargin: `-${navH}px 0px -60% 0px` });
+  }, { rootMargin: `-${navH}px 0px -62% 0px` });
 
   sections.forEach((s) => observer.observe(s));
 }
 
-// ── Animated counters ─────────────────────────────────────────────────────────
-function initCounters(): void {
-  const nums = document.querySelectorAll<HTMLElement>('.stat-num[data-count]');
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      observer.unobserve(entry.target);
-      const el = entry.target as HTMLElement;
-      const target = parseInt(el.dataset.count!, 10);
-      const duration = 1200;
-      const start = performance.now();
-      const tick = (now: number) => {
-        const t = Math.min((now - start) / duration, 1);
-        const ease = 1 - Math.pow(1 - t, 3);
-        el.textContent = String(Math.round(ease * target));
-        if (t < 1) requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
-    });
-  }, { threshold: 0.5 });
-
-  nums.forEach((el) => observer.observe(el));
-}
-
-// ── Reveal on scroll — opacity + translateY 20px → 0 ─────────────────────────
+// ── Reveal on scroll ─────────────────────────────────────────────────────────
 function initReveal(): void {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
     });
-  }, { threshold: 0.08 });
+  }, { threshold: 0.06 });
 
   document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
 
-  const mutObs = new MutationObserver((mutations) => {
+  // Sheet-driven sections mount after first paint — watch for their cards too
+  new MutationObserver((mutations) => {
     mutations.forEach((m) => {
       m.addedNodes.forEach((node) => {
         if (!(node instanceof Element)) return;
-        node.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
         if (node.classList.contains('reveal')) observer.observe(node);
+        node.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
       });
     });
-  });
-  mutObs.observe(document.body, { childList: true, subtree: true });
+  }).observe(document.body, { childList: true, subtree: true });
 }
 
-// ── Star field — 120 particles, one draw, no RAF loop ────────────────────────
-function initStarField(): void {
-  const canvas = document.createElement('canvas');
-  canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;';
-  document.body.prepend(canvas);
-
-  const ctx = canvas.getContext('2d')!;
-
-  interface Star { xr: number; yr: number; r: number; a: number; }
-  const stars: Star[] = Array.from({ length: 120 }, () => ({
-    xr: Math.random(),
-    yr: Math.random(),
-    r:  Math.random() * 0.75 + 0.2,
-    a:  Math.random() * 0.38 + 0.12,
-  }));
-
-  function draw() {
-    canvas.width  = window.innerWidth;
-    canvas.height = window.innerHeight;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (const s of stars) {
-      ctx.beginPath();
-      ctx.arc(s.xr * canvas.width, s.yr * canvas.height, s.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(232,234,240,${s.a})`;
-      ctx.fill();
-    }
-  }
-
-  draw();
-  window.addEventListener('resize', draw, { passive: true });
-}
-
-// ── Google Sheets data ────────────────────────────────────────────────────────
-async function initSheetData(): Promise<void> {
+// ── Google Sheets data ───────────────────────────────────────────────────────
+function initSheetData(): void {
   const tasks: Promise<void>[] = [];
 
   if (BIO_CSV_URL)    tasks.push(renderBio(BIO_CSV_URL));
   if (GIGS_CSV_URL)   tasks.push(renderGigs(GIGS_CSV_URL));
-  else {
-    const el = document.getElementById('gigs-list');
-    if (el) el.innerHTML = `<div class="empty-state">Set VITE_GIGS_CSV_URL in .env</div>`;
-  }
   if (MIXES_CSV_URL)  tasks.push(renderMixes(MIXES_CSV_URL));
-  else {
-    const el = document.getElementById('mixes-list');
-    if (el) el.innerHTML = `<div class="empty-state">Set VITE_MIXES_CSV_URL in .env</div>`;
-  }
-  if (VIDEOS_CSV_URL) tasks.push(renderVideos(VIDEOS_CSV_URL));
-  else {
-    const el = document.getElementById('videos-grid');
-    if (el) el.innerHTML = `<div class="empty-state">Set VITE_VIDEOS_CSV_URL in .env</div>`;
-  }
   if (PRESS_CSV_URL)  tasks.push(renderPressCoverage(PRESS_CSV_URL));
 
-  await Promise.allSettled(tasks);
+  if (VIDEOS_CSV_URL) {
+    tasks.push(renderVideos(VIDEOS_CSV_URL));
+  } else {
+    const el = document.getElementById('videos-grid');
+    if (el) el.innerHTML = '<div class="empty-state">No videos configured</div>';
+  }
+
+  void Promise.allSettled(tasks);
 }
 
-// ── Boot ──────────────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  initHero();
-  initStarField();
+// ── Boot ─────────────────────────────────────────────────────────────────────
+function boot(): void {
+  initAnalytics();
   initNav();
   initActiveNav();
-  initCounters();
   initReveal();
-  initHeroInteractions();
   initSheetData();
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', boot);
+} else {
+  boot();
+}

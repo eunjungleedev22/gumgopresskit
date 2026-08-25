@@ -3,80 +3,140 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'none'; base-uri 'self'; form-action 'none'; object-src 'none'"
+    />
     <title>404 — GUMGO</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@100..900&display=swap" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap"
+    />
     <style>
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
       html, body {
-        height: 100%;
-        background: #060608;
-        color: #aaaaaa;
-        font-family: 'Outfit', system-ui, sans-serif;
+        min-height: 100%;
+        background: #ffffff;
+        color: #0a0a0a;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
         -webkit-font-smoothing: antialiased;
       }
+
       body {
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
-        justify-content: flex-end;
-        padding: clamp(40px, 8vw, 96px) clamp(24px, 5vw, 64px);
         min-height: 100svh;
+        padding: clamp(20px, 4.5vw, 56px);
       }
-      .code {
-        font-family: 'DM Mono', monospace;
-        font-size: 10px;
-        letter-spacing: 0.22em;
+
+      .rule {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 20px;
+        padding-bottom: 14px;
+        border-bottom: 2px solid #0a0a0a;
+      }
+      .rule-title {
+        font-size: clamp(28px, 5.4vw, 46px);
+        font-weight: 800;
+        letter-spacing: -0.035em;
+        line-height: 1;
         text-transform: uppercase;
-        color: #666;
+      }
+      .rule-tag {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #767676;
+      }
+
+      main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-block: clamp(48px, 10vw, 120px);
+      }
+
+      h1 {
+        font-size: clamp(52px, 12vw, 108px);
+        font-weight: 800;
+        letter-spacing: -0.05em;
+        line-height: 0.86;
         margin-bottom: 20px;
       }
-      h1 {
-        font-family: 'Outfit', system-ui, sans-serif;
-        font-size: clamp(64px, 14vw, 100px);
-        font-weight: 800;
-        line-height: 0.92;
-        letter-spacing: -0.04em;
-        color: #ffffff;
+
+      p {
+        font-size: 15px;
+        line-height: 1.7;
+        color: #3d3d3d;
+        max-width: 42ch;
         margin-bottom: 32px;
       }
-      p {
-        font-size: 16px;
-        line-height: 1.7;
-        color: #888;
-        max-width: 380px;
-        margin-bottom: 40px;
-      }
-      a {
-        font-family: 'DM Mono', monospace;
-        font-size: 11px;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        color: #e8eaf0;
-        text-decoration: none;
+
+      a.back {
         display: inline-flex;
         align-items: center;
         gap: 10px;
-        opacity: 0.7;
-        transition: opacity 0.2s, gap 0.2s;
+        width: fit-content;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: #0a0a0a;
+        text-decoration: none;
+        transition: gap 0.2s;
       }
-      a:hover { opacity: 1; gap: 14px; }
-      a::before {
+      a.back::before {
         content: '';
-        display: block;
-        width: 28px;
-        height: 1px;
+        width: 26px;
+        height: 1.5px;
         background: currentColor;
         flex-shrink: 0;
       }
+      a.back:hover { gap: 15px; }
+
+      footer {
+        border-top: 2px solid #0a0a0a;
+        padding-top: 18px;
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #767676;
+      }
+
+      @media (max-width: 600px) {
+        .rule { flex-direction: column; align-items: flex-start; gap: 7px; }
+      }
     </style>
   </head>
+
   <body>
-    <p class="code">404</p>
-    <h1>GUMGO</h1>
-    <p>This page doesn't exist. Maybe it moved, or maybe it never did.</p>
-    <a href="/">Back to press kit</a>
+    <div class="rule">
+      <p class="rule-title">Not Found</p>
+      <p class="rule-tag">GUMGO / 2026</p>
+    </div>
+
+    <main>
+      <h1>404</h1>
+      <p>This page doesn't exist. Maybe it moved, or maybe it never did.</p>
+      <a class="back" href="/">Back to the press kit</a>
+    </main>
+
+    <footer>
+      <span>GUMGO — Electronic Press Kit</span>
+      <span>© 2026</span>
+    </footer>
   </body>
 </html>

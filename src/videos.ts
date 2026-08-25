@@ -1,16 +1,20 @@
 /**
  * Videos — expected sheet columns:
  *   url           YouTube URL (watch?v= or youtu.be/)   (required)
- *   title         Override title                         (optional — falls back to oEmbed)
- *   caption       Short description shown under card     (optional)
- *   genre         Genre tag                              (optional)
- *   order         Integer sort order                     (optional)
- *   is_highlight  "true" → featured card                 (optional)
+ *   title         Override title                        (optional — falls back to oEmbed)
+ *   caption       Short description                     (optional)
+ *   genre         Genre tag                             (optional)
+ *   order         Integer sort order                    (optional)
+ *   is_highlight  "true" → featured card                (optional)
  */
 
 import { fetchSheet, type Row } from './sheets';
+import { escHtml, escAttr, srcAttr } from './safe';
 
 const oEmbedCache = new Map<string, { title: string; thumbnail_url: string }>();
+
+/** YouTube IDs are [A-Za-z0-9_-]{11}; anything else is rejected outright. */
+const YT_ID = /^[A-Za-z0-9_-]{11}$/;
 
 interface Video {
   url: string;
@@ -26,11 +30,27 @@ interface Video {
 function extractYoutubeId(url: string): string | null {
   try {
     const u = new URL(url);
-    if (u.hostname.includes('youtu.be')) return u.pathname.slice(1).split('?')[0];
-    return u.searchParams.get('v');
+    if (u.protocol !== 'https:' && u.protocol !== 'http:') return null;
+
+    const host = u.hostname.replace(/^www\./, '');
+    let id: string | null = null;
+
+    if (host === 'youtu.be')                       id = u.pathname.slice(1).split('/')[0];
+    else if (host === 'youtube.com' || host === 'm.youtube.com' || host === 'youtube-nocookie.com') {
+      id = u.searchParams.get('v')
+        ?? (u.pathname.startsWith('/embed/') ? u.pathname.slice(7).split('/')[0] : null)
+        ?? (u.pathname.startsWith('/shorts/') ? u.pathname.slice(8).split('/')[0] : null);
+    }
+
+    return id && YT_ID.test(id) ? id : null;
   } catch {
     return null;
   }
+}
+
+/** Coerce an unvalidated JSON field to a string — upstream is not trusted to be well-typed. */
+function asString(v: unknown): string {
+  return typeof v === 'string' ? v : '';
 }
 
 async function fetchOEmbed(url: string): Promise<{ title: string; thumbnail_url: string } | null> {
@@ -39,7 +59,12 @@ async function fetchOEmbed(url: string): Promise<{ title: string; thumbnail_url:
     const ep = `https://www.youtube.com/oembed?format=json&url=${encodeURIComponent(url)}`;
     const res = await fetch(ep, { signal: AbortSignal.timeout(6_000) });
     if (!res.ok) return null;
-    const data = await res.json() as { title: string; thumbnail_url: string };
+
+    const raw = await res.json() as Record<string, unknown>;
+    const data = {
+      title:         asString(raw?.title),
+      thumbnail_url: asString(raw?.thumbnail_url),
+    };
     oEmbedCache.set(url, data);
     return data;
   } catch {
@@ -47,65 +72,48 @@ async function fetchOEmbed(url: string): Promise<{ title: string; thumbnail_url:
   }
 }
 
-function urlFallbackTitle(url: string): string {
-  const id = extractYoutubeId(url);
-  return id ?? url;
-}
-
-function trunc(s: string, max = 10): string {
-  return s.length <= max ? s : s.slice(0, max).trimEnd() + '…';
-}
-
-function escHtml(s: string): string {
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-
-const LOREM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.';
-
 function videoCard(v: Video): string {
-  const label   = trunc(v.title, 10);
-  const caption = v.caption || LOREM;
+  const thumb = srcAttr(v.thumbUrl);
   return `
-    <div class="mix-card video-card${v.isHighlight ? ' mix-card--hl' : ''} reveal"
+    <div class="card card--video reveal${v.isHighlight ? ' card--hl' : ''}"
          role="button" tabindex="0"
-         aria-label="Play: ${escHtml(v.title)}"
-         data-ytid="${escHtml(v.youtubeId)}">
-      <div class="mix-caption-bar">
-        <p class="mix-caption-text">${escHtml(caption)}</p>
+         aria-label="Play video: ${escAttr(v.title)}"
+         data-ytid="${escAttr(v.youtubeId)}">
+      <div class="card-cover">
+        ${thumb
+          ? `<img src="${thumb}" alt="" loading="lazy" decoding="async" />`
+          : `<div class="card-cover__empty"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></div>`}
+        <span class="card-play" aria-hidden="true">&#9654;</span>
+        ${v.isHighlight ? '<span class="card-badge">Featured</span>' : ''}
       </div>
-      <div class="mix-cover">
-        ${v.thumbUrl
-          ? `<img src="${escHtml(v.thumbUrl)}" alt="" loading="lazy" decoding="async" />`
-          : `<div class="mix-cover__empty"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="rgba(255,255,255,0.12)"/></svg></div>`}
-        <div class="mix-cover__overlay">
-          <span class="mix-play">&#9654;</span>
-        </div>
-        ${v.isHighlight ? '<span class="mix-badge">Featured</span>' : ''}
-      </div>
-      <div class="mix-meta">
-        <div class="mix-label">${escHtml(label)}</div>
-        ${v.genre ? `<div class="mix-genre">${escHtml(v.genre)}</div>` : ''}
+      <div class="card-meta">
+        <p class="card-title">${escHtml(v.title)}</p>
+        ${v.genre   ? `<p class="card-genre">${escHtml(v.genre)}</p>` : ''}
+        ${v.caption ? `<p class="card-caption">${escHtml(v.caption)}</p>` : ''}
       </div>
     </div>`;
 }
 
 function buildModal(): void {
   if (document.getElementById('video-modal')) return;
+
   const modal = document.createElement('div');
   modal.id = 'video-modal';
   modal.className = 'video-modal';
   modal.setAttribute('role', 'dialog');
   modal.setAttribute('aria-modal', 'true');
+  modal.setAttribute('aria-label', 'Video player');
   modal.innerHTML = `
     <div class="video-modal-inner">
-      <button class="video-modal-close" aria-label="Close video">[ ESC / CLOSE ]</button>
+      <button class="video-modal-close" aria-label="Close video">[ Esc / Close ]</button>
       <div id="video-modal-frame"></div>
     </div>`;
   document.body.appendChild(modal);
 
   const close = () => {
     modal.classList.remove('open');
-    (document.getElementById('video-modal-frame') as HTMLElement).innerHTML = '';
+    const frame = document.getElementById('video-modal-frame');
+    if (frame) frame.textContent = '';
   };
 
   modal.addEventListener('click', (e) => { if (e.target === modal) close(); });
@@ -114,74 +122,43 @@ function buildModal(): void {
 }
 
 function openVideo(youtubeId: string): void {
-  const modal = document.getElementById('video-modal')!;
-  const frame = document.getElementById('video-modal-frame')!;
-  frame.innerHTML = `<iframe
-    src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(youtubeId)}?autoplay=1&rel=0"
-    allow="autoplay; encrypted-media; fullscreen"
-    allowfullscreen
-    title="YouTube video player">
-  </iframe>`;
+  // Re-validate at use time: the id round-trips through a DOM dataset attribute
+  if (!YT_ID.test(youtubeId)) return;
+
+  const modal = document.getElementById('video-modal');
+  const frame = document.getElementById('video-modal-frame');
+  if (!modal || !frame) return;
+
+  // Built as a DOM node rather than an HTML string so the id can never be markup
+  const iframe = document.createElement('iframe');
+  iframe.src = `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&rel=0`;
+  iframe.allow = 'autoplay; encrypted-media; fullscreen';
+  iframe.allowFullscreen = true;
+  iframe.title = 'YouTube video player';
+
+  frame.textContent = '';
+  frame.appendChild(iframe);
   modal.classList.add('open');
 }
 
-function initCarousel(wrapper: HTMLElement): void {
-  const viewport = wrapper.querySelector<HTMLElement>('.mixes-viewport')!;
-  const track    = wrapper.querySelector<HTMLElement>('.mixes-track')!;
-  const btnPrev  = wrapper.querySelector<HTMLButtonElement>('.mix-btn--prev')!;
-  const btnNext  = wrapper.querySelector<HTMLButtonElement>('.mix-btn--next')!;
-  let pos = 0;
-
-  const step = () => {
-    const card = track.querySelector<HTMLElement>('.mix-card');
-    if (!card) return 240;
-    const gap = parseFloat(getComputedStyle(track).gap) || 16;
-    return (card.offsetWidth + gap) * 2;
-  };
-
-  const clamp = () => {
-    const max = -(track.scrollWidth - viewport.offsetWidth);
-    pos = Math.min(0, Math.max(max, pos));
-    track.style.transform = `translateX(${pos}px)`;
-    btnPrev.disabled = pos >= 0;
-    btnNext.disabled = pos <= max + 1;
-  };
-
-  btnPrev.addEventListener('click', () => { pos += step(); clamp(); });
-  btnNext.addEventListener('click', () => { pos -= step(); clamp(); });
-
-  clamp();
-  window.addEventListener('resize', clamp, { passive: true });
-}
-
-function initExpand(container: HTMLElement): void {
-  const btn = container.querySelector<HTMLButtonElement>('#videos-expand-btn');
-  if (!btn) return;
-  btn.addEventListener('click', () => {
-    container.querySelector('.mixes-track')!.classList.remove('collapsed');
-    btn.remove();
-  });
-}
-
 export async function renderVideos(csvUrl: string): Promise<void> {
-  const grid  = document.getElementById('videos-grid')!;
-  const errEl = document.getElementById('videos-error')!;
+  const grid  = document.getElementById('videos-grid');
+  const errEl = document.getElementById('videos-error');
+  if (!grid) return;
 
   buildModal();
 
   try {
     const rows = await fetchSheet(csvUrl);
     const headers = rows[0] ? Object.keys(rows[0]) : [];
-    console.log('[videos] rows:', rows.length, 'columns:', headers);
 
     const videos: Video[] = rows
       .filter((r: Row) => r['url'])
       .map((r: Row) => {
         const url = r['url'].trim();
-        const youtubeId = extractYoutubeId(url) ?? '';
         return {
           url,
-          youtubeId,
+          youtubeId:   extractYoutubeId(url) ?? '',
           title:       r['title'] ?? '',
           caption:     r['caption'] ?? '',
           genre:       r['genre'] ?? '',
@@ -190,55 +167,52 @@ export async function renderVideos(csvUrl: string): Promise<void> {
           thumbUrl:    '',
         };
       })
-      .filter(v => v.youtubeId)
+      .filter((v) => v.youtubeId)
       .sort((a, b) => (b.isHighlight ? 1 : 0) - (a.isHighlight ? 1 : 0) || a.order - b.order);
 
     if (videos.length === 0) {
       const hint = headers.length && !headers.includes('url')
-        ? `(columns found: ${headers.join(', ')} — expected "url")`
+        ? `(sheet columns: ${headers.join(', ')} — expected "url")`
         : rows.length === 0 ? '(sheet appears empty)' : '';
-      grid.innerHTML = `<div class="empty-state">No videos yet. ${hint}</div>`;
+      grid.innerHTML = `<div class="empty-state">No videos yet ${escHtml(hint)}</div>`;
       return;
     }
 
-    // Fetch oEmbed titles + thumbnails
-    const results = await Promise.allSettled(videos.map(v => fetchOEmbed(v.url)));
+    const results = await Promise.allSettled(videos.map((v) => fetchOEmbed(v.url)));
     results.forEach((res, i) => {
       const oe = res.status === 'fulfilled' ? res.value : null;
-      if (!videos[i].title) videos[i].title = oe?.title ?? urlFallbackTitle(videos[i].url);
-      // mqdefault (320x180) is always native 16:9 — no letterbox black bars
-      videos[i].thumbUrl = videos[i].youtubeId
-        ? `https://img.youtube.com/vi/${videos[i].youtubeId}/mqdefault.jpg`
-        : '';
+      // `||` not `??` — an upstream that returns an empty title must still fall back
+      if (!videos[i].title) videos[i].title = oe?.title || videos[i].youtubeId;
+      // mqdefault is natively 16:9 — no letterboxing
+      videos[i].thumbUrl = `https://img.youtube.com/vi/${videos[i].youtubeId}/mqdefault.jpg`;
     });
 
-    const cards = videos.map(videoCard).join('');
-    const showExpand = videos.length > 2;
-
+    const showExpand = videos.length > 3;
     grid.innerHTML = `
-      <div class="mixes-wrapper" id="videos-carousel">
-        <div class="mixes-viewport">
-          <div class="mixes-track${showExpand ? ' collapsed' : ''}">${cards}</div>
-        </div>
-        <div class="mix-carousel-controls">
-          <button class="mix-btn mix-btn--prev" aria-label="Previous" disabled>&#8592;</button>
-          <button class="mix-btn mix-btn--next" aria-label="Next">&#8594;</button>
-        </div>
+      <div class="media-grid${showExpand ? ' collapsed' : ''}" id="videos-inner-grid">
+        ${videos.map(videoCard).join('')}
       </div>
-      ${showExpand ? '<button class="mixes-expand-btn" id="videos-expand-btn">Explore more</button>' : ''}`;
+      ${showExpand ? '<button class="expand-btn" id="videos-expand-btn">Show all videos</button>' : ''}`;
 
-    grid.querySelectorAll<HTMLElement>('.video-card').forEach((card) => {
-      const ytid = card.dataset.ytid!;
-      const play = () => openVideo(ytid);
+    grid.querySelectorAll<HTMLElement>('.card--video').forEach((card) => {
+      const id = card.dataset.ytid ?? '';
+      const play = () => openVideo(id);
       card.addEventListener('click', play);
-      card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') play(); });
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(); }
+      });
     });
 
-    initCarousel(document.getElementById('videos-carousel')!);
-    initExpand(grid);
+    const btn = document.getElementById('videos-expand-btn');
+    btn?.addEventListener('click', () => {
+      document.getElementById('videos-inner-grid')?.classList.remove('collapsed');
+      btn.remove();
+    });
   } catch (e) {
     grid.innerHTML = '';
-    errEl.textContent = `Could not load videos. (${e instanceof Error ? e.message : String(e)})`;
-    errEl.classList.remove('hidden');
+    if (errEl) {
+      errEl.textContent = `Could not load videos (${e instanceof Error ? e.message : String(e)})`;
+      errEl.classList.remove('hidden');
+    }
   }
 }

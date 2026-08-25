@@ -1,103 +1,96 @@
 /**
- * Bio — expected sheet columns (any of):
- *   topline     Bold headline (capitalized)
- *   description Body paragraph
- *   text        Fallback body text
- *   type        "lead" | "body"
+ * Biography — expected sheet columns:
+ *   lang        "en" | "ko"  → which column the row fills (default "en")
+ *   topline     Bold headline, highlighted
+ *   description Body copy; blank lines split paragraphs
+ *   text        Fallback body text when `description` is absent
+ *
+ * When the sheet has no usable rows for a column, the copy hard-coded in
+ * index.html (taken from the 2026 EPK PDF) stays as-is.
  */
 
-import { fetchSheet } from './sheets';
+import { fetchSheet, type Row } from './sheets';
+import { escHtml } from './safe';
 
-function escHtml(s: string): string {
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+function paragraphs(text: string): string[] {
+  return text.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
 }
 
-/** Split a <p>...</p> string at its first sentence boundary (". "). */
-function splitFirstSentence(paraHtml: string): [string, string] | null {
-  const m = paraHtml.match(/^(<p[^>]*>)([\s\S]*?)(<\/p>)$/);
-  if (!m) return null;
-  const [, open, text, close] = m;
-  const idx = text.indexOf('. ');
-  if (idx === -1) return null;
-  const rest = text.slice(idx + 2).trim();
-  return [
-    open + text.slice(0, idx + 1) + close,
-    rest ? open + rest + close : '',
-  ];
+/** Escape, then turn single newlines into <br> — order matters. */
+function withBreaks(s: string): string {
+  return escHtml(s).replace(/\n/g, '<br>');
+}
+
+function buildColumn(rows: Row[]): string {
+  const parts: string[] = [];
+
+  for (const r of rows) {
+    const topline = (r['topline'] ?? '').trim();
+    const body    = (r['description'] ?? r['desc'] ?? r['body'] ?? r['content'] ?? r['text'] ?? '').trim();
+
+    if (topline) {
+      parts.push(`<p class="bio-lead"><span class="bio-topline">${withBreaks(topline)}</span></p>`);
+    }
+    for (const para of paragraphs(body)) {
+      parts.push(`<p>${withBreaks(para)}</p>`);
+    }
+  }
+
+  return parts.join('');
+}
+
+/** Everything past the first two blocks collapses behind a "Read more" button. */
+function mount(el: HTMLElement, html: string, label: string): void {
+  const tpl = document.createElement('template');
+  tpl.innerHTML = html;
+  const blocks = Array.from(tpl.content.children);
+  if (blocks.length === 0) return;
+
+  const visible   = blocks.slice(0, 2);
+  const collapsed = blocks.slice(2);
+
+  el.textContent = '';
+  visible.forEach((b) => el.appendChild(b));
+  if (collapsed.length === 0) return;
+
+  const box = document.createElement('div');
+  box.className = 'bio-collapse';
+  collapsed.forEach((b) => box.appendChild(b));
+
+  const btn = document.createElement('button');
+  btn.className = 'bio-expand-btn';
+  btn.type = 'button';
+  btn.textContent = label;
+  btn.setAttribute('aria-expanded', 'false');
+
+  btn.addEventListener('click', () => {
+    box.classList.add('open');
+    btn.remove();
+  });
+
+  el.append(box, btn);
 }
 
 export async function renderBio(csvUrl: string): Promise<void> {
-  const container = document.getElementById('bio-text');
-  if (!container) return;
+  const enEl = document.getElementById('bio-en');
+  const krEl = document.getElementById('bio-kr');
+  if (!enEl && !krEl) return;
 
   try {
     const rows = await fetchSheet(csvUrl);
-    console.log('[bio] rows:', rows.length, 'cols:', rows[0] ? Object.keys(rows[0]) : []);
     if (rows.length === 0) return;
 
-    const parts: string[] = [];
+    const isKorean = (r: Row) => /^(ko|kr|korean|한국어)$/i.test((r['lang'] ?? '').trim());
+    const krRows = rows.filter(isKorean);
+    const enRows = rows.filter((r) => !isKorean(r));
 
-    for (const r of rows) {
-      const topline     = (r['topline']     ?? '').trim();
-      const description = (r['description'] ?? r['desc'] ?? r['body'] ?? r['content'] ?? '').trim();
-      const text        = (r['text']        ?? '').trim();
-      const type        = (r['type']        ?? '').trim();
+    const enHtml = buildColumn(enRows);
+    const krHtml = buildColumn(krRows);
 
-      if (topline) {
-        parts.push(`<p class="about-lead"><strong class="bio-topline">${escHtml(topline)}</strong></p>`);
-      }
-      if (description) {
-        description.split(/\n{2,}/).forEach((para) => {
-          const trimmed = para.trim();
-          if (trimmed) parts.push(`<p>${escHtml(trimmed)}</p>`);
-        });
-      }
-      if (!topline && !description && text) {
-        const isLead = type === 'lead' || parts.length === 0;
-        parts.push(isLead
-          ? `<p class="about-lead">${escHtml(text)}</p>`
-          : `<p>${escHtml(text)}</p>`);
-      }
-    }
-
-    if (parts.length === 0) return;
-
-    // Visible: topline + first sentence of first body paragraph
-    // Collapsed: rest of first paragraph + remaining paragraphs
-    let visibleHtml = parts[0];
-    const collapsedParts: string[] = [];
-
-    if (parts.length >= 2) {
-      const split = splitFirstSentence(parts[1]);
-      if (split) {
-        visibleHtml += split[0];
-        if (split[1]) collapsedParts.push(split[1]);
-        collapsedParts.push(...parts.slice(2));
-      } else {
-        visibleHtml += parts[1];
-        collapsedParts.push(...parts.slice(2));
-      }
-    }
-
-    const collapsedHtml = collapsedParts.join('');
-    if (collapsedHtml.trim()) {
-      container.innerHTML =
-        visibleHtml +
-        `<div class="about-body collapsed">${collapsedHtml}</div>` +
-        `<button class="bio-expand-btn" aria-expanded="false">— Read more</button>`;
-
-      const btn  = container.querySelector<HTMLButtonElement>('.bio-expand-btn')!;
-      const body = container.querySelector<HTMLElement>('.about-body')!;
-
-      btn.addEventListener('click', () => {
-        body.style.maxHeight = body.scrollHeight + 'px';
-        body.classList.remove('collapsed');
-        btn.remove();
-      });
-    } else {
-      container.innerHTML = visibleHtml;
-    }
+    if (enEl && enHtml) mount(enEl, enHtml, 'Read more');
+    if (krEl && krHtml) mount(krEl, krHtml, '더 읽기');
   } catch (e) {
+    // Leave the hard-coded EPK copy in place
     console.error('[bio] failed to load:', e);
   }
 }

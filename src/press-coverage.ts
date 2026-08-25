@@ -1,17 +1,19 @@
 /**
  * Press — expected sheet columns:
- *   url          Article URL                          (required)
- *   title        Article headline                     (recommended — skips proxy if provided)
- *   publication  Outlet name, e.g. "Groove"           (optional)
- *   date         Date string, e.g. "2026-04"          (optional)
- *   summary      Short excerpt                        (optional — skips proxy if provided)
- *   order        Integer sort order, ascending        (optional)
+ *   url          Article URL                     (required)
+ *   title        Headline                        (recommended — skips the proxy)
+ *   publication  Outlet name, e.g. "Mixmag Asia" (optional)
+ *   date         Date string, e.g. "2026-04"     (optional)
+ *   summary      Short excerpt                   (optional)
+ *   order        Integer sort order, ascending   (optional)
  *
- * If title is in the sheet → renders immediately, no proxy needed.
- * If title is absent → tries allorigins.win to fetch og:title (background, non-blocking).
+ * With a title in the sheet the item renders immediately. Without one, the
+ * headline is fetched through a CORS proxy in the background — parsed in an
+ * inert document, tag-stripped, and written back via textContent only.
  */
 
 import { fetchSheet, type Row } from './sheets';
+import { escHtml, escAttr, hrefAttr, safeUrl } from './safe';
 
 const metaCache = new Map<string, { title: string; summary: string }>();
 
@@ -25,141 +27,158 @@ interface PressItem {
   needsMeta: boolean;
 }
 
+/** Strip tags and clamp length — meta values are third-party content. */
 function safeText(s: string | null | undefined, maxLen: number): string {
   if (!s) return '';
-  // Strip any HTML tags that might appear in meta content values
   return s.replace(/<[^>]*>/g, '').slice(0, maxLen).trim();
 }
 
-async function fetchMeta(url: string): Promise<{ title: string; summary: string }> {
-  if (metaCache.has(url)) return metaCache.get(url)!;
-  try {
-    // Validate URL before sending to proxy — only http/https allowed
-    const parsed = new URL(url);
-    if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') return fallback(url);
+function hostLabel(url: string): string {
+  try { return new URL(url).hostname.replace(/^www\./, ''); }
+  catch { return url; }
+}
 
+/** Ceiling on proxied HTML we will buffer and parse, per article. */
+const MAX_PROXY_BYTES = 256_000;
+
+/** Never queue more than this many proxy lookups, however long the sheet gets. */
+const MAX_PROXY_LOOKUPS = 20;
+
+async function fetchMeta(url: string): Promise<{ title: string; summary: string }> {
+  const cached = metaCache.get(url);
+  if (cached) return cached;
+
+  const empty = { title: '', summary: '' };
+
+  // Only ever hand an http(s) URL to the proxy
+  if (safeUrl(url) === '#') return empty;
+
+  try {
     const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
     const res = await fetch(proxy, { signal: AbortSignal.timeout(5_000) });
-    if (!res.ok) return fallback(url);
-    const data = await res.json() as { contents: string };
+    if (!res.ok) return empty;
 
-    // Parse in an inert document — scripts don't execute, resources don't load
-    const doc = new DOMParser().parseFromString(data.contents ?? '', 'text/html');
+    // The sheet chooses the target URL, so the proxy can be pointed at an
+    // arbitrarily large document. Refuse one before buffering it.
+    const declared = Number(res.headers.get('content-length'));
+    if (Number.isFinite(declared) && declared > MAX_PROXY_BYTES) return empty;
 
-    // Read only attribute/text content — never innerHTML
-    const title = safeText(
-      doc.querySelector('meta[property="og:title"]')?.getAttribute('content') ||
-      doc.querySelector('meta[name="twitter:title"]')?.getAttribute('content') ||
-      doc.querySelector('title')?.textContent,
-      200,
-    );
+    const data = await res.json() as { contents?: unknown };
+    const html = typeof data.contents === 'string'
+      ? data.contents.slice(0, MAX_PROXY_BYTES)
+      : '';
 
-    const summary = safeText(
-      doc.querySelector('meta[property="og:description"]')?.getAttribute('content') ||
-      doc.querySelector('meta[name="description"]')?.getAttribute('content'),
-      200,
-    );
+    // Inert parse: no script execution, no subresource loads
+    const doc = new DOMParser().parseFromString(html, 'text/html');
 
-    const result = { title, summary };
+    const result = {
+      title: safeText(
+        doc.querySelector('meta[property="og:title"]')?.getAttribute('content')
+        || doc.querySelector('meta[name="twitter:title"]')?.getAttribute('content')
+        || doc.querySelector('title')?.textContent,
+        200,
+      ),
+      summary: safeText(
+        doc.querySelector('meta[property="og:description"]')?.getAttribute('content')
+        || doc.querySelector('meta[name="description"]')?.getAttribute('content'),
+        220,
+      ),
+    };
+
     metaCache.set(url, result);
     return result;
   } catch {
-    return fallback(url);
+    return empty;
   }
-}
-
-function fallback(url: string): { title: string; summary: string } {
-  try { return { title: new URL(url).hostname.replace(/^www\./, ''), summary: '' }; }
-  catch { return { title: url, summary: '' }; }
-}
-
-function escHtml(s: string): string {
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 function pressCard(item: PressItem): string {
   const meta = [item.publication, item.date].filter(Boolean).join(' · ');
   return `
-    <a class="press-item reveal" href="${escHtml(item.url)}" target="_blank" rel="noopener"
-       data-press-url="${escHtml(item.url)}">
+    <a class="press-item reveal" href="${hrefAttr(item.url)}"
+       target="_blank" rel="noopener noreferrer"
+       data-press-url="${escAttr(item.url)}">
       ${meta ? `<span class="press-meta">${escHtml(meta)}</span>` : ''}
-      <span class="press-title">${escHtml(item.title || fallback(item.url).title)}</span>
+      <span class="press-title">${escHtml(item.title || hostLabel(item.url))}</span>
       ${item.summary ? `<span class="press-summary">${escHtml(item.summary)}</span>` : ''}
-      <span class="press-arrow">↗</span>
+      <span class="press-arrow" aria-hidden="true">↗</span>
     </a>`;
 }
 
 export async function renderPressCoverage(csvUrl: string): Promise<void> {
-  const container = document.getElementById('press-coverage')!;
-  const errEl     = document.getElementById('press-coverage-error')!;
+  const container = document.getElementById('press-coverage');
+  const errEl     = document.getElementById('press-coverage-error');
+  if (!container) return;
 
   try {
     const rows = await fetchSheet(csvUrl);
     const headers = rows[0] ? Object.keys(rows[0]) : [];
-    console.log('[press] rows:', rows.length, 'columns:', headers);
 
     const items: PressItem[] = rows
       .filter((r: Row) => r['url'])
       .map((r: Row) => {
-        const title   = (r['title']   ?? '').trim();
-        const summary = (r['summary'] ?? '').trim();
+        const title = (r['title'] ?? '').trim();
         return {
           url:         r['url'].trim(),
           publication: r['publication'] ?? '',
           date:        r['date'] ?? '',
           order:       parseInt(r['order'] ?? '0', 10) || 0,
           title,
-          summary,
+          summary:     (r['summary'] ?? '').trim(),
           needsMeta:   !title,
         };
       })
+      // Drop anything that is not a real http(s) link before it reaches the DOM
+      .filter((i) => safeUrl(i.url) !== '#')
       .sort((a, b) => a.order - b.order);
 
     if (items.length === 0) {
       const hint = headers.length && !headers.includes('url')
-        ? `(columns found: ${headers.join(', ')} — expected "url")`
+        ? `(sheet columns: ${headers.join(', ')} — expected "url")`
         : rows.length === 0 ? '(sheet appears empty)' : '';
-      container.innerHTML = `<div class="empty-state" style="margin-bottom:32px">No press coverage yet. ${hint}</div>`;
+      container.innerHTML = `<div class="empty-state">No coverage yet ${escHtml(hint)}</div>`;
       return;
     }
 
-    // Render immediately with whatever data we have from the sheet
     container.innerHTML = items.map(pressCard).join('');
 
-    // Background: enrich items that have no title via proxy (non-blocking)
-    const toEnrich = items.filter(i => i.needsMeta);
-    if (toEnrich.length === 0) return;
+    // Background enrichment — two workers so the proxy is not hammered, and a
+    // hard queue cap so a long sheet cannot turn each visitor into an amplifier
+    const queue = items.filter((i) => i.needsMeta).slice(0, MAX_PROXY_LOOKUPS);
+    if (queue.length === 0) return;
 
-    // Run proxy fetches with max 2 concurrent to avoid rate-limiting
     let idx = 0;
     const worker = async () => {
-      while (idx < toEnrich.length) {
-        const item = toEnrich[idx++];
+      while (idx < queue.length) {
+        const item = queue[idx++];
         try {
           const meta = await fetchMeta(item.url);
-          if (!meta.title) continue;
-          // Patch the already-rendered DOM element in place
-          const el = container.querySelector<HTMLElement>(`[data-press-url="${CSS.escape(item.url)}"]`);
+          if (!meta.title && !meta.summary) continue;
+
+          const el = container.querySelector<HTMLElement>(
+            `[data-press-url="${CSS.escape(item.url)}"]`,
+          );
           if (!el) continue;
+
           const titleEl = el.querySelector('.press-title');
           if (titleEl && meta.title) titleEl.textContent = meta.title;
-          const summaryEl = el.querySelector('.press-summary');
-          if (meta.summary && !summaryEl) {
-            const arrow = el.querySelector('.press-arrow');
+
+          if (meta.summary && !el.querySelector('.press-summary')) {
             const span = document.createElement('span');
             span.className = 'press-summary';
             span.textContent = meta.summary;
-            if (arrow) el.insertBefore(span, arrow);
+            el.insertBefore(span, el.querySelector('.press-arrow'));
           }
-        } catch { /* ignore individual failures */ }
+        } catch { /* individual failures are not worth surfacing */ }
       }
     };
-    // Fire and forget — don't await so the section appears instantly
-    Promise.all([worker(), worker()]);
 
+    void Promise.allSettled([worker(), worker()]);
   } catch (e) {
     container.innerHTML = '';
-    errEl.textContent = `Could not load press. (${e instanceof Error ? e.message : String(e)})`;
-    errEl.classList.remove('hidden');
+    if (errEl) {
+      errEl.textContent = `Could not load press (${e instanceof Error ? e.message : String(e)})`;
+      errEl.classList.remove('hidden');
+    }
   }
 }
