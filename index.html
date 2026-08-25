@@ -53,6 +53,39 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>GUMGO — Electronic Press Kit</title>
 
+    <!--
+      Structured data, so search engines and AI crawlers can read who this is
+      rather than guessing from prose.
+
+      This is a JSON-LD data block, not executable script: per the HTML spec a
+      <script> whose type is neither classic, module nor importmap returns early
+      from "prepare the script element" and is never CSP-checked. It therefore
+      needs no nonce and no 'unsafe-inline' in script-src — do not "fix" the CSP
+      on its account.
+    -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "MusicGroup",
+        "name": "GUMGO",
+        "alternateName": "검고",
+        "url": "https://gumgo.art/",
+        "image": "https://gumgo.art/portrait.jpg",
+        "email": "gumgoya@gmail.com",
+        "genre": ["Minimal", "Dub", "Electro", "Techno", "Electronic"],
+        "description": "Korean vinyl DJ. Minimal, dub and electro sets built on heavy bass, minimal synths and continuous grooves. Featured in Mixmag Asia's Artists Exciting Us 2026 and heard on HÖR Berlin and Oslated's Special Mix Series.",
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Seoul, South Korea"
+        },
+        "sameAs": [
+          "https://ra.co/dj/gumgo",
+          "https://soundcloud.com/gumgo",
+          "https://www.instagram.com/gumgo._"
+        ]
+      }
+    </script>
+
     <link rel="preload" as="image" href="/portrait.webp" type="image/webp" />
 
     <!-- Google tag loader; the config call runs from main.ts so no inline script is needed -->

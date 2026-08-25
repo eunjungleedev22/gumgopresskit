@@ -1,0 +1,7 @@
+# GUMGO — Electronic Press Kit
+# This is a public press kit; everything here is meant to be indexed and quoted.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://gumgo.art/sitemap.xml
