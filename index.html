@@ -149,7 +149,6 @@
             </div>
 
             <div class="masthead-block reveal">
-              <p class="label">Selected Highlights</p>
               <div class="numbered">
                 <div class="numbered-item">
                   <span class="numbered-num">01</span>
@@ -322,14 +321,34 @@
 
         <div class="subsection reveal" id="mixes-sc-section">
           <p class="label label--muted">SoundCloud</p>
-          <div id="mixes-sc-fallback" class="sc-fallback">
+          <div id="mixes-list">
+            <div class="loading-state"><span class="spinner"></span><span>Loading</span></div>
+          </div>
+
+          <!-- Shown only if the sheet cannot be read; hidden the rest of the time -->
+          <div id="mixes-sc-fallback" class="sc-fallback hidden">
             <iframe
               title="GUMGO on SoundCloud"
               scrolling="no" frameborder="no" allow="autoplay" loading="lazy"
               src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/gumgo&color=%230a0a0a&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
             </iframe>
           </div>
-          <div id="mixes-list"></div>
+
+          <noscript>
+            <!-- Without JS nothing will ever resolve those spinners, so take them
+                 down and stand the full SoundCloud profile in their place. -->
+            <style>
+              #mixes-list .loading-state,
+              #videos-grid .loading-state { display: none; }
+              #mixes-yt-section { display: none; }
+            </style>
+            <iframe
+              title="GUMGO on SoundCloud"
+              style="display:block;width:100%;height:420px;border:none"
+              scrolling="no" frameborder="no"
+              src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/gumgo&color=%230a0a0a&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
+            </iframe>
+          </noscript>
         </div>
 
         <div class="subsection reveal" id="mixes-yt-section">
@@ -438,7 +457,6 @@
     <footer>
       <div class="container footer-row">
         <span>GUMGO — Electronic Press Kit</span>
-        <span>© 2026 GUMGO. All rights reserved.</span>
       </div>
     </footer>
 
