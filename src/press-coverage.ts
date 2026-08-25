@@ -107,7 +107,6 @@ function pressCard(item: PressItem): string {
 
 export async function renderPressCoverage(csvUrl: string): Promise<void> {
   const container = document.getElementById('press-coverage');
-  const column    = document.getElementById('press-coverage-col');
   if (!container) return;
 
   try {
@@ -132,12 +131,12 @@ export async function renderPressCoverage(csvUrl: string): Promise<void> {
       .filter((i) => safeUrl(i.url) !== '#')
       .sort((a, b) => a.order - b.order);
 
+    // Nothing usable — leave the Mixmag entry hard-coded in index.html standing
     if (items.length === 0) {
       const hint = headers.length && !headers.includes('url')
         ? `sheet columns: ${headers.join(', ')} — expected "url"`
         : rows.length === 0 ? 'sheet appears empty' : 'no usable rows';
       console.warn('[press] nothing to render —', hint);
-      column?.classList.add('hidden');
       return;
     }
 
@@ -176,11 +175,8 @@ export async function renderPressCoverage(csvUrl: string): Promise<void> {
 
     void Promise.allSettled([worker(), worker()]);
   } catch (e) {
-    // Coverage is supplementary. Rather than show visitors a red error, drop the
-    // whole column so the Press sheet still reads as finished with just the
-    // Media / Radio / Mixes list.
-    container.innerHTML = '';
-    column?.classList.add('hidden');
+    // Keep whatever is already in the markup — the hard-coded Mixmag entry —
+    // rather than clearing the section or showing visitors a red error.
     console.error('[press] failed to load:', e);
   }
 }

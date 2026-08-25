@@ -25,6 +25,8 @@ interface Video {
   order: number;
   isHighlight: boolean;
   thumbUrl: string;
+  /** false when the title is a stand-in (the id), so oEmbed may replace it */
+  titleFromSheet: boolean;
 }
 
 function extractYoutubeId(url: string): string | null {
@@ -169,6 +171,7 @@ export async function renderVideos(csvUrl: string): Promise<void> {
           order:       parseInt(r['order'] ?? '0', 10) || 0,
           isHighlight: (r['is_highlight'] ?? '').trim().toLowerCase() === 'true',
           thumbUrl:    '',
+          titleFromSheet: !!(r['title'] ?? '').trim(),
         };
       })
       .filter((v) => v.youtubeId)
@@ -185,15 +188,15 @@ export async function renderVideos(csvUrl: string): Promise<void> {
       return;
     }
 
-    const results = await Promise.allSettled(videos.map((v) => fetchOEmbed(v.url)));
-    results.forEach((res, i) => {
-      const oe = res.status === 'fulfilled' ? res.value : null;
-      // `||` not `??` — an upstream that returns an empty title must still fall back
-      if (!videos[i].title) videos[i].title = oe?.title || videos[i].youtubeId;
-      // Cards crop to a square, so the 320px-wide mqdefault would be visibly
-      // soft. Ask for maxresdefault and fall back per-image when it 404s.
-      videos[i].thumbUrl = `https://i.ytimg.com/vi/${videos[i].youtubeId}/maxresdefault.jpg`;
-    });
+    // No network needed to paint: a YouTube still is addressable straight from
+    // the id. oEmbed is only consulted afterwards, and only for rows whose
+    // title the sheet left blank — previously every card waited on it.
+    // Cards crop to a square, so the 320px mqdefault would look soft; ask for
+    // maxresdefault and fall back per-image when it 404s.
+    for (const v of videos) {
+      v.thumbUrl = `https://i.ytimg.com/vi/${v.youtubeId}/maxresdefault.jpg`;
+      if (!v.title) v.title = v.youtubeId;
+    }
 
     const showExpand = videos.length > 3;
     grid.innerHTML = `
@@ -224,6 +227,23 @@ export async function renderVideos(csvUrl: string): Promise<void> {
       document.getElementById('videos-inner-grid')?.classList.remove('collapsed');
       btn.remove();
     });
+
+    // Only the rows the sheet left untitled need a round trip, and the grid is
+    // already on screen while they run
+    const untitled = videos.filter((v) => !v.titleFromSheet);
+    if (untitled.length === 0) return;
+
+    void Promise.allSettled(untitled.map(async (v) => {
+      const oe = await fetchOEmbed(v.url);
+      if (!oe?.title) return;
+
+      const card = grid.querySelector<HTMLElement>(`.card--video[data-ytid="${CSS.escape(v.youtubeId)}"]`);
+      if (!card) return;
+
+      const titleEl = card.querySelector('.card-title .marker') ?? card.querySelector('.card-title');
+      if (titleEl) titleEl.textContent = oe.title;
+      card.setAttribute('aria-label', `Play video: ${oe.title}`);
+    }));
   } catch (e) {
     // Drop the subsection rather than show visitors a red technical error
     grid.innerHTML = '';

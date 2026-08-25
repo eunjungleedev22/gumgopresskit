@@ -480,27 +480,54 @@ a.contact-val:hover { border-bottom-color: var(--ink); }
   line-height: 1.7;
   color: var(--ink-2);
 }
-.booking-windows { display: flex; flex-wrap: wrap; gap: 18px 40px; margin-top: 14px; }
-.booking-window { display: flex; align-items: flex-start; gap: 10px; }
+/* Two stacked windows sharing a rule, each reading region → base → dates */
+.booking-windows {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-top: 16px;
+  border-top: 1px solid var(--rule);
+}
+@media (min-width: 520px) {
+  .booking-windows { grid-template-columns: 1fr 1fr; }
+  .booking-window + .booking-window {
+    border-top: none;
+    border-left: 1px solid var(--rule);
+    padding-left: clamp(18px, 3vw, 30px);
+  }
+}
+.booking-window {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  padding: 18px 0;
+}
+.booking-window + .booking-window { border-top: 1px solid var(--rule-soft); }
+
 .booking-region {
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--paper);
-  background: var(--teal);
-  padding: 3px 7px;
-  flex-shrink: 0;
+  background: var(--ink);
+  padding: 4px 9px;
+  line-height: 1.4;
 }
-.booking-detail { display: flex; flex-direction: column; gap: 1px; }
+.booking-detail { display: flex; flex-direction: column; gap: 2px; }
 .booking-base {
   font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--ink-3);
 }
-.booking-when { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
+.booking-when {
+  font-size: clamp(16px, 2.2vw, 19px);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+}
 
 /* ── Media cards (mixes + videos) ───────────────────────────────────────── */
 .media-grid {
@@ -835,9 +862,14 @@ footer {
   .venue:hover .venue-city,
   .numbered-item:hover .numbered-num { color: var(--ink-2); }
 
-  .chip { transition: background 0.2s ease, color 0.2s ease; }
+  /* Straight black/white inversion — no third colour entering the palette */
+  .chip { transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease; }
   .venue:hover .chip,
-  .media-item:hover .chip { background: var(--teal); }
+  .media-item:hover .chip {
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow: inset 0 0 0 1.5px var(--ink);
+  }
 
   /* Cards lift, and the cover picks up a soft shadow now that it is in colour */
   .card { transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1); }
@@ -850,9 +882,12 @@ footer {
 
   .contact-row:hover .contact-key { color: var(--ink); }
 
-  .booking-window { transition: transform 0.25s ease; }
-  .booking-window:hover { transform: translateX(5px); }
-  .booking-window:hover .booking-region { background: var(--ink); }
+  .booking-region { transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease; }
+  .booking-window:hover .booking-region {
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow: inset 0 0 0 1.5px var(--ink);
+  }
 
   .nav-logo { transition: opacity 0.2s ease; }
   .nav-logo:hover { opacity: 0.55; }

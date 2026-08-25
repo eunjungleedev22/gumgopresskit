@@ -9,7 +9,7 @@
  */
 
 import { fetchSheet, type Row } from './sheets';
-import { escHtml, escAttr, hrefAttr, srcAttr } from './safe';
+import { escHtml, escAttr, hrefAttr, safeImgUrl } from './safe';
 
 const oEmbedCache = new Map<string, { title: string; thumbnail_url: string }>();
 
@@ -20,7 +20,8 @@ interface Mix {
   genre: string;
   order: number;
   isHighlight: boolean;
-  thumbUrl: string;
+  /** false when the title is a stand-in derived from the URL, so oEmbed may replace it */
+  titleFromSheet: boolean;
 }
 
 /** Coerce an unvalidated JSON field to a string — upstream is not trusted to be well-typed. */
@@ -60,16 +61,14 @@ function waveIcon(): string {
   return `<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="10" width="3" height="12" rx="1.5"/><rect x="8" y="6" width="3" height="20" rx="1.5"/><rect x="14" y="3" width="3" height="26" rx="1.5"/><rect x="20" y="8" width="3" height="16" rx="1.5"/><rect x="26" y="12" width="3" height="8" rx="1.5"/></svg>`;
 }
 
-function mixCard(mix: Mix): string {
-  const thumb = srcAttr(mix.thumbUrl);
+/** Rendered before any oEmbed answers; artwork is dropped in later by index. */
+function mixCard(mix: Mix, i: number): string {
   return `
-    <a class="card reveal${mix.isHighlight ? ' card--hl' : ''}"
+    <a class="card reveal${mix.isHighlight ? ' card--hl' : ''}" data-mix="${i}"
        href="${hrefAttr(mix.url)}" target="_blank" rel="noopener noreferrer"
        aria-label="Listen on SoundCloud: ${escAttr(mix.title)}">
       <div class="card-cover">
-        ${thumb
-          ? `<img src="${thumb}" alt="" loading="lazy" decoding="async" />`
-          : `<div class="card-cover__empty">${waveIcon()}</div>`}
+        <div class="card-cover__empty">${waveIcon()}</div>
         <span class="card-play" aria-hidden="true">&#9654;</span>
       </div>
       <div class="card-meta">
@@ -103,7 +102,7 @@ export async function renderMixes(csvUrl: string): Promise<void> {
         genre:       r['genre'] ?? '',
         order:       parseInt(r['order'] ?? '0', 10) || 0,
         isHighlight: (r['is_highlight'] ?? '').trim().toLowerCase() === 'true',
-        thumbUrl:    '',
+        titleFromSheet: !!(r['title'] ?? '').trim(),
       }))
       .sort((a, b) => (b.isHighlight ? 1 : 0) - (a.isHighlight ? 1 : 0) || a.order - b.order);
 
@@ -116,13 +115,12 @@ export async function renderMixes(csvUrl: string): Promise<void> {
       return;
     }
 
-    const results = await Promise.allSettled(mixes.map((m) => fetchOEmbed(m.url)));
-    results.forEach((res, i) => {
-      const oe = res.status === 'fulfilled' ? res.value : null;
-      // `||` not `??` — an upstream that returns an empty title must still fall back
-      if (!mixes[i].title) mixes[i].title = oe?.title || urlFallbackTitle(mixes[i].url);
-      mixes[i].thumbUrl = oe?.thumbnail_url ?? '';
-    });
+    // Paint from sheet data alone. Waiting on Promise.allSettled over every
+    // oEmbed meant the grid appeared only once the slowest of them answered —
+    // up to the full 6 s timeout for a single bad track.
+    for (const m of mixes) {
+      if (!m.title) m.title = urlFallbackTitle(m.url);
+    }
 
     const showExpand = mixes.length > 3;
     list.innerHTML = `
@@ -141,6 +139,33 @@ export async function renderMixes(csvUrl: string): Promise<void> {
       document.getElementById('mixes-grid')?.classList.remove('collapsed');
       btn.remove();
     });
+
+    // Artwork, and any title the sheet did not supply, arrive per card
+    void Promise.allSettled(mixes.map(async (m, i) => {
+      const oe = await fetchOEmbed(m.url);
+      if (!oe) return;
+
+      const card = list.querySelector<HTMLElement>(`[data-mix="${i}"]`);
+      if (!card) return;
+
+      // Assigned as a DOM property, so protocol-checking is enough — no escaping
+      const art = safeImgUrl(oe.thumbnail_url);
+      const placeholder = card.querySelector('.card-cover__empty');
+      if (art && placeholder) {
+        const img = document.createElement('img');
+        img.src = art;
+        img.alt = '';
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        placeholder.replaceWith(img);
+      }
+
+      if (!m.titleFromSheet && oe.title) {
+        const titleEl = card.querySelector('.card-title .marker') ?? card.querySelector('.card-title');
+        if (titleEl) titleEl.textContent = oe.title;
+        card.setAttribute('aria-label', `Listen on SoundCloud: ${oe.title}`);
+      }
+    }));
   } catch (e) {
     // The static SoundCloud player is still on the page — that is the fallback,
     // so visitors get a working section instead of a red error.
