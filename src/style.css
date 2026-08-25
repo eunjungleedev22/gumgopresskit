@@ -27,6 +27,10 @@
   --teal:       #055357;
   --teal-mid:   #28696f;
 
+  /* Marker tint. Full-strength peach is too dark and too saturated to sit
+     behind black text — it muddies the glyphs. Held back to a wash. */
+  --marker:     rgba(244, 176, 137, 0.55);
+
   --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --kr:   'Noto Sans KR', 'Inter', system-ui, sans-serif;
 
@@ -127,6 +131,18 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
   margin-bottom: 16px;
 }
 .label--muted { color: var(--ink-3); font-weight: 600; }
+
+/* Marker highlight — one definition for the bio topline and featured titles.
+   It must sit on an INLINE element: the background box of an inline box is the
+   font's em box, so a band measured in em lands at the same place under the
+   glyphs whatever the surrounding line-height is, and it follows each line when
+   the text wraps. On a block it would instead paint a single band across the
+   full column width, which is what it was doing on the card titles. */
+.marker {
+  background-image: linear-gradient(to top, var(--marker) 0.45em, transparent 0.45em);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
 
 /* Inverted chip — the PDF marks key venues this way */
 .chip {
@@ -388,15 +404,10 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
   color: var(--ink);
   margin-bottom: 20px;
 }
-/* Marker highlight — a gradient stop paints behind inline text more
-   reliably than an inset box-shadow, which breaks across line wraps. */
 .bio-topline {
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: -0.01em;
-  background-image: linear-gradient(transparent 58%, var(--peach) 58%, var(--peach) 94%, transparent 94%);
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
 }
 
 .bio-kr p { font-family: var(--kr); font-size: 13.5px; line-height: 1.85; }
@@ -580,12 +591,8 @@ a.contact-val:hover { border-bottom-color: var(--ink); }
   box-shadow: 0 0 0 3px rgba(229, 161, 138, 0.22);
 }
 
-/* The featured card's title carries the same peach marker as the bio topline */
-.card--hl .card-title {
-  background-image: linear-gradient(transparent 62%, var(--peach) 62%, var(--peach) 96%, transparent 96%);
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
-}
+/* The featured card's title carries the same marker, applied to the inline
+   span the renderer wraps around the text — never to the <p> itself. */
 
 .card-meta { padding-top: 11px; }
 .card-title {
@@ -805,6 +812,54 @@ footer {
 }
 .data-error { color: #b3261e; }
 .hidden { display: none !important; }
+
+/* ── Hover ──────────────────────────────────────────────────────────────────
+   One gesture across the whole page: the hairline under a row goes solid ink,
+   the row steps right, and any chip on it flips to teal. Confined to
+   (hover: hover) so touch devices never get a state stuck on after a tap. */
+@media (hover: hover) {
+  .venue,
+  .media-item,
+  .numbered-item,
+  .gig-row {
+    transition: padding-left 0.25s ease, border-color 0.2s ease;
+  }
+  .venue:hover,
+  .media-item:hover,
+  .numbered-item:hover,
+  .gig-row:hover {
+    padding-left: 7px;
+    border-bottom-color: var(--ink);
+  }
+
+  .venue:hover .venue-city,
+  .numbered-item:hover .numbered-num { color: var(--ink-2); }
+
+  .chip { transition: background 0.2s ease, color 0.2s ease; }
+  .venue:hover .chip,
+  .media-item:hover .chip { background: var(--teal); }
+
+  /* Cards lift, and the cover picks up a soft shadow now that it is in colour */
+  .card { transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1); }
+  .card:hover { transform: translateY(-4px); }
+  .card-cover { transition: box-shadow 0.3s ease; }
+  .card:hover .card-cover { box-shadow: 0 12px 28px rgba(10, 10, 10, 0.16); }
+
+  .portrait img { transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.3, 1); }
+  .portrait:hover img { transform: scale(1.035); }
+
+  .contact-row:hover .contact-key { color: var(--ink); }
+
+  .booking-window { transition: transform 0.25s ease; }
+  .booking-window:hover { transform: translateX(5px); }
+  .booking-window:hover .booking-region { background: var(--ink); }
+
+  .nav-logo { transition: opacity 0.2s ease; }
+  .nav-logo:hover { opacity: 0.55; }
+
+  .sheet-title { transition: letter-spacing 0.4s ease; }
+  .sheet-head:hover .sheet-title { letter-spacing: -0.025em; }
+}
 
 /* ── Print ──────────────────────────────────────────────────────────────── */
 @media print {

@@ -29,7 +29,7 @@ function buildColumn(rows: Row[]): string {
     const body    = (r['description'] ?? r['desc'] ?? r['body'] ?? r['content'] ?? r['text'] ?? '').trim();
 
     if (topline) {
-      parts.push(`<p class="bio-lead"><span class="bio-topline">${withBreaks(topline)}</span></p>`);
+      parts.push(`<p class="bio-lead"><span class="bio-topline marker">${withBreaks(topline)}</span></p>`);
     }
     for (const para of paragraphs(body)) {
       parts.push(`<p>${withBreaks(para)}</p>`);

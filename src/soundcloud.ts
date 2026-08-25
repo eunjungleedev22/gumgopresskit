@@ -74,7 +74,11 @@ function mixCard(mix: Mix): string {
       </div>
       <div class="card-meta">
         ${mix.isHighlight ? '<p class="card-flag">Featured</p>' : ''}
-        <p class="card-title">${escHtml(mix.title)}</p>
+        <p class="card-title">${
+          mix.isHighlight
+            ? `<span class="marker">${escHtml(mix.title)}</span>`
+            : escHtml(mix.title)
+        }</p>
         ${mix.genre   ? `<p class="card-genre">${escHtml(mix.genre)}</p>` : ''}
         ${mix.caption ? `<p class="card-caption">${escHtml(mix.caption)}</p>` : ''}
       </div>

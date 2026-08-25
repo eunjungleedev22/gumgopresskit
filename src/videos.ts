@@ -87,7 +87,11 @@ function videoCard(v: Video): string {
       </div>
       <div class="card-meta">
         ${v.isHighlight ? '<p class="card-flag">Featured</p>' : ''}
-        <p class="card-title">${escHtml(v.title)}</p>
+        <p class="card-title">${
+          v.isHighlight
+            ? `<span class="marker">${escHtml(v.title)}</span>`
+            : escHtml(v.title)
+        }</p>
         ${v.genre   ? `<p class="card-genre">${escHtml(v.genre)}</p>` : ''}
         ${v.caption ? `<p class="card-caption">${escHtml(v.caption)}</p>` : ''}
       </div>
