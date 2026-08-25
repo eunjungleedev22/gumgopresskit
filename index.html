@@ -10,10 +10,12 @@
       lives in main.ts so script-src stays strict. style-src does allow inline
       because element .style writes and the critical CSS block need it.
 
-      connect-src must include *.googleusercontent.com: a published-sheet CSV URL
-      answers with a redirect to doc-XX-XX-sheets.googleusercontent.com, and CSP
-      re-checks fetch directives on every redirect hop. Without it every sheet
-      request fails and the whole data layer goes dark.
+      connect-src is deliberately loose across Google's own domains. A published
+      sheet CSV redirects from docs.google.com to doc-XX-XX-sheets.googleusercontent.com,
+      and CSP re-checks fetch directives on every redirect hop — a CSP was removed
+      from this site once before because a hop got blocked and the whole data layer
+      went dark. The tight control on where sheet data may come from is the host
+      allowlist in src/sheets.ts, not this line.
 
       Note that frame-ancestors is silently ignored in a meta-tag CSP, so
       clickjacking protection is not available on this host.
@@ -27,7 +29,7 @@
         font-src 'self' https://fonts.gstatic.com;
         img-src 'self' https://i1.sndcdn.com https://i.sndcdn.com https://img.youtube.com https://i.ytimg.com https://www.google-analytics.com;
         frame-src https://w.soundcloud.com https://www.youtube-nocookie.com;
-        connect-src 'self' https://docs.google.com https://*.googleusercontent.com https://soundcloud.com https://www.youtube.com https://api.allorigins.win https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com;
+        connect-src 'self' https://*.google.com https://*.googleusercontent.com https://soundcloud.com https://www.youtube.com https://api.allorigins.win https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com;
         base-uri 'self';
         form-action 'none';
         object-src 'none';
