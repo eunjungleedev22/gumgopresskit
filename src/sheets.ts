@@ -144,16 +144,39 @@ async function readCapped(res: Response): Promise<string> {
   return chunks.join('');
 }
 
+/**
+ * A published sheet on a cold cache regularly takes several seconds, and the
+ * page asks for five of them at once behind a redirect. 10 s was tight enough
+ * that the slowest tab timed out, so allow more headroom and retry once —
+ * a cold fetch warms Google's cache, which usually makes the retry quick.
+ */
+const FETCH_TIMEOUT_MS = 20_000;
+const RETRY_DELAY_MS   = 700;
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+async function fetchOnce(url: URL): Promise<string> {
+  const res = await fetch(url, {
+    cache: 'default',                            // respect server Cache-Control; don't force bypass
+    redirect: 'follow',
+    credentials: 'omit',                         // never attach cookies to a third-party origin
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+  });
+  if (!res.ok) throw new Error(`Sheet fetch failed: ${res.status} ${res.statusText}`);
+  return readCapped(res);
+}
+
 export async function fetchSheet(csvUrl: string): Promise<Row[]> {
   const url = assertAllowed(csvUrl);
 
-  const res = await fetch(url, {
-    cache: 'default',                      // respect server Cache-Control; don't force bypass
-    redirect: 'follow',
-    credentials: 'omit',                   // never attach cookies to a third-party origin
-    signal: AbortSignal.timeout(10_000),   // bail after 10 s instead of hanging forever
-  });
-  if (!res.ok) throw new Error(`Sheet fetch failed: ${res.status} ${res.statusText}`);
+  try {
+    return parseCSV(await fetchOnce(url));
+  } catch (first) {
+    // Don't retry a refusal — only a timeout or transport failure
+    const name = first instanceof Error ? first.name : '';
+    if (name !== 'TimeoutError' && name !== 'AbortError' && name !== 'TypeError') throw first;
 
-  return parseCSV(await readCapped(res));
+    await sleep(RETRY_DELAY_MS);
+    return parseCSV(await fetchOnce(url));
+  }
 }

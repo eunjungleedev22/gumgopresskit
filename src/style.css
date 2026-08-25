@@ -469,8 +469,8 @@ a.contact-val:hover { border-bottom-color: var(--ink); }
   line-height: 1.7;
   color: var(--ink-2);
 }
-.booking-windows { display: flex; flex-wrap: wrap; gap: 10px 24px; margin-top: 12px; }
-.booking-window { display: flex; align-items: baseline; gap: 9px; }
+.booking-windows { display: flex; flex-wrap: wrap; gap: 18px 40px; margin-top: 14px; }
+.booking-window { display: flex; align-items: flex-start; gap: 10px; }
 .booking-region {
   font-size: 10px;
   font-weight: 700;
@@ -478,9 +478,18 @@ a.contact-val:hover { border-bottom-color: var(--ink); }
   text-transform: uppercase;
   color: var(--paper);
   background: var(--teal);
-  padding: 2px 7px;
+  padding: 3px 7px;
+  flex-shrink: 0;
 }
-.booking-when { font-size: 13px; font-weight: 600; }
+.booking-detail { display: flex; flex-direction: column; gap: 1px; }
+.booking-base {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.booking-when { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
 
 /* ── Media cards (mixes + videos) ───────────────────────────────────────── */
 .media-grid {
@@ -497,22 +506,22 @@ a.contact-val:hover { border-bottom-color: var(--ink); }
 
 .card { display: block; cursor: pointer; }
 
+/* One square for every card — SoundCloud art and YouTube stills alike, so the
+   two subsections read as a single grid instead of two different shapes. */
 .card-cover {
   position: relative;
   aspect-ratio: 1 / 1;
   overflow: hidden;
   background: var(--paper-2);
 }
-.card--video .card-cover { aspect-ratio: 16 / 9; }
 
 .card-cover img {
   width: 100%; height: 100%;
   object-fit: cover;
-  filter: grayscale(1) contrast(1.04);
-  transition: filter 0.4s ease, transform 0.5s ease;
+  transition: transform 0.5s ease;
 }
 .card:hover .card-cover img,
-.card:focus-visible .card-cover img { filter: none; transform: scale(1.03); }
+.card:focus-visible .card-cover img { transform: scale(1.04); }
 
 .card-cover__empty {
   width: 100%; height: 100%;
@@ -522,33 +531,60 @@ a.contact-val:hover { border-bottom-color: var(--ink); }
 }
 .card-cover__empty svg { width: 34px; height: 34px; fill: var(--ink-4); }
 
+/* Play affordance — a soft glass disc rather than a hard black square, which
+   would fight the artwork now that covers render in full colour. */
 .card-play {
   position: absolute;
   right: 10px; bottom: 10px;
-  width: 32px; height: 32px;
+  width: 34px; height: 34px;
   display: grid;
   place-items: center;
-  background: var(--ink);
-  color: var(--paper);
+  border-radius: 50%;
+  background: rgba(10, 10, 10, 0.5);
+  backdrop-filter: blur(10px) saturate(1.3);
+  -webkit-backdrop-filter: blur(10px) saturate(1.3);
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.28);
+  color: #fff;
   font-size: 11px;
   padding-left: 2px;
   opacity: 0;
-  transform: translateY(4px);
-  transition: opacity 0.25s, transform 0.25s;
+  transform: translateY(6px) scale(0.92);
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 .card:hover .card-play,
 .card:focus-visible .card-play { opacity: 1; transform: none; }
 
-.card-badge {
-  position: absolute;
-  top: 8px; left: 8px;
-  background: var(--ink);
-  color: var(--paper);
+/* Touch devices never hover, so the affordance has to be there from the start */
+@media (hover: none) {
+  .card-play { opacity: 1; transform: none; }
+}
+
+/* Featured — a quiet dot-and-label marker in the meta line. Nothing is stamped
+   over the artwork, and it reads as a state rather than as a button. */
+.card-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 9px;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  padding: 3px 7px;
+  color: var(--ink-3);
+  margin-bottom: 6px;
+}
+.card-flag::before {
+  content: '';
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--peach-deep);
+  box-shadow: 0 0 0 3px rgba(229, 161, 138, 0.22);
+}
+
+/* The featured card's title carries the same peach marker as the bio topline */
+.card--hl .card-title {
+  background-image: linear-gradient(transparent 62%, var(--peach) 62%, var(--peach) 96%, transparent 96%);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 
 .card-meta { padding-top: 11px; }

@@ -71,9 +71,9 @@ function mixCard(mix: Mix): string {
           ? `<img src="${thumb}" alt="" loading="lazy" decoding="async" />`
           : `<div class="card-cover__empty">${waveIcon()}</div>`}
         <span class="card-play" aria-hidden="true">&#9654;</span>
-        ${mix.isHighlight ? '<span class="card-badge">Featured</span>' : ''}
       </div>
       <div class="card-meta">
+        ${mix.isHighlight ? '<p class="card-flag">Featured</p>' : ''}
         <p class="card-title">${escHtml(mix.title)}</p>
         ${mix.genre   ? `<p class="card-genre">${escHtml(mix.genre)}</p>` : ''}
         ${mix.caption ? `<p class="card-caption">${escHtml(mix.caption)}</p>` : ''}
@@ -83,7 +83,6 @@ function mixCard(mix: Mix): string {
 
 export async function renderMixes(csvUrl: string): Promise<void> {
   const list     = document.getElementById('mixes-list');
-  const errEl    = document.getElementById('mixes-error');
   const fallback = document.getElementById('mixes-sc-fallback');
   if (!list) return;
 
@@ -104,11 +103,12 @@ export async function renderMixes(csvUrl: string): Promise<void> {
       }))
       .sort((a, b) => (b.isHighlight ? 1 : 0) - (a.isHighlight ? 1 : 0) || a.order - b.order);
 
+    // Nothing usable — leave the static SoundCloud player standing in for the grid
     if (mixes.length === 0) {
       const hint = headers.length && !headers.includes('url')
-        ? `(sheet columns: ${headers.join(', ')} — expected "url")`
-        : rows.length === 0 ? '(sheet appears empty)' : '';
-      list.innerHTML = `<div class="empty-state">No mixes yet ${escHtml(hint)}</div>`;
+        ? `sheet columns: ${headers.join(', ')} — expected "url"`
+        : rows.length === 0 ? 'sheet appears empty' : 'no usable rows';
+      console.warn('[mixes] nothing to render —', hint);
       return;
     }
 
@@ -138,10 +138,9 @@ export async function renderMixes(csvUrl: string): Promise<void> {
       btn.remove();
     });
   } catch (e) {
+    // The static SoundCloud player is still on the page — that is the fallback,
+    // so visitors get a working section instead of a red error.
     list.innerHTML = '';
-    if (errEl) {
-      errEl.textContent = `Could not load mixes (${e instanceof Error ? e.message : String(e)})`;
-      errEl.classList.remove('hidden');
-    }
+    console.error('[mixes] failed to load:', e);
   }
 }

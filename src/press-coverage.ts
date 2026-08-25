@@ -107,7 +107,7 @@ function pressCard(item: PressItem): string {
 
 export async function renderPressCoverage(csvUrl: string): Promise<void> {
   const container = document.getElementById('press-coverage');
-  const errEl     = document.getElementById('press-coverage-error');
+  const column    = document.getElementById('press-coverage-col');
   if (!container) return;
 
   try {
@@ -134,9 +134,10 @@ export async function renderPressCoverage(csvUrl: string): Promise<void> {
 
     if (items.length === 0) {
       const hint = headers.length && !headers.includes('url')
-        ? `(sheet columns: ${headers.join(', ')} — expected "url")`
-        : rows.length === 0 ? '(sheet appears empty)' : '';
-      container.innerHTML = `<div class="empty-state">No coverage yet ${escHtml(hint)}</div>`;
+        ? `sheet columns: ${headers.join(', ')} — expected "url"`
+        : rows.length === 0 ? 'sheet appears empty' : 'no usable rows';
+      console.warn('[press] nothing to render —', hint);
+      column?.classList.add('hidden');
       return;
     }
 
@@ -175,10 +176,11 @@ export async function renderPressCoverage(csvUrl: string): Promise<void> {
 
     void Promise.allSettled([worker(), worker()]);
   } catch (e) {
+    // Coverage is supplementary. Rather than show visitors a red error, drop the
+    // whole column so the Press sheet still reads as finished with just the
+    // Media / Radio / Mixes list.
     container.innerHTML = '';
-    if (errEl) {
-      errEl.textContent = `Could not load press (${e instanceof Error ? e.message : String(e)})`;
-      errEl.classList.remove('hidden');
-    }
+    column?.classList.add('hidden');
+    console.error('[press] failed to load:', e);
   }
 }
