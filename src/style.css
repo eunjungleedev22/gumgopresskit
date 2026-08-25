@@ -314,10 +314,16 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
 .numbered { display: flex; flex-direction: column; }
 .numbered-item {
   display: grid;
-  grid-template-columns: 30px 1fr;
+  grid-template-columns: 30px 1fr auto;
   gap: 14px;
   padding: 14px 0;
   border-bottom: 1px solid var(--rule-soft);
+}
+.numbered-arrow {
+  align-self: center;
+  font-size: 15px;
+  color: var(--ink-4);
+  transition: color 0.2s ease, transform 0.25s ease;
 }
 .numbered-item:first-child { border-top: 1px solid var(--rule-soft); }
 .numbered-num {
@@ -861,6 +867,11 @@ footer {
 
   .venue:hover .venue-city,
   .numbered-item:hover .numbered-num { color: var(--ink-2); }
+
+  .numbered-item:hover .numbered-arrow {
+    color: var(--ink);
+    transform: translate(2px, -2px);
+  }
 
   /* Straight black/white inversion — no third colour entering the palette */
   .chip { transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease; }
