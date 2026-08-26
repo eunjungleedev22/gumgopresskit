@@ -32,9 +32,13 @@ function build(): void {
   modal.setAttribute('role', 'dialog');
   modal.setAttribute('aria-modal', 'true');
   modal.setAttribute('aria-label', 'Media player');
+  // The close button hangs off the modal, not the frame, so it stays in the
+  // corner of the viewport instead of being clipped above a short player.
   modal.innerHTML = `
+    <button class="player-close" type="button" aria-label="Close player">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6 18 18M18 6 6 18"/></svg>
+    </button>
     <div class="player-inner">
-      <button class="player-close" type="button" aria-label="Close player">[ Esc / Close ]</button>
       <div class="player-frame"></div>
     </div>`;
 
