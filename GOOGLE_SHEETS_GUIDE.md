@@ -34,8 +34,8 @@ straight from the 2026 EPK PDF) stays on the page — the section is never blank
 
 | lang | topline | description |
 |------|---------|-------------|
-| en | A top pick in Mixmag Asia's Artists Exciting Us 2026 | From Singapore's dancefloors to clubs across Europe… |
-| ko | 2026년 Mixmag Asia 'Artists Exciting Us' Top Pick 선정 | 싱가포르의 플로어에서 출발한 GUMGO는… |
+| en | Featured in Mixmag Asia's “Artists Exciting Us in 2026” | From Singapore's dancefloors to clubs across Europe… |
+| ko | 2026년 Mixmag Asia 'Artists Exciting Us' 4월 편 소개 | 싱가포르의 플로어에서 출발한 GUMGO는… |
 
 ---
 
