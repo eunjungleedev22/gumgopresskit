@@ -12,6 +12,7 @@ import { fetchSheet, type Row } from './sheets';
 import { escHtml, escAttr, srcAttr } from './safe';
 import { openYouTube, youtubeId as extractYoutubeId } from './player';
 import { trackEvent } from './analytics';
+import { type FeaturedCandidate } from './featured';
 
 const oEmbedCache = new Map<string, { title: string; thumbnail_url: string }>();
 
@@ -81,10 +82,10 @@ function videoCard(v: Video): string {
     </div>`;
 }
 
-export async function renderVideos(csvUrl: string): Promise<void> {
+export async function renderVideos(csvUrl: string): Promise<FeaturedCandidate | null> {
   const grid    = document.getElementById('videos-grid');
   const section = document.getElementById('mixes-yt-section');
-  if (!grid) return;
+  if (!grid) return null;
 
   try {
     const rows = await fetchSheet(csvUrl);
@@ -117,7 +118,7 @@ export async function renderVideos(csvUrl: string): Promise<void> {
       console.warn('[videos] nothing to render —', hint);
       grid.innerHTML = '';
       section?.classList.add('hidden');
-      return;
+      return null;
     }
 
     // A YouTube still is addressable straight from the id, so no request is
@@ -177,10 +178,18 @@ export async function renderVideos(csvUrl: string): Promise<void> {
       document.getElementById('videos-inner-grid')?.classList.remove('collapsed');
       btn.remove();
     });
+
+    // Offer the flagged video up for the third "Start here" card
+    const top = videos.find((v) => v.isHighlight);
+    return top
+      ? { provider: 'youtube', url: top.url, title: top.title, sub: top.genre,
+          thumbUrl: top.thumbUrl, playerId: top.youtubeId }
+      : null;
   } catch (e) {
     // Drop the subsection rather than show visitors a red technical error
     grid.innerHTML = '';
     section?.classList.add('hidden');
     console.error('[videos] failed to load:', e);
+    return null;
   }
 }

@@ -363,6 +363,13 @@
               </div>
               <span class="feature-play" aria-hidden="true">&#9654;</span>
             </a>
+
+            <!-- Third card comes from the sheets: whichever row is flagged
+                 is_highlight. Reserved here so filling it never reflows the two
+                 beside it; removed outright if nothing is flagged. -->
+            <div class="feature-card feature-card--pending" id="feature-slot">
+              <div class="loading-state"><span class="spinner"></span><span>Loading</span></div>
+            </div>
           </div>
         </div>
 

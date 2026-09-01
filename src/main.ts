@@ -6,6 +6,7 @@ import { renderPressCoverage } from './press-coverage';
 import { renderBio } from './bio';
 import { initAnalytics } from './analytics';
 import { initPlayerLinks } from './player';
+import { renderFeatureSlot, isAlreadyFeatured } from './featured';
 
 // ── Config ───────────────────────────────────────────────────────────────────
 const GIGS_CSV_URL   = import.meta.env.VITE_GIGS_CSV_URL   as string | undefined;
@@ -94,21 +95,28 @@ function initReveal(): void {
 
 // ── Google Sheets data ───────────────────────────────────────────────────────
 function initSheetData(): void {
-  const tasks: Promise<void>[] = [];
+  if (BIO_CSV_URL)   void renderBio(BIO_CSV_URL);
+  if (GIGS_CSV_URL)  void renderGigs(GIGS_CSV_URL);
+  if (PRESS_CSV_URL) void renderPressCoverage(PRESS_CSV_URL);
 
-  if (BIO_CSV_URL)    tasks.push(renderBio(BIO_CSV_URL));
-  if (GIGS_CSV_URL)   tasks.push(renderGigs(GIGS_CSV_URL));
-  if (MIXES_CSV_URL)  tasks.push(renderMixes(MIXES_CSV_URL));
-  if (PRESS_CSV_URL)  tasks.push(renderPressCoverage(PRESS_CSV_URL));
-
-  if (VIDEOS_CSV_URL) {
-    tasks.push(renderVideos(VIDEOS_CSV_URL));
-  } else {
+  if (!VIDEOS_CSV_URL) {
     const el = document.getElementById('videos-grid');
     if (el) el.innerHTML = '<div class="empty-state">No videos configured</div>';
   }
 
-  void Promise.allSettled(tasks);
+  // Both grids also nominate whatever the sheet flags is_highlight, and the
+  // winner fills the third "Start here" card. A mix is preferred over a video:
+  // the two hard-coded cards are already one of each, and a club or radio mix
+  // rounds the row out better than a second video.
+  void (async () => {
+    const [mix, video] = await Promise.all([
+      MIXES_CSV_URL  ? renderMixes(MIXES_CSV_URL)   : Promise.resolve(null),
+      VIDEOS_CSV_URL ? renderVideos(VIDEOS_CSV_URL) : Promise.resolve(null),
+    ]);
+
+    const pick = [mix, video].find((c) => c && !isAlreadyFeatured(c)) ?? null;
+    renderFeatureSlot(pick);
+  })();
 }
 
 // ── Boot ─────────────────────────────────────────────────────────────────────

@@ -10,6 +10,7 @@
 
 import { fetchSheet, type Row } from './sheets';
 import { escHtml, escAttr, hrefAttr, srcAttr } from './safe';
+import { type FeaturedCandidate } from './featured';
 
 const oEmbedCache = new Map<string, { title: string; thumbnail_url: string }>();
 
@@ -86,10 +87,10 @@ function mixCard(mix: Mix): string {
     </a>`;
 }
 
-export async function renderMixes(csvUrl: string): Promise<void> {
+export async function renderMixes(csvUrl: string): Promise<FeaturedCandidate | null> {
   const list     = document.getElementById('mixes-list');
   const fallback = document.getElementById('mixes-sc-fallback');
-  if (!list) return;
+  if (!list) return null;
 
   try {
     const rows = await fetchSheet(csvUrl);
@@ -116,7 +117,7 @@ export async function renderMixes(csvUrl: string): Promise<void> {
       console.warn('[mixes] nothing to render —', hint);
       list.innerHTML = '';
       fallback?.classList.remove('hidden');
-      return;
+      return null;
     }
 
     // Cover art only exists in the oEmbed response, so the grid waits for it and
@@ -145,11 +146,18 @@ export async function renderMixes(csvUrl: string): Promise<void> {
       document.getElementById('mixes-grid')?.classList.remove('collapsed');
       btn.remove();
     });
+
+    // Offer the flagged mix up for the third "Start here" card
+    const top = mixes.find((m) => m.isHighlight);
+    return top
+      ? { provider: 'soundcloud', url: top.url, title: top.title, sub: top.genre, thumbUrl: top.thumbUrl }
+      : null;
   } catch (e) {
     // Swap the spinner for the full SoundCloud profile — a working section
     // rather than a red error.
     list.innerHTML = '';
     fallback?.classList.remove('hidden');
     console.error('[mixes] failed to load:', e);
+    return null;
   }
 }
