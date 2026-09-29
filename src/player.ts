@@ -165,8 +165,8 @@ export function initPlayerLinks(): void {
 
     if (opened) {
       e.preventDefault();
-      trackEvent('media_open', {
-        provider: kind,
+      // Provider rides in the name so the split is readable with no GA setup
+      trackEvent(`play_${kind}`, {
         item_name: label,
         link_url: link.href,
         method: 'in_app',

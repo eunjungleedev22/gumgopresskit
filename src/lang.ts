@@ -29,7 +29,8 @@ export function initLangTabs(): void {
       const lang = tab.dataset.lang;
       if (!lang || tab.classList.contains('is-active')) return;
       show(lang);
-      trackEvent('bio_language', { language: lang });
+      // Language in the name — three values, and it needs no GA setup to read
+      trackEvent(`bio_${lang}`);
     });
 
     tab.addEventListener('keydown', (e) => {

@@ -28,7 +28,19 @@ export function initAnalytics(): void {
   gtag('config', GA_ID);
 }
 
-/** Record an interaction. Params show up as event parameters in GA4. */
+/**
+ * Record an interaction.
+ *
+ * Event NAMES are reportable in GA4 with no setup — they show up under
+ * Engagement → Events straight away. Event PARAMETERS are collected but stay
+ * invisible until someone registers them as custom dimensions in the property,
+ * which no amount of client code can do.
+ *
+ * So anything with few possible values (which player, which language) is baked
+ * into the name and needs no dashboard work. Parameters are still sent for the
+ * open-ended detail — chiefly item_name, whose values come from the sheet and
+ * so cannot go in the name: GA4 caps a property at 500 distinct event names.
+ */
 export function trackEvent(name: string, params: Record<string, unknown> = {}): void {
   try {
     gtag('event', name, params);

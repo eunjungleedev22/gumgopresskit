@@ -160,8 +160,7 @@ export async function renderVideos(csvUrl: string): Promise<FeaturedCandidate | 
       const id = card.dataset.ytid ?? '';
       const play = () => {
         if (!openYouTube(id)) return;
-        trackEvent('media_open', {
-          provider: 'youtube',
+        trackEvent('play_youtube', {
           item_name: card.querySelector('.card-title')?.textContent?.trim() ?? '',
           link_url: `https://www.youtube.com/watch?v=${id}`,
           method: 'in_app',
