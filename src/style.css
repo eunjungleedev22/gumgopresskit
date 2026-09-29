@@ -320,6 +320,9 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
   padding: 14px 0;
   border-bottom: 1px solid var(--rule-soft);
 }
+/* A highlight with no URL yet: same row, no icon, no pointer */
+.numbered-item--static { cursor: default; }
+
 /* ↗ leaves the site, ▶ opens the in-app player */
 .numbered-icon {
   align-self: center;
