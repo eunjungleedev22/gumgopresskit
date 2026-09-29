@@ -5,7 +5,7 @@ CSV. No backend and no API key — the site stays fully static.
 
 | Tab | Env var | Renders |
 |-----|---------|---------|
-| Bio | `VITE_BIO_CSV_URL` | Biography section (EN + KR columns) |
+| Bio | `VITE_BIO_CSV_URL` | Biography section (EN / KO / ZH tabs) |
 | SoundCloud | `VITE_MIXES_CSV_URL` | Mixes grid |
 | Videos | `VITE_VIDEOS_CSV_URL` | YouTube grid |
 | Press | `VITE_PRESS_CSV_URL` | Press coverage list |
@@ -20,12 +20,13 @@ Header row must be row 1. Header names are lower-cased and trimmed on read, so
 
 | Column | Required | Notes |
 |--------|----------|-------|
-| `lang` | | `en` (default) or `ko` / `kr` / `korean` — picks which column the row fills |
+| `lang` | | `en` (default), `ko` / `kr` / `korean`, or `zh` / `cn` / `chinese` — picks which language tab the row fills |
 | `topline` | | Bold headline, rendered with the peach marker highlight |
 | `description` | | Body copy. A **blank line** starts a new paragraph. |
 | `text` | | Used when `description` is absent |
 
-Everything past the first two blocks collapses behind a "Read more" button.
+English shows by default; the other two sit behind buttons. Everything past the
+first two blocks of a tab collapses behind a "Read more" button.
 
 If this tab is empty or fails to load, the copy hard-coded in `index.html` (taken
 straight from the 2026 EPK PDF) stays on the page — the section is never blank.
@@ -34,8 +35,12 @@ straight from the 2026 EPK PDF) stays on the page — the section is never blank
 
 | lang | topline | description |
 |------|---------|-------------|
-| en | Featured in Mixmag Asia's “Artists Exciting Us in 2026” | From Singapore's dancefloors to clubs across Europe… |
-| ko | 2026년 Mixmag Asia 'Artists Exciting Us' 4월 편 소개 | 싱가포르의 플로어에서 출발한 GUMGO는… |
+| en | | Born in Korea, GUMGO debuted in Singapore in 2024… |
+| ko | | 한국 출신 DJ GUMGO는 2024년 싱가포르에서 데뷔했다… |
+| zh | | 出生于韩国的 GUMGO 于 2024 年在新加坡首次登台… |
+
+A language with no rows keeps the copy hard-coded in `index.html`, so you can
+translate one tab at a time.
 
 ---
 

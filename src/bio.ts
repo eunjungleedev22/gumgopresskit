@@ -71,24 +71,34 @@ function mount(el: HTMLElement, html: string, label: string): void {
   el.append(box, btn);
 }
 
+/** Sheet `lang` values, normalised to the three panels the page has. */
+function langOf(r: Row): 'en' | 'ko' | 'zh' {
+  const v = (r['lang'] ?? '').trim();
+  if (/^(ko|kr|korean|한국어)$/i.test(v)) return 'ko';
+  if (/^(zh|cn|zh-cn|zh-hans|chinese|简体中文|中文)$/i.test(v)) return 'zh';
+  return 'en';
+}
+
+const PANELS = [
+  { lang: 'ko' as const, id: 'bio-ko', more: '더 읽기' },
+  { lang: 'zh' as const, id: 'bio-zh', more: '阅读更多' },
+  { lang: 'en' as const, id: 'bio-en', more: 'Read more' },
+];
+
 export async function renderBio(csvUrl: string): Promise<void> {
-  const enEl = document.getElementById('bio-en');
-  const krEl = document.getElementById('bio-kr');
-  if (!enEl && !krEl) return;
+  if (!PANELS.some((p) => document.getElementById(p.id))) return;
 
   try {
     const rows = await fetchSheet(csvUrl);
     if (rows.length === 0) return;
 
-    const isKorean = (r: Row) => /^(ko|kr|korean|한국어)$/i.test((r['lang'] ?? '').trim());
-    const krRows = rows.filter(isKorean);
-    const enRows = rows.filter((r) => !isKorean(r));
-
-    const enHtml = buildColumn(enRows);
-    const krHtml = buildColumn(krRows);
-
-    if (enEl && enHtml) mount(enEl, enHtml, 'Read more');
-    if (krEl && krHtml) mount(krEl, krHtml, '더 읽기');
+    for (const panel of PANELS) {
+      const el = document.getElementById(panel.id);
+      if (!el) continue;
+      const html = buildColumn(rows.filter((r) => langOf(r) === panel.lang));
+      // No rows for this language leaves the hard-coded copy in place
+      if (html) mount(el, html, panel.more);
+    }
   } catch (e) {
     // Leave the hard-coded EPK copy in place
     console.error('[bio] failed to load:', e);

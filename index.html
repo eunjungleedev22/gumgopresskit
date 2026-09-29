@@ -91,12 +91,13 @@
     <!-- Google tag loader; the config call runs from main.ts so no inline script is needed -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-CKNF5FXSW6"></script>
 
-    <!-- Inter + Noto Sans KR — both SIL Open Font License, same faces as the EPK PDF -->
+    <!-- Inter + Noto Sans KR/SC — all SIL Open Font License. Google serves CJK
+         in unicode-range subsets, so only the blocks actually used download. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap"
     />
 
     <!-- Critical CSS — first paint before the bundle lands -->
@@ -236,87 +237,108 @@
       <div class="container">
         <header class="sheet-head">
           <h2 class="sheet-title">Biography</h2>
-          <p class="sheet-tag">Adapted from Resident Advisor</p>
         </header>
 
-        <div class="grid-2">
-          <!-- English — replaced by the Bio sheet when it has rows -->
-          <div class="reveal">
-            <p class="bio-col-label">English</p>
-            <div id="bio-en" class="bio-body">
-              <p class="bio-lead">
-                <span class="bio-topline marker">Featured in Mixmag Asia’s “Artists Exciting Us in 2026” — April</span>
-              </p>
-              <p>
-                From Singapore's dancefloors to clubs and radio platforms across Europe, GUMGO
-                continues to build a distinct cross-border presence.
-              </p>
-              <p>
-                Featured in Mixmag Asia's Artists Exciting Us in 2026 and heard on HÖR Berlin and
-                Oslated's Special Mix Series, GUMGO is a vinyl-focused selector whose sound was
-                shaped long before she ever touched a turntable. For her, vinyl is about selection.
-                Good music, a good dancefloor and happy moments are never limited by equipment.
-                Trained in samulnori, a Korean traditional percussion band, from the age of nine,
-                she spent her childhood inside repetition and resonance: cyclical rhythms played on
-                the janggu drum, built to entrance rather than perform. That grammar never left.
-              </p>
-              <p>
-                Today it drives sets built on heavy bass, minimal synths, and continuous grooves
-                that hold a dancefloor in motion; dark, hypnotic, and slightly eerie, pulling the
-                floor into SAMADHI, a state of deep absorption. Less a performance than a release.
-              </p>
-              <p>
-                Since her 2024 debut in Singapore she has carried her records out of the city and
-                across Asia and Europe — HÖR Berlin, Faust Seoul, Headquarters and RASA Singapore,
-                Output Busan, Bar Temp Bangkok for an all-night set, and local anchors like Hope
-                Records Bali and Studio Stereo Barcelona. She also hosts her own parties in Seoul
-                and Singapore: warm, intimate nights that read as the flip side of her dark sets.
-              </p>
-              <p>
-                Now relocating to Barcelona, GUMGO enters her next chapter in Europe, with her
-                debut EP planned for 2027.
-              </p>
-            </div>
-          </div>
+        <!-- English is the default; the other two are a click away. Each panel is
+             a real tabpanel so the whole thing is reachable from the keyboard. -->
+        <div class="lang-tabs reveal" role="tablist" aria-label="Biography language">
+          <button class="lang-tab is-active" type="button" role="tab"
+                  data-lang="en" aria-selected="true" aria-controls="bio-en">English</button>
+          <button class="lang-tab" type="button" role="tab" tabindex="-1"
+                  data-lang="ko" aria-selected="false" aria-controls="bio-ko">한국어</button>
+          <button class="lang-tab" type="button" role="tab" tabindex="-1"
+                  data-lang="zh" aria-selected="false" aria-controls="bio-zh">简体中文</button>
+        </div>
 
-          <!-- Korean -->
-          <div class="reveal">
-            <p class="bio-col-label">한국어</p>
-            <div id="bio-kr" class="bio-body bio-kr" lang="ko">
-              <p class="bio-lead">
-                <span class="bio-topline marker">2026년 Mixmag Asia ‘Artists Exciting Us’ 4월 편 소개</span>
-              </p>
-              <p>
-                싱가포르의 플로어에서 출발한 GUMGO는 유럽의 클럽과 라디오 플랫폼으로 활동을 넓히며
-                국경을 넘나드는 독자적인 입지를 구축하고 있다.
-              </p>
-              <p>
-                2026년 Mixmag Asia ‘Artists Exciting Us’에 소개되고 HÖR Berlin과 Oslated Special Mix
-                Series에서 셋을 선보인 GUMGO는, 턴테이블을 처음 만지기 훨씬 전부터 사운드의 기반을
-                쌓아온 바이닐 중심의 셀렉터다. 그녀에게 바이닐은 형식에 대한 규칙이 아니라 셀렉션을
-                위한 선택이다. 좋은 음악과 좋은 플로어, 그 안에서 만들어지는 행복한 순간은 장비에
-                한정되지 않는다. 아홉 살부터 한국 전통 타악 합주인 사물놀이를 배운 그녀는 장구의
-                순환적인 가락과 반복, 울림 속에서 어린 시절을 보냈다. 보여주기 위한 연주보다 듣는 이를
-                빠져들게 하는 연주였으며, 그 감각은 지금까지 이어진다.
-              </p>
-              <p>
-                이 감각은 묵직한 베이스와 미니멀 신스, 플로어를 계속 움직이게 하는 끊김 없는 그루브로
-                구성된 세트에 반영된다. 어둡고 최면적이며 조금은 기이한 흐름은 플로어를 깊은 몰입의
-                경지인 삼매(SAMADHI)로 이끈다. 공연보다는 해방에 가깝다.
-              </p>
-              <p>
-                2024년 싱가포르 데뷔 이후 레코드를 들고 아시아와 유럽을 오갔다. HÖR Berlin, Faust
-                Seoul, Headquarters와 RASA Singapore, Output Busan, 올나이트로 진행한 Bar Temp
-                Bangkok, 그리고 Hope Records Bali와 Studio Stereo Barcelona 같은 로컬 거점까지.
-                서울과 싱가포르에서는 직접 파티를 열었고, 어두운 세트와는 또 다른 따뜻하고 친밀한
-                밤을 만들었다.
-              </p>
-              <p>
-                현재 바르셀로나로 활동 거점을 옮기며 유럽에서의 다음 챕터를 시작한다. 첫 EP는
-                2027년 발매를 준비하고 있다.
-              </p>
-            </div>
-          </div>
+        <!-- Each panel is replaced by the Bio sheet when it has rows for that lang -->
+        <div class="bio-panel reveal" id="bio-en" role="tabpanel" data-bio-lang="en">
+          <p class="bio-lead">
+            Born in Korea, GUMGO debuted in Singapore in 2024 and built her sound on dancefloors
+            across Southeast Asia before taking it to Europe. She studied samulnori on the janggu
+            for four years from age nine. Along with her love of boom bap, it shaped her taste for
+            heavy bass and hard-hitting percussion.
+          </p>
+          <p>
+            In her vinyl-focused sets, bass and percussion carry the flow through minimal, dub
+            techno, electro and acid. Long grooves and metallic textures build a dark, hypnotic
+            and slightly eerie atmosphere, drawing the floor toward SAMADHI, a state of deep
+            absorption. Less a performance than a release.
+          </p>
+          <p>
+            She has played at Headquarters and RASA in Singapore. Her other appearances include an
+            all-night set at Bar Temp Bangkok and sets at Output Busan, Faust Seoul and Studio
+            Stereo Barcelona. In 2026, she performed for HÖR Berlin, recorded for 20ft Radio, was
+            featured in Mixmag Asia’s Artists Exciting Us series and contributed Oslated Special
+            Mix 097. She has also hosted her own parties in Seoul and Singapore.
+          </p>
+          <p>
+            Press and venue names cannot measure musical depth, but they show an artist willing to
+            keep testing herself in unfamiliar rooms. What stays with GUMGO is the energy she and
+            the crowd give each other.
+          </p>
+          <p>
+            Now based in Barcelona, she is digging through its record shops under the sun, letting
+            new influences deepen her selection. Her debut EP is set for release in 2027.
+          </p>
+        </div>
+
+        <div class="bio-panel bio-cjk reveal" id="bio-ko" role="tabpanel" data-bio-lang="ko" lang="ko" hidden>
+          <p class="bio-lead">
+            한국 출신 DJ GUMGO는 2024년 싱가포르에서 데뷔했다. 동남아시아 곳곳의 댄스플로어에서
+            자신의 사운드를 다듬은 뒤 유럽으로 활동을 넓혔다. 아홉 살부터 4년간 사물놀이 장구를
+            배운 경험과 붐뱁에 대한 애정은 묵직한 베이스와 타격감 있는 퍼커션을 향한 취향의
+            바탕이 됐다.
+          </p>
+          <p>
+            바이닐 중심의 셋에서는 베이스와 퍼커션을 축으로 미니멀, 덥 테크노, 일렉트로, 애시드를
+            넘나든다. 길게 이어지는 그루브와 금속성 소리가 어둡고 최면적이면서도 조금은 기묘한
+            분위기를 만들고, 관객을 깊은 몰입의 상태인 SAMADHI로 이끈다. 공연이라기보다 쌓인
+            에너지를 함께 풀어내는 경험에 가깝다.
+          </p>
+          <p>
+            싱가포르의 Headquarters와 RASA에서 플레이했으며, 방콕 Bar Temp에서는 올나잇 셋을
+            선보였다. 부산 Output, 서울 Faust, 바르셀로나 Studio Stereo 등에도 섰다. 2026년에는
+            HÖR Berlin에서 공연하고 20ft Radio를 위한 셋을 녹음했다. Mixmag Asia의
+            <em>Artists Exciting Us</em> 시리즈에 소개됐으며 Oslated Special Mix 097에도
+            참여했다. 서울과 싱가포르에서 직접 파티를 열기도 했다.
+          </p>
+          <p>
+            매체의 주목이나 공연장 이름이 음악의 깊이를 대신 증명해 주지는 않는다. 그러나 그
+            이력은 GUMGO가 낯선 공간에 계속 뛰어들며 자신의 음악을 넓혀 왔음을 보여준다.
+            그녀에게 가장 중요한 것은 언제나 관객과 주고받는 에너지다.
+          </p>
+          <p>
+            2026년부터 바르셀로나를 거점으로 활동 중인 GUMGO는 이 도시의 햇살과 레코드숍에서
+            새로운 영감을 얻으며 선곡의 깊이를 더하고 있다. 첫 EP는 2027년 발매 예정이다.
+          </p>
+        </div>
+
+        <div class="bio-panel bio-cjk reveal" id="bio-zh" role="tabpanel" data-bio-lang="zh" lang="zh-Hans" hidden>
+          <p class="bio-lead">
+            出生于韩国的 GUMGO 于 2024 年在新加坡首次登台。她在东南亚的舞池中打磨自己的声音，随后
+            走向欧洲。九岁起，她学习“四物农乐”中的长鼓，持续四年。这段韩国传统打击乐的训练和她对
+            Boom Bap 的喜爱，让她偏爱厚重低频与有力的打击乐。
+          </p>
+          <p>
+            在以黑胶为核心的 DJ set 中，低频与打击乐带动音乐在 Minimal、Dub Techno、Electro 与
+            Acid 之间流动。绵长的律动与金属质感的音色营造出幽暗、催眠般又略带诡异的氛围，将舞池
+            带向 SAMADHI——一种深度沉浸的状态。与其说是一场表演，不如说是一次释放。
+          </p>
+          <p>
+            她曾在新加坡的 Headquarters 和 RASA 演出。其他演出包括曼谷 Bar Temp 的整晚 DJ set，
+            以及釜山 Output、首尔 Faust 和巴塞罗那 Studio Stereo 的演出。2026 年，她在
+            HÖR Berlin 演出，为 20ft Radio 录制 DJ set，入选 Mixmag Asia 的
+            <em>Artists Exciting Us</em> 系列。她还为 Oslated 录制 Special Mix 097，也曾在首尔和
+            新加坡主办自己的派对。
+          </p>
+          <p>
+            媒体报道和演出场地的名字本身无法衡量音乐的深度，但这些经历足以说明，她是一位愿意不断
+            走进新场景、挑战自己的音乐人。对 GUMGO 来说，最难忘的仍是她与舞池观众之间流动的能量。
+          </p>
+          <p>
+            如今她以巴塞罗那为据点。在这座阳光明媚的城市，她继续在唱片店里寻觅新的声音，为自己的
+            选曲增添更多层次。她的首张 EP 定于 2027 年发行。
+          </p>
         </div>
       </div>
     </section>

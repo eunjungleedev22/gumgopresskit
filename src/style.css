@@ -33,6 +33,7 @@
 
   --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --kr:   'Noto Sans KR', 'Inter', system-ui, sans-serif;
+  --sc:   'Noto Sans SC', 'Noto Sans KR', 'Inter', system-ui, sans-serif;
 
   --nav-h:   52px;
   --pad:     clamp(20px, 4.5vw, 56px);
@@ -395,6 +396,64 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
 }
 
 /* ── Biography ──────────────────────────────────────────────────────────── */
+/* ── Biography ──────────────────────────────────────────────────────────── */
+/* Language switch. Three bios cannot sit side by side, so they stack as
+   tabpanels with English showing by default. */
+.lang-tabs {
+  display: flex;
+  width: fit-content;
+  max-width: 100%;
+  border: 1px solid var(--rule);
+  margin-bottom: clamp(26px, 3.5vw, 40px);
+}
+.lang-tab {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: 10px clamp(12px, 2vw, 20px);
+  white-space: nowrap;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.lang-tab + .lang-tab { border-left: 1px solid var(--rule); }
+.lang-tab.is-active { background: var(--ink); color: var(--paper); }
+@media (hover: hover) {
+  .lang-tab:not(.is-active):hover { background: var(--paper-2); color: var(--ink); }
+}
+
+/* Two text columns keep the measure readable at full container width */
+.bio-panel[hidden] { display: none; }
+@media (min-width: 900px) {
+  .bio-panel {
+    column-count: 2;
+    column-gap: clamp(30px, 4vw, 60px);
+  }
+}
+
+.bio-panel p {
+  font-size: 14px;
+  line-height: 1.78;
+  color: var(--ink-2);
+  margin-bottom: 15px;
+}
+.bio-panel p:last-child { margin-bottom: 0; }
+
+.bio-panel .bio-lead {
+  font-size: clamp(15px, 1.9vw, 17px);
+  line-height: 1.68;
+  color: var(--ink);
+}
+.bio-panel em { font-style: italic; }
+
+/* Korean and Chinese need their own faces and their own wrapping rules */
+.bio-cjk p {
+  font-family: var(--kr);
+  font-size: 13.5px;
+  line-height: 1.9;
+}
+.bio-zh, .bio-panel[lang='zh-Hans'] p { font-family: var(--sc); }
+
 .bio-col-label {
   font-size: 10px;
   font-weight: 700;
