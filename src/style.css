@@ -77,6 +77,19 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
 
 ::selection { background: var(--ink); color: var(--paper); }
 
+/* Anything fed from the sheet or a third-party title can contain a long token
+   with no break opportunity. Without this it overflows its box and the clamp
+   just clips it horizontally instead of wrapping. */
+.card-title, .card-caption, .card-genre,
+.feature-title, .feature-sub,
+.venue-name, .venue-city,
+.numbered-title, .numbered-sub,
+.press-title, .press-summary, .press-meta,
+.gig-venue, .gig-city,
+.contact-val {
+  overflow-wrap: anywhere;
+}
+
 /* ── Layout primitives ──────────────────────────────────────────────────── */
 .container {
   width: min(1240px, 100%);
