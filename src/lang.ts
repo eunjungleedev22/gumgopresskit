@@ -42,3 +42,16 @@ export function initLangTabs(): void {
     });
   });
 }
+
+/** Reveals the venues held back behind the "Show all venues" button. */
+export function initVenuesExpand(): void {
+  const wrap = document.getElementById('venues');
+  const btn = document.getElementById('venues-expand-btn');
+  if (!wrap || !btn) return;
+
+  btn.addEventListener('click', () => {
+    wrap.classList.remove('is-collapsed');
+    btn.remove();
+    trackEvent('venues_expand');
+  });
+}

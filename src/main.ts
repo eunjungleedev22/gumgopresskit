@@ -7,7 +7,7 @@ import { renderBio } from './bio';
 import { initAnalytics } from './analytics';
 import { initPlayerLinks } from './player';
 import { renderFeatureSlot, isAlreadyFeatured } from './featured';
-import { initLangTabs } from './lang';
+import { initLangTabs, initVenuesExpand } from './lang';
 
 // ── Config ───────────────────────────────────────────────────────────────────
 const GIGS_CSV_URL   = import.meta.env.VITE_GIGS_CSV_URL   as string | undefined;
@@ -125,6 +125,7 @@ function boot(): void {
   initAnalytics();
   initPlayerLinks();
   initLangTabs();
+  initVenuesExpand();
   initNav();
   initActiveNav();
   initReveal();

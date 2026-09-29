@@ -196,29 +196,45 @@
           </div>
         </div>
 
-        <!-- Selected venues — 1 / 2 / 3 columns. Taken from the 2026 EPK; the
-             chips mark the names worth scanning for. HÖR and Headstream are
-             broadcast platforms, so they sit under Radio & Mixes, not here. -->
-        <div class="venues reveal">
+        <!-- Selected venues, split Europe / Asia. Nine show by default — a longer
+             list makes the booker work out which names matter — and the rest are
+             one click away. All three European rooms stay visible, so the current
+             base reads at a glance; expanding only deepens the Asian run. -->
+        <div class="venues reveal is-collapsed" id="venues">
           <p class="label">Selected Venues</p>
-          <div class="venue-grid">
-            <div class="venue"><p class="venue-name"><span class="chip">Headquarters</span></p><p class="venue-city">Singapore</p></div>
-            <div class="venue"><p class="venue-name"><span class="chip">RASA</span></p><p class="venue-city">Singapore</p></div>
-            <div class="venue"><p class="venue-name"><span class="chip">Santai</span></p><p class="venue-city">Singapore</p></div>
-            <div class="venue"><p class="venue-name"><span class="chip">Studio Stereo</span></p><p class="venue-city">Barcelona</p></div>
-            <div class="venue"><p class="venue-name">Switch Pocket Club</p><p class="venue-city">Barcelona</p></div>
-            <div class="venue"><p class="venue-name"><span class="chip">Ganok</span></p><p class="venue-city">Lviv, Ukraine</p></div>
-            <div class="venue"><p class="venue-name"><span class="chip">Bar Temp</span></p><p class="venue-city">Bangkok · All Night Long</p></div>
-            <div class="venue"><p class="venue-name">Noise</p><p class="venue-city">Chiang Mai</p></div>
-            <div class="venue"><p class="venue-name"><span class="chip">Faust</span></p><p class="venue-city">Seoul</p></div>
-            <div class="venue"><p class="venue-name">Nue</p><p class="venue-city">Seoul</p></div>
-            <div class="venue"><p class="venue-name">Dumb</p><p class="venue-city">Seoul</p></div>
-            <div class="venue"><p class="venue-name">MTL Hannam</p><p class="venue-city">Seoul</p></div>
-            <div class="venue"><p class="venue-name"><span class="chip">Output</span></p><p class="venue-city">Busan</p></div>
-            <div class="venue"><p class="venue-name">Nasub</p><p class="venue-city">Busan</p></div>
-            <div class="venue"><p class="venue-name">Hope Records</p><p class="venue-city">Bali</p></div>
-            <div class="venue"><p class="venue-name">Millers Records</p><p class="venue-city">Bali</p></div>
+
+          <div class="venue-region">
+            <p class="venue-region-label">Europe</p>
+            <div class="venue-grid">
+              <div class="venue"><p class="venue-name"><span class="chip">Studio Stereo</span></p><p class="venue-city">Barcelona</p></div>
+              <div class="venue"><p class="venue-name">Switch Pocket Club</p><p class="venue-city">Barcelona</p></div>
+              <div class="venue"><p class="venue-name"><span class="chip">Ganok</span></p><p class="venue-city">Lviv, Ukraine</p></div>
+            </div>
           </div>
+
+          <div class="venue-region">
+            <p class="venue-region-label">Asia</p>
+            <div class="venue-grid">
+              <div class="venue"><p class="venue-name"><span class="chip">Headquarters</span></p><p class="venue-city">Singapore</p></div>
+              <div class="venue"><p class="venue-name"><span class="chip">RASA</span></p><p class="venue-city">Singapore</p></div>
+              <div class="venue"><p class="venue-name"><span class="chip">Santai</span></p><p class="venue-city">Singapore</p></div>
+              <div class="venue"><p class="venue-name"><span class="chip">Bar Temp</span></p><p class="venue-city">Bangkok · All Night Long</p></div>
+              <div class="venue"><p class="venue-name"><span class="chip">Faust</span></p><p class="venue-city">Seoul</p></div>
+              <div class="venue"><p class="venue-name"><span class="chip">Output</span></p><p class="venue-city">Busan</p></div>
+
+              <div class="venue venue--more"><p class="venue-name">Nue</p><p class="venue-city">Seoul</p></div>
+              <div class="venue venue--more"><p class="venue-name">Dumb</p><p class="venue-city">Seoul</p></div>
+              <div class="venue venue--more"><p class="venue-name">MTL Hannam</p><p class="venue-city">Seoul</p></div>
+              <div class="venue venue--more"><p class="venue-name">Nasub</p><p class="venue-city">Busan</p></div>
+              <div class="venue venue--more"><p class="venue-name">Noise</p><p class="venue-city">Chiang Mai</p></div>
+              <div class="venue venue--more"><p class="venue-name">Hope Records</p><p class="venue-city">Bali</p></div>
+              <div class="venue venue--more"><p class="venue-name">Millers Records</p><p class="venue-city">Bali</p></div>
+            </div>
+          </div>
+
+          <button class="expand-btn" type="button" id="venues-expand-btn"
+                  aria-controls="venues" aria-expanded="false">Show all venues</button>
+        </div>
         </div>
 
         <!-- Radio and mix appearances sit with the venues: both are credits.

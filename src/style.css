@@ -381,6 +381,22 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
 @media (min-width: 640px)  { .venue-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 1024px) { .venue-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
+/* Region split. Nine rows show until the list is expanded; the seven deeper
+   Asian rooms sit behind the button. */
+.venue-region + .venue-region { margin-top: clamp(24px, 3.2vw, 38px); }
+.venue-region-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 2px;
+}
+.venues.is-collapsed .venue--more { display: none; }
+.venues .expand-btn { margin-top: clamp(20px, 2.6vw, 28px); }
+
 .venue {
   padding: 11px 0;
   border-bottom: 1px solid var(--rule-soft);
