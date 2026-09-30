@@ -21,8 +21,9 @@ function preferredLang(available: Set<string>): string {
   const tags = navigator.languages?.length ? navigator.languages : [navigator.language];
   for (const tag of tags) {
     const base = (tag || '').toLowerCase().split('-')[0];
-    // Only Simplified is written, but it still beats English for any Chinese reader
-    if ((base === 'ko' || base === 'zh' || base === 'en') && available.has(base)) return base;
+    // Chinese is written in Simplified only, but it still beats English for any
+    // Chinese reader, so zh-TW and zh-HK match too
+    if (['ko', 'zh', 'es', 'en'].includes(base) && available.has(base)) return base;
   }
   return 'en';
 }

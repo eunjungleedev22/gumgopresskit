@@ -449,6 +449,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
    tabpanels with English showing by default. */
 .lang-tabs {
   display: flex;
+  flex-wrap: wrap;          /* four languages will not fit one row on a phone */
   width: fit-content;
   max-width: 100%;
   border: 1px solid var(--rule);
@@ -464,6 +465,8 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
   white-space: nowrap;
   transition: background 0.2s ease, color 0.2s ease;
 }
+/* The separator has to follow the wrap, or a row that starts mid-list
+   carries a stray left border. */
 .lang-tab + .lang-tab { border-left: 1px solid var(--rule); }
 .lang-tab.is-active { background: var(--ink); color: var(--paper); }
 @media (hover: hover) {

@@ -71,17 +71,19 @@ function mount(el: HTMLElement, html: string, label: string): void {
   el.append(box, btn);
 }
 
-/** Sheet `lang` values, normalised to the three panels the page has. */
-function langOf(r: Row): 'en' | 'ko' | 'zh' {
+/** Sheet `lang` values, normalised to the language panels the page has. */
+function langOf(r: Row): 'en' | 'ko' | 'zh' | 'es' {
   const v = (r['lang'] ?? '').trim();
   if (/^(ko|kr|korean|한국어)$/i.test(v)) return 'ko';
   if (/^(zh|cn|zh-cn|zh-hans|chinese|简体中文|中文)$/i.test(v)) return 'zh';
+  if (/^(es|esp|spanish|castellano|español|espanol)$/i.test(v)) return 'es';
   return 'en';
 }
 
 const PANELS = [
   { lang: 'ko' as const, id: 'bio-ko', more: '더 읽기' },
   { lang: 'zh' as const, id: 'bio-zh', more: '阅读更多' },
+  { lang: 'es' as const, id: 'bio-es', more: 'Seguir leyendo' },
   { lang: 'en' as const, id: 'bio-en', more: 'Read more' },
 ];
 
