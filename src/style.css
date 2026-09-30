@@ -447,13 +447,14 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
 /* ── Biography ──────────────────────────────────────────────────────────── */
 /* Language switch. Three bios cannot sit side by side, so they stack as
    tabpanels with English showing by default. */
+.lang-switch { margin-bottom: clamp(24px, 3.2vw, 36px); }
+
+/* Tabs from 640px up; below that the native picker takes over */
 .lang-tabs {
-  display: flex;
-  flex-wrap: wrap;          /* four languages will not fit one row on a phone */
+  display: none;
   width: fit-content;
   max-width: 100%;
   border: 1px solid var(--rule);
-  margin-bottom: clamp(26px, 3.5vw, 40px);
 }
 .lang-tab {
   font-size: 10px;
@@ -461,17 +462,72 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--ink-3);
-  padding: 10px clamp(12px, 2vw, 20px);
+  padding: 10px clamp(12px, 1.8vw, 18px);
   white-space: nowrap;
   transition: background 0.2s ease, color 0.2s ease;
 }
-/* The separator has to follow the wrap, or a row that starts mid-list
-   carries a stray left border. */
 .lang-tab + .lang-tab { border-left: 1px solid var(--rule); }
 .lang-tab.is-active { background: var(--ink); color: var(--paper); }
 @media (hover: hover) {
   .lang-tab:not(.is-active):hover { background: var(--paper-2); color: var(--ink); }
 }
+
+/* Native select: the phone's own picker beats five wrapped chips, and it needs
+   no custom keyboard or focus handling. Styled to match the chips around it. */
+/* The caret is drawn rather than inlined as a data: URI — img-src does not
+   allow data:, and CSS background images are governed by img-src. */
+.lang-select-wrap { position: relative; width: 100%; max-width: 320px; }
+.lang-select-wrap::after {
+  content: '';
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  width: 7px; height: 7px;
+  border-right: 1.6px solid var(--ink);
+  border-bottom: 1.6px solid var(--ink);
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+}
+
+.lang-select {
+  display: block;
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 0;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 12px 36px 12px 14px;
+}
+
+@media (min-width: 640px) {
+  .lang-tabs { display: flex; }
+  .lang-select-wrap { display: none; }
+}
+
+/* Machine-translation offer, for visitors with none of the five languages */
+.bio-mt-note {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--ink-3);
+  border-left: 2px solid var(--peach-deep);
+  padding: 2px 0 2px 12px;
+  margin-bottom: clamp(22px, 3vw, 32px);
+  max-width: 68ch;
+}
+.bio-mt-link {
+  color: var(--ink);
+  font-weight: 600;
+  border-bottom: 1px solid var(--rule);
+  transition: border-color 0.2s;
+}
+.bio-mt-link:hover { border-bottom-color: var(--ink); }
 
 /* Two text columns keep the measure readable at full container width */
 .bio-panel[hidden] { display: none; }

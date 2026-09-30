@@ -256,16 +256,37 @@
 
         <!-- English is the default; the other two are a click away. Each panel is
              a real tabpanel so the whole thing is reachable from the keyboard. -->
-        <div class="lang-tabs reveal" role="tablist" aria-label="Biography language">
-          <button class="lang-tab is-active" type="button" role="tab"
-                  data-lang="en" aria-selected="true" aria-controls="bio-en">English</button>
-          <button class="lang-tab" type="button" role="tab" tabindex="-1"
-                  data-lang="ko" aria-selected="false" aria-controls="bio-ko">한국어</button>
-          <button class="lang-tab" type="button" role="tab" tabindex="-1"
-                  data-lang="zh" aria-selected="false" aria-controls="bio-zh">简体中文</button>
-          <button class="lang-tab" type="button" role="tab" tabindex="-1"
-                  data-lang="es" aria-selected="false" aria-controls="bio-es">Español</button>
+        <!-- Tabs read well across a desktop row; on a phone five of them either
+             wrap into a ragged block or scroll out of sight, so that width gets
+             the platform's own picker instead. Both drive the same state. -->
+        <div class="lang-switch reveal">
+          <div class="lang-tabs" role="tablist" aria-label="Biography language">
+            <button class="lang-tab is-active" type="button" role="tab"
+                    data-lang="en" aria-selected="true" aria-controls="bio-en">English</button>
+            <button class="lang-tab" type="button" role="tab" tabindex="-1"
+                    data-lang="es" aria-selected="false" aria-controls="bio-es">Español</button>
+            <button class="lang-tab" type="button" role="tab" tabindex="-1"
+                    data-lang="ca" aria-selected="false" aria-controls="bio-ca">Català</button>
+            <button class="lang-tab" type="button" role="tab" tabindex="-1"
+                    data-lang="zh" aria-selected="false" aria-controls="bio-zh">简体中文</button>
+            <button class="lang-tab" type="button" role="tab" tabindex="-1"
+                    data-lang="ko" aria-selected="false" aria-controls="bio-ko">한국어</button>
+          </div>
+
+          <div class="lang-select-wrap">
+            <select class="lang-select" id="lang-select" aria-label="Biography language">
+              <option value="en">English</option>
+              <option value="es">Español</option>
+              <option value="ca">Català</option>
+              <option value="zh">简体中文</option>
+              <option value="ko">한국어</option>
+            </select>
+          </div>
         </div>
+
+        <!-- Filled in by lang.ts when the visitor's language is not one of the five -->
+        <p class="bio-mt-note hidden" id="bio-mt-note"></p>
+
 
         <!-- Each panel is replaced by the Bio sheet when it has rows for that lang -->
         <div class="bio-panel reveal" id="bio-en" role="tabpanel" data-bio-lang="en">
@@ -389,6 +410,40 @@
             Instalada ahora en Barcelona, rebusca en sus tiendas de discos bajo el sol y deja que
             las nuevas influencias den más hondura a su selección. Su primer EP está previsto para
             2027.
+          </p>
+        </div>
+
+        <div class="bio-panel reveal" id="bio-ca" role="tabpanel" data-bio-lang="ca" lang="ca" hidden>
+          <p class="bio-lead">
+            Nascuda a Corea, GUMGO va debutar a Singapur el 2024 i va forjar el seu so a les pistes
+            del Sud-est Asiàtic abans de portar-lo a Europa. Als nou anys va començar a estudiar
+            samulnori —percussió tradicional coreana— amb el janggu, i hi va seguir quatre anys.
+            Aquesta base, juntament amb la seva afició al boom bap, explica el seu gust pels greus
+            densos i la percussió contundent.
+          </p>
+          <p>
+            En els seus sets, centrats en el vinil, el baix i la percussió sostenen el recorregut
+            entre minimal, dub techno, electro i acid. Els grooves llargs i les textures
+            metàl·liques aixequen una atmosfera fosca, hipnòtica i una mica inquietant que
+            arrossega la pista cap al SAMADHI, un estat d’absorció profunda. Més que una actuació,
+            un alliberament.
+          </p>
+          <p>
+            Ha punxat a Headquarters i RASA, a Singapur. Entre les seves altres dates hi ha un all
+            night long al Bar Temp de Bangkok i sessions a Output (Busan), Faust (Seül) i Studio
+            Stereo (Barcelona). El 2026 va tocar per a HÖR Berlin, va gravar un set per a 20ft
+            Radio, va entrar a la sèrie <em>Artists Exciting Us</em> de Mixmag Asia i va signar
+            l’Oslated Special Mix 097. També organitza les seves pròpies festes a Seül i Singapur.
+          </p>
+          <p>
+            Ni la premsa ni els noms de les sales mesuren la profunditat d’una proposta, però sí
+            que retraten una artista disposada a continuar posant-se a prova en sales que no
+            coneix. El que de debò s’emporta GUMGO és l’energia que intercanvia amb la pista.
+          </p>
+          <p>
+            Instal·lada ara a Barcelona, remena les botigues de discos de la ciutat sota el sol i
+            deixa que les noves influències donin més fondària a la seva selecció. El seu primer EP
+            està previst per al 2027.
           </p>
         </div>
       </div>
