@@ -9,8 +9,18 @@
 import { trackEvent } from './analytics';
 
 /**
- * Which translation to open on. English is the default; a Korean or Chinese
- * browser gets its own.
+ * Browser tags that are best served by a panel written in another language.
+ *
+ * Catalan, Galician and Basque are co-official in their regions of Spain and
+ * every one of those readers also reads Spanish. With no Catalan text on the
+ * site, Spanish serves them far better than dropping them to English — which
+ * matters here, since Barcelona is home.
+ */
+const ALIASES: Record<string, string> = { ca: 'es', gl: 'es', eu: 'es' };
+
+/**
+ * Which translation to open on. English is the default; a Korean, Chinese or
+ * Spanish browser gets its own.
  *
  * This reads the browser's language preference, not the visitor's location —
  * a static site has no way to know where a request came from, and the
@@ -21,9 +31,10 @@ function preferredLang(available: Set<string>): string {
   const tags = navigator.languages?.length ? navigator.languages : [navigator.language];
   for (const tag of tags) {
     const base = (tag || '').toLowerCase().split('-')[0];
+    const want = ALIASES[base] ?? base;
     // Chinese is written in Simplified only, but it still beats English for any
     // Chinese reader, so zh-TW and zh-HK match too
-    if (['ko', 'zh', 'es', 'en'].includes(base) && available.has(base)) return base;
+    if (['ko', 'zh', 'es', 'en'].includes(want) && available.has(want)) return want;
   }
   return 'en';
 }

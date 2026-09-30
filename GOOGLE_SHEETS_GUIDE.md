@@ -26,7 +26,9 @@ Header row must be row 1. Header names are lower-cased and trimmed on read, so
 | `text` | | Used when `description` is absent |
 
 The tab opens on the reader's browser language — Korean, Chinese and Spanish
-browsers each land on their own, everything else on English. Everything past
+browsers each land on their own, everything else on English. Catalan, Galician
+and Basque browsers get Spanish rather than English, since those readers all
+read Spanish and the site carries no Catalan. Everything past
 the first two blocks of a tab collapses behind a "Read more" button.
 
 If this tab is empty or fails to load, the copy hard-coded in `index.html` (taken
