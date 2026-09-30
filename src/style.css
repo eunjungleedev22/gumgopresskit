@@ -385,13 +385,6 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
   letter-spacing: 0.01em;
 }
 
-.profile-text {
-  font-size: 14px;
-  line-height: 1.72;
-  color: var(--ink-2);
-  max-width: 46ch;
-}
-
 /* ── Venues ─────────────────────────────────────────────────────────────── */
 .venues { margin-top: clamp(44px, 6vw, 72px); }
 
@@ -581,39 +574,12 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
 }
 .bio-zh, .bio-panel[lang='zh-Hans'] p { font-family: var(--sc); }
 
-.bio-col-label {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--rule);
-  margin-bottom: 20px;
-}
-
-.bio-body p {
-  font-size: 14px;
-  line-height: 1.78;
-  color: var(--ink-2);
-  margin-bottom: 15px;
-}
-.bio-body p:last-child { margin-bottom: 0; }
-
-.bio-body .bio-lead {
-  font-size: clamp(15px, 1.9vw, 17px);
-  font-weight: 600;
-  line-height: 1.6;
-  color: var(--ink);
-  margin-bottom: 20px;
-}
 .bio-topline {
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: -0.01em;
 }
 
-.bio-kr p { font-family: var(--kr); font-size: 13.5px; line-height: 1.85; }
 
 .bio-collapse {
   overflow: hidden;
@@ -642,15 +608,6 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
 .bio-expand-btn:hover { gap: 13px; }
 
 /* ── Media / contact lists ──────────────────────────────────────────────── */
-.media-list { display: flex; flex-direction: column; }
-.media-item {
-  padding: 9px 0;
-  border-bottom: 1px solid var(--rule-soft);
-  font-size: 13px;
-  font-weight: 500;
-}
-.media-item .chip { font-size: 12px; }
-
 .contact-list { display: flex; flex-direction: column; gap: 20px; }
 .contact-row {
   display: flex;
@@ -1161,8 +1118,7 @@ footer {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-.empty-state,
-.data-error {
+.empty-state {
   padding: 40px 20px;
   text-align: center;
   font-size: 11px;
@@ -1171,7 +1127,6 @@ footer {
   text-transform: uppercase;
   color: var(--ink-4);
 }
-.data-error { color: #b3261e; }
 .hidden { display: none !important; }
 
 /* ── Hover ──────────────────────────────────────────────────────────────────
@@ -1180,13 +1135,11 @@ footer {
    (hover: hover) so touch devices never get a state stuck on after a tap. */
 @media (hover: hover) {
   .venue,
-  .media-item,
   .numbered-item,
   .gig-row {
     transition: padding-left 0.25s ease, border-color 0.2s ease;
   }
   .venue:hover,
-  .media-item:hover,
   .numbered-item:hover,
   .gig-row:hover {
     padding-left: 7px;
@@ -1210,8 +1163,7 @@ footer {
 
   /* Straight black/white inversion — no third colour entering the palette */
   .chip { transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease; }
-  .venue:hover .chip,
-  .media-item:hover .chip {
+  .venue:hover .chip {
     background: var(--paper);
     color: var(--ink);
     box-shadow: inset 0 0 0 1.5px var(--ink);
