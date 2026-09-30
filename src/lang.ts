@@ -48,44 +48,53 @@ function browserTag(): string {
   return tags[0] || 'en';
 }
 
-/** "Français", "Deutsch" — falls back to the raw tag where unsupported. */
-function nativeName(tag: string): string {
-  try {
-    const base = tag.toLowerCase().split('-')[0];
-    return new Intl.DisplayNames([tag], { type: 'language' }).of(base) ?? tag;
-  } catch {
-    return tag;
+/** Google serves its translated view from <host-with-dashes>.translate.goog. */
+function onTranslatedPage(): boolean {
+  return location.hostname.endsWith('.translate.goog');
+}
+
+/** The real address, for getting back off the proxy. */
+function canonicalUrl(): string {
+  return document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href
+    ?? 'https://gumgo.art/';
+}
+
+function mtLink(text: string, href: string, event: string): HTMLAnchorElement {
+  const a = document.createElement('a');
+  a.href = href;
+  a.textContent = text;
+  a.className = 'bio-mt-link';
+  if (href.startsWith('http') && !href.startsWith(canonicalUrl())) {
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
   }
+  a.addEventListener('click', () => trackEvent(event, { link_url: href }));
+  return a;
 }
 
 /**
- * Offer machine translation to visitors we have no bio for.
+ * Two states, depending on which side of the translation the reader is on.
  *
- * A static site cannot translate anything itself: the Google website widget was
- * retired years ago, and the Cloud Translation API needs a key that would be
- * public in this bundle. So this points at the two things that do work — the
- * browser's own translator, and Google's translated view of the page — and says
- * plainly that the result is machine output.
+ * On the real site, a visitor whose language we have no bio for gets one link.
+ * On Google's translated view — where the whole page, this line included, is
+ * machine output — it says so and offers the way back. A static site cannot
+ * translate in place: the Google website widget was retired and the Cloud
+ * Translation API needs a key that would be public in this bundle.
  */
 function showTranslationNote(): void {
   const note = document.getElementById('bio-mt-note');
   if (!note) return;
+  note.textContent = '';
 
-  const tag = browserTag();
-  const name = nativeName(tag);
-  const target = tag.toLowerCase().split('-')[0];
+  if (onTranslatedPage()) {
+    note.appendChild(document.createTextNode('Machine translated from English · '));
+    note.appendChild(mtLink('See original', canonicalUrl(), 'bio_see_original'));
+  } else {
+    const target = browserTag().toLowerCase().split('-')[0];
+    const href = `https://translate.google.com/translate?sl=en&tl=${encodeURIComponent(target)}&u=${encodeURIComponent(location.href)}`;
+    note.appendChild(mtLink('Translate this page', href, 'bio_machine_translate'));
+  }
 
-  const link = document.createElement('a');
-  link.href = `https://translate.google.com/translate?sl=en&tl=${encodeURIComponent(target)}&u=${encodeURIComponent(location.href)}`;
-  link.target = '_blank';
-  link.rel = 'noopener noreferrer';
-  link.textContent = 'Open the machine translation';
-  link.className = 'bio-mt-link';
-  link.addEventListener('click', () => trackEvent('bio_machine_translate', { link_url: link.href }));
-
-  note.textContent = `This biography is not available in ${name}. Your browser can translate the page, or `;
-  note.appendChild(link);
-  note.appendChild(document.createTextNode(' — machine translated from English, not reviewed.'));
   note.classList.remove('hidden');
 }
 
@@ -136,7 +145,10 @@ export function initLangTabs(): void {
   const initial = preferredLang(available);
 
   if (initial && initial !== 'en') show(initial);
-  if (!initial) showTranslationNote();
+
+  // Mark the switch as machine output while on the translated view
+  if (onTranslatedPage()) document.querySelector('.lang-switch')?.classList.add('is-translated');
+  if (!initial || onTranslatedPage()) showTranslationNote();
 }
 
 /** Reveals the venues held back behind the "Show all venues" button. */

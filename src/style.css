@@ -447,7 +447,15 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
 /* ── Biography ──────────────────────────────────────────────────────────── */
 /* Language switch. Three bios cannot sit side by side, so they stack as
    tabpanels with English showing by default. */
-.lang-switch { margin-bottom: clamp(24px, 3.2vw, 36px); }
+/* Flex so the "Translated" marker sits beside the control rather than under it */
+.lang-switch {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: clamp(24px, 3.2vw, 36px);
+}
+.lang-switch.is-translated { margin-bottom: 20px; }
 
 /* Tabs from 640px up; below that the native picker takes over */
 .lang-tabs {
@@ -512,14 +520,26 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
 }
 
 /* Machine-translation offer, for visitors with none of the five languages */
+/* One line, no box: it is a footnote to the switch above it, not a warning. */
 .bio-mt-note {
-  font-size: 12px;
-  line-height: 1.7;
+  font-size: 11px;
+  letter-spacing: 0.04em;
   color: var(--ink-3);
-  border-left: 2px solid var(--peach-deep);
-  padding: 2px 0 2px 12px;
-  margin-bottom: clamp(22px, 3vw, 32px);
-  max-width: 68ch;
+  margin: -14px 0 clamp(22px, 3vw, 32px);
+}
+
+/* "Translated" marker, shown while the page is Google's rendering.
+   Ink on peach rather than paper on peach — the latter sits near 2:1. */
+.lang-switch.is-translated::after {
+  content: 'Translated';
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--peach);
+  padding: 4px 8px;
+  white-space: nowrap;
 }
 .bio-mt-link {
   color: var(--ink);
