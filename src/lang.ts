@@ -145,6 +145,8 @@ export function initLangTabs(): void {
   const initial = preferredLang(available);
 
   if (initial && initial !== 'en') show(initial);
+  // lang-boot.js painted this; hand the state over to the hidden attribute
+  document.documentElement.removeAttribute('data-bio');
 
   // Mark the switch as machine output while on the translated view
   if (onTranslatedPage()) document.querySelector('.lang-switch')?.classList.add('is-translated');

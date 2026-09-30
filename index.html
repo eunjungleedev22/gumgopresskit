@@ -47,6 +47,12 @@
     <meta property="og:image" content="https://gumgo.art/portrait.jpg" />
     <meta property="og:url" content="https://gumgo.art/" />
     <meta property="og:type" content="profile" />
+    <meta property="og:site_name" content="GUMGO" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="es_ES" />
+    <meta property="og:locale:alternate" content="ca_ES" />
+    <meta property="og:locale:alternate" content="zh_CN" />
+    <meta property="og:locale:alternate" content="ko_KR" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content="https://gumgo.art/portrait.jpg" />
 
@@ -66,27 +72,59 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "MusicGroup",
-        "name": "GUMGO",
-        "alternateName": "검고",
-        "url": "https://gumgo.art/",
-        "image": "https://gumgo.art/portrait.jpg",
-        "email": "gumgoya@gmail.com",
-        "genre": ["Minimal", "Dub", "Electro", "Techno", "Electronic"],
-        "description": "Korean vinyl curator based in Barcelona. Vinyl-focused sets moving through minimal, dub techno, electro and acid, built on heavy bass and hard-hitting percussion. Featured in Mixmag Asia's Artists Exciting Us 2026, with sets for HÖR Berlin, 20ft Radio and Oslated's Special Mix Series.",
-        "foundingLocation": {
-          "@type": "Place",
-          "name": "Seoul, South Korea"
-        },
-        "sameAs": [
-          "https://ra.co/dj/gumgo",
-          "https://soundcloud.com/gumgo",
-          "https://www.instagram.com/gumgo._"
+        "@graph": [
+          {
+            "@type": "MusicGroup",
+            "@id": "https://gumgo.art/#gumgo",
+            "name": "GUMGO",
+            "alternateName": "검고",
+            "url": "https://gumgo.art/",
+            "image": "https://gumgo.art/portrait.jpg",
+            "email": "gumgoya@gmail.com",
+            "foundingDate": "2024",
+            "genre": ["Minimal", "Dub Techno", "Electro", "Acid", "Techno"],
+            "description": "Korean vinyl curator based in Barcelona. Vinyl-focused sets moving through minimal, dub techno, electro and acid, built on heavy bass and hard-hitting percussion. Featured in Mixmag Asia's Artists Exciting Us 2026, with sets for HÖR Berlin, 20ft Radio and Oslated's Special Mix Series.",
+            "foundingLocation": { "@type": "Place", "name": "Singapore" },
+            "homeLocation": {
+              "@type": "Place",
+              "name": "Barcelona, Spain",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Barcelona",
+                "addressCountry": "ES"
+              }
+            },
+            "subjectOf": {
+              "@type": "Article",
+              "headline": "Artists Exciting Us In 2026",
+              "url": "https://mixmag.asia/feature/artists-exciting-us-in-2026-april",
+              "datePublished": "2026-04",
+              "publisher": { "@type": "Organization", "name": "Mixmag Asia" }
+            },
+            "sameAs": [
+              "https://ra.co/dj/gumgo",
+              "https://soundcloud.com/gumgo",
+              "https://www.instagram.com/gumgo._"
+            ]
+          },
+          {
+            "@type": "WebPage",
+            "@id": "https://gumgo.art/#page",
+            "url": "https://gumgo.art/",
+            "name": "GUMGO — Electronic Press Kit",
+            "inLanguage": "en",
+            "about": { "@id": "https://gumgo.art/#gumgo" },
+            "availableLanguage": ["en", "es", "ca", "zh-Hans", "ko"]
+          }
         ]
       }
     </script>
 
     <link rel="preload" as="image" href="/portrait.webp" type="image/webp" />
+
+    <!-- Render-blocking on purpose: it decides the biography language before the
+         first frame, so a non-English visitor never sees English flash past. -->
+    <script src="/lang-boot.js"></script>
 
     <!-- Google tag loader; the config call runs from main.ts so no inline script is needed -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-CKNF5FXSW6"></script>
@@ -640,6 +678,20 @@
         <span>GUMGO — Electronic Press Kit</span>
       </div>
     </footer>
+
+    <!-- Follows the page. ig.me/m/<handle> is Instagram's DM deep link: the app
+         on a phone, the web inbox on a desktop. -->
+    <a class="dm-fab" href="https://ig.me/m/gumgo._"
+       target="_blank" rel="noopener noreferrer"
+       data-track="Floating DM" aria-label="Send GUMGO a direct message on Instagram">
+      <svg class="dm-fab__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="2" y="2" width="20" height="20" rx="5.5"/>
+        <circle cx="12" cy="12" r="4.4"/>
+        <circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none"/>
+      </svg>
+      <span class="dm-fab__label">DM</span>
+    </a>
 
     <script type="module" src="/src/main.ts"></script>
   </body>
