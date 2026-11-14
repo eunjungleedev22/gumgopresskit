@@ -16,7 +16,7 @@
 (function () {
   try {
     var alias = { gl: 'es', eu: 'es' };
-    var have = ['en', 'es', 'ca', 'zh', 'ko'];
+    var have = ['en', 'es', 'ca', 'zh'];
     var tags = (navigator.languages && navigator.languages.length)
       ? navigator.languages
       : [navigator.language];

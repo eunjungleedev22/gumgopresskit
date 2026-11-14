@@ -5,7 +5,7 @@ CSV. No backend and no API key — the site stays fully static.
 
 | Tab | Env var | Renders |
 |-----|---------|---------|
-| Bio | `VITE_BIO_CSV_URL` | Biography (EN / ES / CA / ZH / KO) |
+| Bio | `VITE_BIO_CSV_URL` | Biography (EN / ES / CA / ZH) |
 | SoundCloud | `VITE_MIXES_CSV_URL` | Mixes grid |
 | Videos | `VITE_VIDEOS_CSV_URL` | YouTube grid |
 | Press | `VITE_PRESS_CSV_URL` | Press coverage list |
@@ -20,13 +20,13 @@ Header row must be row 1. Header names are lower-cased and trimmed on read, so
 
 | Column | Required | Notes |
 |--------|----------|-------|
-| `lang` | | `en` (default), `es` / `spanish` / `castellano`, `ca` / `catalan` / `català`, `zh` / `cn` / `chinese`, `ko` / `kr` / `korean` — picks which language the row fills |
+| `lang` | | `en` (default), `es` / `spanish` / `castellano`, `ca` / `catalan` / `català`, `zh` / `cn` / `chinese` — picks which language the row fills |
 | `topline` | | Bold headline, rendered with the peach marker highlight |
 | `description` | | Body copy. A **blank line** starts a new paragraph. |
 | `text` | | Used when `description` is absent |
 
 The tab opens on the reader's browser language — Korean, Chinese and Spanish
-browsers each land on their own, and so do Catalan ones. Galician and Basque
+Chinese, Spanish and Catalan browsers each land on their own. Galician and Basque
 browsers get Spanish. Any other language gets English plus a note offering
 machine translation, clearly labelled as such.
 
@@ -41,7 +41,6 @@ straight from the 2026 EPK PDF) stays on the page — the section is never blank
 | lang | topline | description |
 |------|---------|-------------|
 | en | | Born in Korea, GUMGO debuted in Singapore in 2024… |
-| ko | | 한국 출신 DJ GUMGO는 2024년 싱가포르에서 데뷔했다… |
 | zh | | 出生于韩国的 GUMGO 于 2024 年在新加坡首次登台… |
 | es | | Nacida en Corea, GUMGO debutó en Singapur en 2024… |
 | ca | | Nascuda a Corea, GUMGO va debutar a Singapur el 2024… |

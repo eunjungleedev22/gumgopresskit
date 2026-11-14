@@ -72,9 +72,8 @@ function mount(el: HTMLElement, html: string, label: string): void {
 }
 
 /** Sheet `lang` values, normalised to the language panels the page has. */
-function langOf(r: Row): 'en' | 'ko' | 'zh' | 'es' | 'ca' {
+function langOf(r: Row): 'en' | 'zh' | 'es' | 'ca' {
   const v = (r['lang'] ?? '').trim();
-  if (/^(ko|kr|korean|한국어)$/i.test(v)) return 'ko';
   if (/^(zh|cn|zh-cn|zh-hans|chinese|简体中文|中文)$/i.test(v)) return 'zh';
   // Catalan before Spanish: "catalan" must not be swallowed by the es pattern
   if (/^(ca|cat|catalan|català|catala)$/i.test(v)) return 'ca';
@@ -87,7 +86,6 @@ const PANELS = [
   { lang: 'es' as const, id: 'bio-es', more: 'Seguir leyendo' },
   { lang: 'ca' as const, id: 'bio-ca', more: 'Segueix llegint' },
   { lang: 'zh' as const, id: 'bio-zh', more: '阅读更多' },
-  { lang: 'ko' as const, id: 'bio-ko', more: '더 읽기' },
 ];
 
 export async function renderBio(csvUrl: string): Promise<void> {
