@@ -331,6 +331,18 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
   margin-top: 6px;
 }
 
+/* The page's only forward-looking line, so it gets the marker and a rule of
+   its own rather than blending into the identity block above it. */
+.masthead-hook {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+  font-size: clamp(14px, 1.9vw, 16px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
 .masthead-block { margin-top: clamp(30px, 4vw, 46px); }
 
 /* Numbered highlights — 01 / 02 / 03 */
@@ -623,7 +635,11 @@ html[data-bio='ko'] .lang-tab[data-lang='ko'] { background: var(--ink); color: v
 .bio-expand-btn:hover { gap: 13px; }
 
 /* ── Media / contact lists ──────────────────────────────────────────────── */
-.contact-list { display: flex; flex-direction: column; gap: 20px; }
+/* Full width now that the bookings column is gone, so the links spread rather
+   than running down one narrow edge. */
+.contact-list { display: grid; grid-template-columns: 1fr; gap: 20px var(--col-gap); }
+@media (min-width: 640px)  { .contact-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .contact-list { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 .contact-row {
   display: flex;
   flex-direction: column;
@@ -646,63 +662,6 @@ html[data-bio='ko'] .lang-tab[data-lang='ko'] { background: var(--ink); color: v
   transition: border-color 0.2s;
 }
 a.contact-val:hover { border-bottom-color: var(--ink); }
-
-.booking-note {
-  margin-top: 28px;
-  padding-top: 20px;
-  border-top: 1px solid var(--rule);
-  font-size: 13px;
-  line-height: 1.7;
-  color: var(--ink-2);
-}
-/* Two stacked windows sharing a rule, each reading region → base → dates */
-.booking-windows {
-  display: grid;
-  grid-template-columns: 1fr;
-  margin-top: 16px;
-  border-top: 1px solid var(--rule);
-}
-@media (min-width: 640px) {
-  .booking-windows { grid-template-columns: 1fr 1fr; }
-  .booking-window + .booking-window {
-    border-top: none;
-    border-left: 1px solid var(--rule);
-    padding-left: clamp(18px, 3vw, 30px);
-  }
-}
-.booking-window {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 7px;
-  padding: 18px 0;
-}
-.booking-window + .booking-window { border-top: 1px solid var(--rule-soft); }
-
-.booking-region {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--paper);
-  background: var(--ink);
-  padding: 4px 9px;
-  line-height: 1.4;
-}
-.booking-detail { display: flex; flex-direction: column; gap: 2px; }
-.booking-base {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-}
-.booking-when {
-  font-size: clamp(16px, 2.2vw, 19px);
-  font-weight: 700;
-  letter-spacing: -0.015em;
-  line-height: 1.25;
-}
 
 /* ── Media cards (mixes + videos) ───────────────────────────────────────── */
 .media-grid {
@@ -956,6 +915,50 @@ a.contact-val:hover { border-bottom-color: var(--ink); }
 .subsection { margin-bottom: clamp(40px, 5.5vw, 68px); }
 .subsection:last-child { margin-bottom: 0; }
 
+/* ── Label pitch ────────────────────────────────────────────────────────── */
+.label-pitch {
+  margin-top: clamp(22px, 3vw, 32px);
+  padding-top: clamp(18px, 2.4vw, 24px);
+  border-top: 2px solid var(--ink);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px clamp(16px, 2.6vw, 30px);
+}
+.label-pitch__head {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+.label-pitch__body {
+  flex: 1 1 260px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  max-width: 52ch;
+}
+.label-pitch__cta {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 11px 20px;
+  background: var(--ink);
+  color: var(--paper);
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+@media (hover: hover) {
+  .label-pitch__cta:hover {
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow: inset 0 0 0 1.5px var(--ink);
+  }
+}
+
 /* ── In-app player ──────────────────────────────────────────────────────── */
 .player-modal {
   position: fixed; inset: 0;
@@ -1094,23 +1097,6 @@ body.modal-open { overflow: hidden; }
 .gig-ticket:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .gig-ticket.sold-out { opacity: 0.35; pointer-events: none; }
 
-/* ── Footer ─────────────────────────────────────────────────────────────── */
-footer {
-  border-top: 2px solid var(--ink);
-  padding-block: 20px;
-}
-.footer-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-}
-
 /* ── States ─────────────────────────────────────────────────────────────── */
 .loading-state {
   display: flex;
@@ -1195,20 +1181,7 @@ footer {
 
   .contact-row:hover .contact-key { color: var(--ink); }
 
-  .booking-region { transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease; }
-  .booking-window:hover .booking-region {
-    background: var(--paper);
-    color: var(--ink);
-    box-shadow: inset 0 0 0 1.5px var(--ink);
-  }
-
-  .nav-logo { transition: opacity 0.2s ease; }
-  .nav-logo:hover { opacity: 0.55; }
-
-  .sheet-title { transition: letter-spacing 0.4s ease; }
-  .sheet-head:hover .sheet-title { letter-spacing: -0.025em; }
-}
-
+  
 /* ── Floating DM ────────────────────────────────────────────────────────── */
 .dm-fab {
   position: fixed;
@@ -1243,10 +1216,9 @@ footer {
 /* The player owns the screen while it is open */
 body.modal-open .dm-fab { opacity: 0; pointer-events: none; }
 
-/* Keep it clear of the last section's own content on a phone */
-@media (max-width: 639px) {
-  footer { padding-bottom: 92px; }
-}
+/* With the footer gone, the last sheet carries the clearance so the floating
+   DM never covers the final line. */
+.sheet:last-of-type { padding-bottom: clamp(104px, 12vw, 128px); }
 
 /* ── Print ──────────────────────────────────────────────────────────────── */
 @media print {
