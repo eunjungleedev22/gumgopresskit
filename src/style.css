@@ -211,6 +211,23 @@ p { max-width: 68ch; }
 
 /* ── Intro ──────────────────────────────────────────────────────────────── */
 .intro__line { font-size: 15px; font-weight: bold; max-width: 46ch; }
+
+/* Where she is right now. A booker reading the Book button needs this before
+   they press it, so it sits directly above the first table. */
+.notice {
+  margin-top: 16px;
+  padding: 8px 10px;
+  border: 1px solid var(--edge);
+  border-left: 4px solid var(--go);
+  background: var(--head);
+  font-size: 12px;
+  max-width: none;
+}
+.notice b {
+  margin-right: 6px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
 .intro__acts { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
 .intro__ep { margin-top: 10px; }
 .intro .tbl { margin-top: 16px; }
