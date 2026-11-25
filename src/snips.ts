@@ -13,7 +13,6 @@
  * One track plays at a time, because two would only fight each other.
  */
 
-import { trackEvent } from './analytics';
 
 const TRACKS = import.meta.glob('./audio/ep/*.{mp3,m4a,ogg}', {
   eager: true, query: '?url', import: 'default',
@@ -109,7 +108,6 @@ export function initSnips(): void {
       if (audio.paused) {
         for (const other of players) if (other !== audio) other.pause();
         void audio.play().catch(() => stopped());
-        trackEvent('ep_play', { item_name: title });
       } else {
         audio.pause();
       }

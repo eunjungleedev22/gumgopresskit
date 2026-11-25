@@ -6,8 +6,8 @@
 
     <!--
       Content Security Policy. GitHub Pages cannot set response headers, so the
-      policy is declared here. No 'unsafe-inline' for scripts — the GA bootstrap
-      lives in main.ts so script-src stays strict. style-src does allow inline
+      policy is declared here. The page loads no third-party script, no font and
+      no analytics, so script-src is 'self' and nothing else. style-src does allow inline
       because element .style writes and the critical CSS block need it.
 
       connect-src names exactly the two hops a published sheet CSV takes:
@@ -34,12 +34,12 @@
       http-equiv="Content-Security-Policy"
       content="
         default-src 'self';
-        script-src 'self' https://www.googletagmanager.com;
+        script-src 'self';
         style-src 'self' 'unsafe-inline';
         font-src 'none';
-        img-src 'self' https://i.ytimg.com https://www.google-analytics.com;
+        img-src 'self' https://i.ytimg.com;
         frame-src https://w.soundcloud.com https://www.youtube-nocookie.com;
-        connect-src 'self' https://docs.google.com https://*.googleusercontent.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com;
+        connect-src 'self' https://docs.google.com https://*.googleusercontent.com;
         base-uri 'self';
         form-action 'none';
         object-src 'none';
@@ -140,9 +140,6 @@
 
     <link rel="preload" as="image" href="/hero/hero-composite.webp" type="image/webp" fetchpriority="high" />
 
-    <!-- Google tag loader; the config call runs from main.ts so no inline script is needed -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CKNF5FXSW6"></script>
-
     <!-- Critical CSS: first paint before the bundle lands. No webfont is
          requested anywhere on the site, so there is nothing to wait for. -->
     <style>
@@ -198,10 +195,10 @@
 
           <p class="side__h">Elsewhere</p>
           <ul>
-            <li><a href="https://soundcloud.com/gumgo" target="_blank" rel="noopener noreferrer" data-track="SoundCloud profile">SoundCloud</a></li>
-            <li><a href="https://gumgo.bandcamp.com" target="_blank" rel="noopener noreferrer" data-track="Bandcamp - side">Bandcamp</a></li>
-            <li><a href="https://ra.co/dj/gumgo" target="_blank" rel="noopener noreferrer" data-track="Resident Advisor - side">Resident Advisor</a></li>
-            <li><a href="https://www.instagram.com/gumgo.xyz" target="_blank" rel="noopener noreferrer" data-track="Instagram - side">Instagram</a></li>
+            <li><a href="https://soundcloud.com/gumgo" target="_blank" rel="noopener noreferrer">SoundCloud</a></li>
+            <li><a href="https://gumgo.bandcamp.com" target="_blank" rel="noopener noreferrer">Bandcamp</a></li>
+            <li><a href="https://ra.co/dj/gumgo" target="_blank" rel="noopener noreferrer">Resident Advisor</a></li>
+            <li><a href="https://www.instagram.com/gumgo.xyz" target="_blank" rel="noopener noreferrer">Instagram</a></li>
           </ul>
 
           <p class="side__up">Updated 2026</p>
@@ -214,19 +211,16 @@
             <p class="intro__acts">
               <a class="btn btn--go"
                  href="https://www.youtube.com/watch?v=HDx12Hh6JfY"
-                 data-player="youtube" data-player-id="HDx12Hh6JfY"
-                 data-track="HOR Berlin - intro">Play the H&Ouml;R Berlin set</a>
+                 data-player="youtube" data-player-id="HDx12Hh6JfY">Play the H&Ouml;R Berlin set</a>
               <a class="btn"
-                 href="mailto:jessica.techie@gmail.com?subject=Booking%20enquiry%3A%20GUMGO"
-                 data-track="Booking - intro">Book GUMGO</a>
+                 href="mailto:jessica.techie@gmail.com?subject=Booking%20enquiry%3A%20GUMGO">Book GUMGO</a>
             </p>
             <p class="intro__ep" id="ep-link" hidden><a href="#ep">Debut EP, 2027: hear the snippets</a></p>
 
             <table class="tbl">
               <tr><th colspan="2">Selected</th></tr>
               <tr><td><a href="https://mixmag.asia/feature/artists-exciting-us-in-2026-april"
-                         target="_blank" rel="noopener noreferrer"
-                         data-track="Mixmag Asia - proof">Mixmag Asia</a></td>
+                         target="_blank" rel="noopener noreferrer">Mixmag Asia</a></td>
                   <td>Artists Exciting Us 2026</td></tr>
               <tr><td>H&Ouml;R Berlin</td><td>Full set &middot; 2026</td></tr>
               <tr><td>Oslated</td><td>Special Mix 097</td></tr>
@@ -240,8 +234,7 @@
             <!-- Nothing third party loads before a click; both keep their href. -->
             <div class="cards">
               <a class="card" href="https://www.youtube.com/watch?v=HDx12Hh6JfY"
-                 data-player="youtube" data-player-id="HDx12Hh6JfY"
-                 data-track="HOR Berlin - listen">
+                 data-player="youtube" data-player-id="HDx12Hh6JfY">
                 <span class="card__shot">
                   <img src="https://i.ytimg.com/vi/HDx12Hh6JfY/maxresdefault.jpg" alt=""
                        width="1280" height="720" loading="lazy" decoding="async" />
@@ -252,7 +245,7 @@
               </a>
 
               <a class="card" href="https://soundcloud.com/oslated/oslated-special-mix-097-gumgo"
-                 data-player="soundcloud" data-track="Oslated Special Mix 097 - listen">
+                 data-player="soundcloud">
                 <span class="card__shot card__shot--blank">
                   <span class="card__go">&#9654;</span>
                 </span>
@@ -357,17 +350,17 @@
                   <option value="zh">&#31616;&#20307;&#20013;&#25991;</option>
                 </select>
               </label>
-              <button class="btn btn--sm" type="button" id="bio-copy" data-track="Bio copy">Copy</button>
+              <button class="btn btn--sm" type="button" id="bio-copy">Copy</button>
             </div>
 
             <p class="bio" id="bio-text" lang="en">GUMGO is a Korean DJ and vinyl curator based in Barcelona, digging the record shops of every city she plays. Trained on the janggu from age nine, she plays dub techno, electro and minimal built on bass and percussion. Featured in Mixmag Asia&rsquo;s Artists Exciting Us 2026; sets for H&Ouml;R Berlin and Oslated. Debut EP due 2027.</p>
 
             <!-- Hidden until the file exists, so the kit never offers a 404. -->
             <p class="dl" id="kit-photos" hidden>
-              Press photos: <a id="kit-photos-link" href="#" download data-track="Press photos">gumgo-press-photos.zip</a>
+              Press photos: <a id="kit-photos-link" href="#" download>gumgo-press-photos.zip</a>
             </p>
             <p class="dl" id="kit-logo" hidden>
-              Logo: <a id="kit-logo-link" href="#" download data-track="Logo">gumgo-logo.svg</a>
+              Logo: <a id="kit-logo-link" href="#" download>gumgo-logo.svg</a>
             </p>
 
             <p class="foot"><a href="#nav">back to top</a></p>
@@ -379,15 +372,15 @@
 
             <table class="tbl">
               <tr><th scope="row">Booking</th>
-                  <td><a href="mailto:jessica.techie@gmail.com?subject=Booking%20enquiry%3A%20GUMGO" data-track="Booking - contact">jessica.techie@gmail.com</a></td></tr>
+                  <td><a href="mailto:jessica.techie@gmail.com?subject=Booking%20enquiry%3A%20GUMGO">jessica.techie@gmail.com</a></td></tr>
               <tr><th scope="row">Label / demo</th>
-                  <td><a href="mailto:jessica.techie@gmail.com?subject=Label%20enquiry%3A%20GUMGO%20debut%20EP" data-track="Label - contact">jessica.techie@gmail.com</a></td></tr>
+                  <td><a href="mailto:jessica.techie@gmail.com?subject=Label%20enquiry%3A%20GUMGO%20debut%20EP">jessica.techie@gmail.com</a></td></tr>
               <tr><th scope="row">Instagram</th>
-                  <td><a href="https://www.instagram.com/gumgo.xyz" target="_blank" rel="noopener noreferrer" data-track="Instagram - contact">@gumgo.xyz</a></td></tr>
+                  <td><a href="https://www.instagram.com/gumgo.xyz" target="_blank" rel="noopener noreferrer">@gumgo.xyz</a></td></tr>
               <tr><th scope="row">Bandcamp</th>
-                  <td><a href="https://gumgo.bandcamp.com" target="_blank" rel="noopener noreferrer" data-track="Bandcamp - contact">gumgo.bandcamp.com</a></td></tr>
+                  <td><a href="https://gumgo.bandcamp.com" target="_blank" rel="noopener noreferrer">gumgo.bandcamp.com</a></td></tr>
               <tr><th scope="row">Resident Advisor</th>
-                  <td><a href="https://ra.co/dj/gumgo" target="_blank" rel="noopener noreferrer" data-track="Resident Advisor - contact">ra.co/dj/gumgo</a></td></tr>
+                  <td><a href="https://ra.co/dj/gumgo" target="_blank" rel="noopener noreferrer">ra.co/dj/gumgo</a></td></tr>
             </table>
 
             <p class="foot"><a href="#nav">back to top</a></p>
@@ -400,8 +393,7 @@
     </div>
 
     <a class="dm-fab" href="https://ig.me/m/gumgo.xyz"
-       target="_blank" rel="noopener noreferrer"
-       data-track="Floating DM" aria-label="Send GUMGO a direct message on Instagram">
+       target="_blank" rel="noopener noreferrer" aria-label="Send GUMGO a direct message on Instagram">
       <svg class="dm-fab__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
            stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <rect x="2" y="2" width="20" height="20" rx="5.5"/>

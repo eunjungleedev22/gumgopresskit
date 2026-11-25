@@ -79,6 +79,10 @@ down before a booker reaches anything.
 - **Fonts:** none downloaded
 - **Data:** one Google Sheets tab, for Upcoming only (see `GOOGLE_SHEETS_GUIDE.md`).
   Everything else is in the document, so nothing below the hero waits on a fetch.
+- **Analytics:** none. There is no third-party script, no cookie and therefore
+  no consent banner to argue about. The only third-party request a visitor's
+  browser makes on load is the YouTube poster frame from `i.ytimg.com`;
+  everything else is a link they have to click.
 - **Hosting:** GitHub Pages via `.github/workflows/deploy.yml`
 
 ## Develop

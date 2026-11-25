@@ -1,6 +1,5 @@
 import './style.css';
 import { renderGigs } from './gigs';
-import { initAnalytics } from './analytics';
 import { initPlayerLinks } from './player';
 import { initHero } from './hero';
 import { initIndex } from './nav';
@@ -15,7 +14,6 @@ const GIGS_CSV_URL = import.meta.env.VITE_GIGS_CSV_URL as string | undefined;
 
 // ── Boot ─────────────────────────────────────────────────────────────────────
 function boot(): void {
-  initAnalytics();
   initHero();
   initIndex();
   initPlayerLinks();

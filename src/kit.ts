@@ -8,7 +8,6 @@
  * The text lives in bios.ts, so the wiring here has nothing to say about it.
  */
 
-import { trackEvent } from './analytics';
 
 import { BIOS, HTML_LANG, LANGS, LENS, type Lang, type Len } from './bios';
 
@@ -93,7 +92,6 @@ export function initKit(): void {
       copy.textContent = ok ? 'Copied' : 'Press to select';
       window.clearTimeout(revert);
       revert = window.setTimeout(() => { copy.textContent = label; }, 1800);
-      if (ok) trackEvent('bio_copy', { item_name: `${lang}-${len}` });
     })();
   });
 

@@ -13,7 +13,6 @@
  */
 
 import { safeUrl } from './safe';
-import { trackEvent } from './analytics';
 
 const YT_ID = /^[A-Za-z0-9_-]{11}$/;
 
@@ -149,11 +148,6 @@ export function initPlayerLinks(): void {
     const link = (e.target as Element | null)?.closest<HTMLAnchorElement>('a[href]');
     if (!link) return;
 
-    const label = link.dataset.track
-      || link.querySelector('.card__title')?.textContent?.trim()
-      || link.textContent?.trim().slice(0, 80)
-      || '';
-
     const kind = link.dataset.player;
     let opened = false;
 
@@ -163,29 +157,8 @@ export function initPlayerLinks(): void {
       opened = openSoundCloud(link.href);
     }
 
-    if (opened) {
-      e.preventDefault();
-      // Provider rides in the name so the split is readable with no GA setup
-      trackEvent(`play_${kind}`, {
-        item_name: label,
-        link_url: link.href,
-        method: 'in_app',
-      });
-      return;
-    }
-
-    // Not embeddable — it is leaving the site, so at least record it
-    let external = false;
-    try {
-      external = new URL(link.href, location.href).origin !== location.origin;
-    } catch { /* mailto: and friends */ }
-
-    if (external) {
-      trackEvent('outbound_click', {
-        item_name: label,
-        link_url: link.href,
-        method: link.target === '_blank' ? 'new_tab' : 'same_tab',
-      });
-    }
+    // Anything not embeddable keeps its href and leaves the site, which is
+    // what the link said it would do.
+    if (opened) e.preventDefault();
   });
 }
