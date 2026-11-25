@@ -1,7 +1,7 @@
 # GUMGO — Electronic Press Kit
 
 Static press kit for DJ and vinyl curator **GUMGO**, live at
-[gumgo.art](https://gumgo.art).
+[gumgo.xyz](https://gumgo.xyz).
 
 ---
 
@@ -96,16 +96,21 @@ npm run preview         # serve the built output
 
 `npm run build` runs `tsc` first, so a type error fails the build.
 
-## Moving to gumgo.xyz
+## Domains
 
-Not done yet, and the order matters: changing `public/CNAME` before the new
-domain resolves takes both domains down.
+The site is served from **gumgo.xyz**. `public/CNAME` is what sets that: the
+Pages deployment ships it in the artifact, so changing the custom domain in the
+repository settings alone is not enough, it gets overwritten on the next
+deploy. Change the file.
 
-1. Point `gumgo.xyz` at GitHub Pages (four A records on the apex, `www` as a
-   CNAME to `eunjungleedev22.github.io`). Confirm the addresses against
-   GitHub's own docs rather than any copy of them.
-2. Then change `public/CNAME`, and with it the canonical, `og:url`, the two
-   JSON-LD `@id`s, `robots.txt` and `sitemap.xml`.
-3. Redirect `gumgo.art` from somewhere that holds a certificate for it.
-   GitHub only issues one for the domain in `CNAME`, so pointing `gumgo.art`
-   at Pages fails the certificate check before the redirect is ever sent.
+Everything that names the origin changes with it: the canonical link, `og:url`,
+`og:image`, `twitter:image`, both JSON-LD `@id`s and their `url`, `robots.txt`
+and `sitemap.xml`.
+
+**gumgo.art still has to be redirected, and not from GitHub.** Pages only
+issues a certificate for the domain in `CNAME`, so pointing gumgo.art at Pages
+fails the certificate check before the redirect is ever sent, and most of the
+links out there are https. Put gumgo.art behind something that holds a
+certificate for it and send a 301 that preserves the path, so `/ep` and `/kit`
+still land when they exist. Cloudflare's free plan does this with one redirect
+rule.

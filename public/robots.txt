@@ -49,4 +49,4 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
-Sitemap: https://gumgo.art/sitemap.xml
+Sitemap: https://gumgo.xyz/sitemap.xml
