@@ -19,6 +19,13 @@
 
       Note that frame-ancestors is silently ignored in a meta-tag CSP, so
       clickjacking protection is not available on this host.
+
+      TEMPORARY: upgrade-insecure-requests is removed. GitHub Pages has not
+      finished issuing the certificate for gumgo.xyz, so it still answers on
+      http, and the directive was upgrading the stylesheet and the bundle to
+      https where nothing could answer them. The page rendered unstyled.
+      Put the directive back the moment Enforce HTTPS can be turned on in
+      Settings, Pages: until then the site is served in the clear.
     -->
     <meta
       http-equiv="Content-Security-Policy"
@@ -32,8 +39,7 @@
         connect-src 'self' https://*.google.com https://*.googleusercontent.com https://soundcloud.com https://www.youtube.com https://api.allorigins.win https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com;
         base-uri 'self';
         form-action 'none';
-        object-src 'none';
-        upgrade-insecure-requests
+        object-src 'none'
       "
     />
 
