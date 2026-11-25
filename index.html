@@ -47,7 +47,7 @@
       "
     />
 
-    <meta name="description" content="GUMGO is an electronic music producer, DJ and vinyl curator based in Barcelona. Dub techno, electro and minimal, built on bass and percussion. Press kit: sets, biography, rooms and contact." />
+    <meta name="description" content="Electronic music producer, DJ and vinyl curator in Barcelona. Dub techno, electro and minimal, played on vinyl. Sets, biography, rooms and contact." />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="theme-color" content="#2f2a24" />
     <link rel="canonical" href="https://gumgo.xyz/" />
@@ -94,6 +94,7 @@
             "alternateName": "검고",
             "member": {
               "@type": "Person",
+              "@id": "https://gumgo.xyz/#jessica",
               "name": "Jessica Eunjung Lee",
               "jobTitle": "Electronic music producer, DJ and vinyl curator"
             },
@@ -134,6 +135,10 @@
             "name": "GUMGO — Electronic music producer and DJ, Barcelona",
             "inLanguage": "en",
             "mainEntity": { "@id": "https://gumgo.xyz/#gumgo" },
+            "author": { "@id": "https://gumgo.xyz/#jessica" },
+            "publisher": { "@id": "https://gumgo.xyz/#gumgo" },
+            "datePublished": "2026-05-16",
+            "dateModified": "2026-11-25",
             "about": { "@id": "https://gumgo.xyz/#gumgo" },
             "primaryImageOfPage": "https://gumgo.xyz/og.jpg",
             "availableLanguage": ["en", "es", "ca", "zh-Hans"]
@@ -142,7 +147,9 @@
       }
     </script>
 
-    <link rel="preload" as="image" href="/hero/hero-composite.webp" type="image/webp" fetchpriority="high" />
+    <link rel="preload" as="image" href="/hero/hero-composite.webp" type="image/webp"
+          imagesrcset="/hero/hero-composite-640.webp 640w, /hero/hero-composite-960.webp 960w, /hero/hero-composite-1280.webp 1280w, /hero/hero-composite.webp 1672w"
+          imagesizes="100vw" fetchpriority="high" />
 
     <!-- Critical CSS: first paint before the bundle lands. No webfont is
          requested anywhere on the site, so there is nothing to wait for. -->
@@ -170,6 +177,11 @@
     <header class="hero">
       <figure class="hero__fig">
         <img class="hero__img" src="/hero/hero-composite.webp"
+             srcset="/hero/hero-composite-640.webp 640w,
+                     /hero/hero-composite-960.webp 960w,
+                     /hero/hero-composite-1280.webp 1280w,
+                     /hero/hero-composite.webp 1672w"
+             sizes="100vw"
              alt="GUMGO with one hand raised to her eye holding a drawing compass, over a field of ruled paper crossed by printed bands and a drawn circle."
              width="1672" height="941" fetchpriority="high" decoding="async" />
         <figcaption class="hero__cap">After El Lissitzky, Self-Portrait (The Constructor), 1924</figcaption>
@@ -234,6 +246,10 @@
           <!-- ── Z · LISTEN ─────────────────────────────────────────────── -->
           <section id="z">
             <h2 class="h">Listen</h2>
+            <p class="lead">Two full sets, both played on vinyl. The H&Ouml;R Berlin
+              session and Oslated Special Mix 097 move through dub techno, electro and
+              minimal, built on bass and percussion and running dark and hypnotic. Both
+              play here without leaving the page. The debut EP follows in 2027.</p>
 
             <!-- Nothing third party loads before a click; both keep their href. -->
             <div class="cards">
@@ -319,6 +335,7 @@
             <details class="more">
               <summary>All other rooms</summary>
               <table class="tbl">
+                <tr><th>Room</th><th>Where</th></tr>
                 <tr><td>Switch Pocket Club</td><td>Barcelona</td></tr>
                 <tr><td>RASA</td><td>Singapore</td></tr>
                 <tr><td>Santai</td><td>Singapore</td></tr>

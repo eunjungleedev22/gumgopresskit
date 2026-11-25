@@ -1,0 +1,5 @@
+# Somebody who finds a problem with this site needs a way to say so.
+Contact: mailto:jessica.techie@gmail.com
+Expires: 2027-11-25T00:00:00.000Z
+Preferred-Languages: en, ko, es
+Canonical: https://gumgo.xyz/.well-known/security.txt
