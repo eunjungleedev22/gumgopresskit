@@ -1,0 +1,508 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   GUMGO — Electronic Press Kit
+
+   An early 2000s homepage: a fixed column centred on a tiled background, a
+   title strip, a dark nav column on the left and a white page on the right.
+   Black text on white, blue underlined links, bordered tables with shaded
+   header rows. No webfont is requested anywhere.
+
+   Contrast, measured: black on white 21:1, link blue on white 8.59:1, white
+   on the nav column 11.6:1. Nothing on this page is borderline.
+
+   Breakpoint, and only one: 720px, where the nav column stops being a column.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --page:   #2f2a24;   /* behind the frame                      */
+  --tile:   #3d3730;   /* the ruling drawn on it                */
+  --sheet:  #ffffff;   /* the page itself                       */
+  --edge:   #000000;   /* frame and table borders               */
+  --bar:    #1f1b17;   /* title strip and section headers       */
+  --side:   #4a423a;   /* nav column                            */
+  --side-2: #5c534a;   /* its headings                          */
+  --head:   #e4e0d8;   /* table header cells                    */
+  --alt:    #f4f2ee;   /* every other table row                 */
+  --txt:    #111111;
+  --txt-2:  #555555;
+  --link:   #0033cc;
+  --seen:   #551a8b;
+  --go:     #9e3a28;   /* play and book only                    */
+
+  --sans: Verdana, Dotum, '돋움', Geneva, Arial, sans-serif;
+  --mono: 'Courier New', Courier, monospace;
+
+  --w: 820px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  font: 13px/1.6 var(--sans);
+  background: var(--page);
+  color: var(--txt);
+}
+
+a { color: var(--link); }
+a:visited { color: var(--seen); }
+a:hover { color: var(--go); }
+ul, ol { list-style: none; }
+img { display: block; max-width: 100%; }
+button, select { font: inherit; }
+table { border-collapse: collapse; width: 100%; }
+th { text-align: left; font-weight: bold; }
+
+:focus-visible { outline: 2px solid var(--go); outline-offset: 1px; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.hidden { display: none !important; }
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ── Tiled background ───────────────────────────────────────────────────────
+   Fixed, and lagging the scroll. Because the tile repeats, the script shifts
+   it by less than one square, so no edge can be exposed. */
+.paper {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right,  var(--tile) 0 1px, transparent 1px),
+    linear-gradient(to bottom, var(--tile) 0 1px, transparent 1px);
+  background-size: 14px 14px;
+  will-change: transform;
+}
+
+/* ── The plate ──────────────────────────────────────────────────────────── */
+.hero__fig { margin: 0; }
+.hero__img { width: 100%; height: auto; display: block; }
+.hero__cap {
+  width: min(var(--w), 100%);
+  margin-inline: auto;
+  padding: 6px 10px 0;
+  text-align: right;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #b9b1a6;
+}
+
+/* ── The frame ──────────────────────────────────────────────────────────── */
+.frame {
+  width: min(var(--w), 100% - 16px);
+  margin: 14px auto 32px;
+  border: 1px solid var(--edge);
+  background: var(--sheet);
+}
+
+.title { padding: 14px 16px; background: var(--bar); color: #ffffff; }
+.title__name {
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: 0.12em;
+  line-height: 1.1;
+}
+.title__real {
+  margin-top: 3px;
+  font-size: 13px;
+  color: #ffffff;
+  letter-spacing: 0.06em;
+}
+.title__sub { margin-top: 3px; font-size: 11px; color: #c9c2b8; letter-spacing: 0.04em; }
+
+.cols { display: block; }
+
+/* ── Nav column ─────────────────────────────────────────────────────────── */
+.side {
+  background: var(--side);
+  color: #ffffff;
+  padding: 10px 0 14px;
+  border-bottom: 1px solid var(--edge);
+}
+.side__h {
+  padding: 6px 14px 4px;
+  background: var(--side-2);
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+.side ul { margin-bottom: 10px; }
+.side a {
+  display: block;
+  padding: 7px 14px 7px 22px;
+  color: #ffffff;
+  font-size: 12px;
+  text-decoration: none;
+  position: relative;
+}
+.side a::before { content: '>'; position: absolute; left: 11px; color: #b6ab9c; }
+.side a:visited { color: #ffffff; }
+.side a:hover { background: var(--bar); text-decoration: underline; }
+.side__up {
+  padding: 0 14px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: #b6ab9c;
+}
+
+/* ── Page ───────────────────────────────────────────────────────────────── */
+.main { padding: 16px; }
+.main > * + * { margin-top: 22px; }
+
+.h {
+  padding: 5px 10px;
+  background: var(--bar);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+section > * + * { margin-top: 12px; }
+
+.sub {
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--txt-2);
+}
+
+p { max-width: 68ch; }
+
+/* The rule under a section spans the page, not the prose measure */
+.foot {
+  max-width: none;
+  padding-top: 10px;
+  border-top: 1px solid #cccccc;
+  font-size: 11px;
+}
+
+.bottom {
+  display: block;
+  padding: 10px 16px;
+  border-top: 1px solid var(--edge);
+  background: var(--head);
+  font-size: 11px;
+  color: var(--txt-2);
+  max-width: none;
+}
+
+/* ── Intro ──────────────────────────────────────────────────────────────── */
+.intro__line { font-size: 15px; font-weight: bold; max-width: 46ch; }
+.intro__acts { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+.intro__ep { margin-top: 10px; }
+.intro .tbl { margin-top: 16px; }
+
+/* ── Tables ─────────────────────────────────────────────────────────────── */
+.tbl { border: 1px solid #999999; }
+.tbl th,
+.tbl td {
+  padding: 6px 10px;
+  border: 1px solid #cccccc;
+  vertical-align: top;
+}
+.tbl th { background: var(--head); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+.tbl tr:nth-child(even) td { background: var(--alt); }
+.tbl td:first-child { font-weight: bold; }
+.tbl td:last-child:not(:first-child) { font-weight: normal; color: var(--txt-2); }
+
+/* ── Listen ─────────────────────────────────────────────────────────────── */
+.cards { display: grid; gap: 14px; }
+@media (min-width: 540px) { .cards { grid-template-columns: 1fr 1fr; } }
+
+.card { display: block; text-decoration: none; color: var(--txt); }
+.card:visited { color: var(--txt); }
+.card__shot {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 9;
+  margin-bottom: 6px;
+  overflow: hidden;
+  border: 1px solid #999999;
+  background: #1f1b17;
+}
+.card__shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.card__shot--blank { background: #1f1b17; }
+.card__go {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 46px; height: 34px;
+  display: grid;
+  place-items: center;
+  background: var(--go);
+  border: 1px solid #ffffff;
+  color: #ffffff;
+  font-size: 15px;
+  line-height: 1;
+}
+.card:hover .card__go { background: var(--bar); }
+.card__title { display: block; font-size: 15px; font-weight: bold; color: var(--link); text-decoration: underline; }
+.card:hover .card__title { color: var(--go); }
+.card__sub { display: block; font-size: 11px; color: var(--txt-2); }
+
+/* ── EP snippets ────────────────────────────────────────────────────────────
+   One track at a time. Progress is an arc, so there is no bar and no spinner:
+   before a track knows its length there is nothing to show yet. */
+.snips__list { border: 1px solid #999999; margin-top: 6px; }
+.snip { display: flex; align-items: center; gap: 10px; padding: 6px 10px; }
+.snip + .snip { border-top: 1px solid #cccccc; }
+.snip:nth-child(even) { background: var(--alt); }
+.snip__b { flex: none; width: 26px; aspect-ratio: 1; border: 0; background: none; cursor: pointer; }
+.snip__b svg { width: 100%; height: 100%; display: block; }
+.snip__track { fill: #ffffff; stroke: #999999; stroke-width: 3; }
+.snip__arc {
+  fill: none;
+  stroke: var(--go);
+  stroke-width: 3;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  stroke-dasharray: var(--arc-len, 0);
+  stroke-dashoffset: var(--arc-len, 0);
+}
+.snip__tri { fill: var(--txt); }
+.snip__n { flex: 1; font-weight: bold; }
+.snip__t { font-family: var(--mono); font-size: 11px; color: var(--txt-2); }
+
+/* ── Statement ──────────────────────────────────────────────────────────── */
+.theses { counter-reset: t; }
+.theses li {
+  counter-increment: t;
+  display: flex;
+  gap: 10px;
+  padding: 7px 0;
+  max-width: 72ch;
+}
+.theses li + li { border-top: 1px solid #e2e2e2; }
+.theses li::before {
+  content: counter(t) '.';
+  flex: none;
+  width: 1.6em;
+  font-weight: bold;
+  color: var(--txt-2);
+}
+
+/* ── Rooms ──────────────────────────────────────────────────────────────── */
+.more > summary {
+  display: inline-block;
+  padding: 4px 0;
+  color: var(--link);
+  text-decoration: underline;
+  cursor: pointer;
+  list-style: none;
+}
+.more > summary::-webkit-details-marker { display: none; }
+.more > summary::before { content: '[+] '; text-decoration: none; }
+.more[open] > summary::before { content: '[-] '; }
+.more > .tbl { margin-top: 6px; }
+
+/* ── Kit ────────────────────────────────────────────────────────────────── */
+.ctl {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: var(--head);
+  border: 1px solid #999999;
+}
+.ctl__u { font-size: 11px; color: var(--txt-2); }
+.ctl select { padding: 3px 4px; border: 1px solid #999999; background: #ffffff; font-size: 12px; }
+
+.seg { display: flex; }
+.seg__b {
+  min-width: 40px;
+  padding: 4px 8px;
+  border: 1px solid #999999;
+  background: #ffffff;
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+}
+.seg__b + .seg__b { margin-left: -1px; }
+.seg__b[aria-pressed='true'] { background: var(--bar); border-color: var(--bar); color: #ffffff; }
+
+.bio {
+  padding: 10px;
+  border: 1px solid #999999;
+  border-top: 0;
+  white-space: pre-line;
+  max-width: none;
+}
+.bio:lang(zh) { line-height: 1.85; }
+
+/* ── Buttons ────────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-block;
+  padding: 7px 14px;
+  border: 1px solid var(--edge);
+  background: var(--head);
+  color: var(--txt);
+  font-size: 12px;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn:visited { color: var(--txt); }
+.btn:hover { background: var(--bar); color: #ffffff; }
+.btn--go { background: var(--go); border-color: var(--go); color: #ffffff; }
+.btn--go:visited { color: #ffffff; }
+.btn--go:hover { background: var(--bar); border-color: var(--bar); }
+.btn--sm { padding: 3px 9px; }
+
+/* ── Upcoming, the one block still built from the sheet ─────────────────── */
+.gig-row { display: flex; flex-wrap: wrap; gap: 6px 12px; padding: 6px 10px; border: 1px solid #cccccc; }
+.gig-row + .gig-row { border-top: 0; }
+.gig-date { flex: none; width: 8em; font-family: var(--mono); font-size: 12px; }
+.gig-info { flex: 1; }
+.gig-venue { font-weight: bold; }
+.gig-city { font-size: 11px; color: var(--txt-2); }
+.sold-out { color: var(--txt-2); text-decoration: line-through; }
+
+/* On a phone the nav is an inline list, which is the other way this age did
+   it, and which keeps 280px of stacked links from pushing the page down. */
+@media (max-width: 719px) {
+  .side { padding: 8px 10px 10px; }
+  .side ul { display: flex; flex-wrap: wrap; margin-bottom: 8px; }
+  /* The row itself has to be the flex container, or the separator does not
+     share a line with the link it follows. */
+  .side li { display: flex; align-items: center; }
+  .side li + li::before { content: '|'; color: #b6ab9c; }
+  .side a { padding: 5px 9px; }
+  .side a::before { content: none; }
+  .side__h { margin-bottom: 4px; padding: 4px 9px 3px; }
+  .side__up { padding-inline: 9px; }
+}
+
+/* ── The nav becomes a column once there is room for one ────────────────── */
+@media (min-width: 720px) {
+  .cols { display: flex; align-items: stretch; }
+  .side {
+    flex: none;
+    width: 168px;
+    border-bottom: 0;
+    border-right: 1px solid var(--edge);
+  }
+  .main { flex: 1; min-width: 0; padding: 18px 20px; }
+  .title__name { font-size: 34px; }
+}
+
+/* ── Load: one fade, once per session. The plate is never in it. ────────── */
+body.is-building .frame,
+body.is-building .hero__cap { animation: fade-in 300ms ease 200ms both; }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* ── Print ──────────────────────────────────────────────────────────────── */
+@media print {
+  .side, .foot, .player-modal, .dm-fab, .paper { display: none !important; }
+  body { background: #ffffff; }
+  .frame { width: auto; border: 0; margin: 0; }
+  .title, .h { background: none; color: #000000; border-bottom: 2px solid #000000; }
+  .title__sub { color: #555555; }
+  section { break-inside: avoid; }
+  .more > .tbl { display: table !important; }
+}
+/* ── In-app player ──────────────────────────────────────────────────────── */
+.player-modal {
+  position: fixed; inset: 0;
+  z-index: 8000;
+  background: rgba(10, 10, 10, 0.94);
+  display: grid;
+  place-items: center;
+  padding: clamp(16px, 4vw, 48px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s ease;
+}
+.player-modal.open { opacity: 1; pointer-events: auto; }
+
+/* Locks the page behind the modal so a scroll gesture does not move it */
+body.modal-open { overflow: hidden; }
+
+.player-inner { position: relative; }
+.player-frame { width: 100%; }
+.player-frame iframe { display: block; width: 100%; height: 100%; border: none; }
+
+/* Video: hold 16:9. The third width term keeps the ratio when the viewport is
+   short enough that height, not width, is the binding constraint. */
+.player-inner--video { width: min(980px, 100%, calc(74svh * 16 / 9)); }
+.player-inner--video .player-frame { aspect-ratio: 16 / 9; }
+
+/* SoundCloud's visual player is a panel, not a ratio — give it a height */
+.player-inner--audio { width: min(720px, 100%); }
+.player-inner--audio .player-frame { height: min(520px, 64svh); }
+@media (max-width: 639px) {
+  .player-inner--audio .player-frame { height: min(400px, 56svh); }
+}
+
+.player-close {
+  position: absolute;
+  top: calc(14px + env(safe-area-inset-top, 0px));
+  right: calc(14px + env(safe-area-inset-right, 0px));
+  z-index: 1;
+  width: 38px; height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 0;
+  color: rgba(255, 255, 255, 0.72);
+  transition: color 0.2s ease, background 0.2s ease;
+}
+.player-close:hover { color: #fff; background: rgba(255, 255, 255, 0.14); }
+.player-close svg {
+  width: 19px; height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+/* ── Floating DM ────────────────────────────────────────────────────────── */
+.dm-fab {
+  position: fixed;
+  z-index: 7000;
+  right: max(20px, env(safe-area-inset-right));
+  bottom: max(20px, env(safe-area-inset-bottom));
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  /* Comfortably past the 44px minimum touch target */
+  min-height: 56px;
+  padding: 0 26px 0 22px;
+  border-radius: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition: opacity 0.2s ease;
+}
+.dm-fab__icon { width: 22px; height: 22px; flex-shrink: 0; }
+
+/* A phone has no second way to open a direct message, so the button earns its
+   place there. On desktop Instagram is one line in Contact and a button that
+   follows the reader down the page would only cover the text. */
+@media (min-width: 1024px) {
+  .dm-fab { display: none; }
+}
+
+/* The player owns the screen while it is open */
+body.modal-open .dm-fab { opacity: 0; pointer-events: none; }

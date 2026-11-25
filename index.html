@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--
+      Content Security Policy. GitHub Pages cannot set response headers, so the
+      policy is declared here. No 'unsafe-inline' for scripts — the GA bootstrap
+      lives in main.ts so script-src stays strict. style-src does allow inline
+      because element .style writes and the critical CSS block need it.
+
+      connect-src is deliberately loose across Google's own domains. A published
+      sheet CSV redirects from docs.google.com to doc-XX-XX-sheets.googleusercontent.com,
+      and CSP re-checks fetch directives on every redirect hop — a CSP was removed
+      from this site once before because a hop got blocked and the whole data layer
+      went dark. The tight control on where sheet data may come from is the host
+      allowlist in src/sheets.ts, not this line.
+
+      Note that frame-ancestors is silently ignored in a meta-tag CSP, so
+      clickjacking protection is not available on this host.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src 'self' https://www.googletagmanager.com;
+        style-src 'self' 'unsafe-inline';
+        font-src 'self';
+        img-src 'self' https://i1.sndcdn.com https://i.sndcdn.com https://img.youtube.com https://i.ytimg.com https://www.google-analytics.com;
+        frame-src https://w.soundcloud.com https://www.youtube-nocookie.com;
+        connect-src 'self' https://*.google.com https://*.googleusercontent.com https://soundcloud.com https://www.youtube.com https://api.allorigins.win https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com;
+        base-uri 'self';
+        form-action 'none';
+        object-src 'none';
+        upgrade-insecure-requests
+      "
+    />
+
+    <meta name="description" content="GUMGO is a Korean DJ and vinyl curator based in Barcelona. Dub techno, electro and minimal, played on vinyl and built on bass and percussion. Press kit: sets, biography, rooms and contact." />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="theme-color" content="#2f2a24" />
+    <link rel="canonical" href="https://gumgo.art/" />
+
+    <meta property="og:title" content="GUMGO — Vinyl curator, Barcelona" />
+    <meta property="og:description" content="Dub, electro and minimal, dug out of every city I play. HÖR Berlin, Mixmag Asia, Oslated. Debut EP 2027." />
+    <meta property="og:image" content="https://gumgo.art/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content="https://gumgo.art/" />
+    <meta property="og:type" content="profile" />
+    <meta property="og:site_name" content="GUMGO" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="es_ES" />
+    <meta property="og:locale:alternate" content="ca_ES" />
+    <meta property="og:locale:alternate" content="zh_CN" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://gumgo.art/og.jpg" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>GUMGO — Korean DJ and vinyl curator, Barcelona</title>
+
+    <!--
+      Structured data, so search engines and AI crawlers can read who this is
+      rather than guessing from prose.
+
+      This is a JSON-LD data block, not executable script: per the HTML spec a
+      <script> whose type is neither classic, module nor importmap returns early
+      from "prepare the script element" and is never CSP-checked. It therefore
+      needs no nonce and no 'unsafe-inline' in script-src — do not "fix" the CSP
+      on its account.
+    -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "MusicGroup",
+            "@id": "https://gumgo.art/#gumgo",
+            "name": "GUMGO",
+            "alternateName": "검고",
+            "member": { "@type": "Person", "name": "Jessica Eunjung Lee" },
+            "url": "https://gumgo.art/",
+            "image": "https://gumgo.art/og.jpg",
+            "email": "jessica.techie@gmail.com",
+            "foundingDate": "2024",
+            "genre": ["Minimal", "Dub Techno", "Electro", "Acid", "Techno"],
+            "description": "Born in Korea, GUMGO debuted in Singapore in 2024 and built her sound on dancefloors across Southeast Asia before taking it to Europe. She studied samulnori on the janggu for four years from age nine; along with her love of boom bap, it shaped her taste for heavy bass and hard-hitting percussion. In her vinyl-focused sets, bass and percussion carry the flow through minimal, dub techno, electro and acid. Long grooves and metallic textures build a dark, hypnotic and slightly eerie atmosphere, drawing the floor toward SAMADHI, a state of deep absorption. Less a performance than a release. She has played Headquarters and RASA in Singapore, an all-night set at Bar Temp Bangkok, Output Busan, Faust Seoul and Studio Stereo Barcelona. In 2026 she performed for HÖR Berlin, recorded for 20ft Radio, was featured in Mixmag Asia's Artists Exciting Us and contributed Oslated Special Mix 097. Now based in Barcelona, she digs the record shops of every city she plays. Her debut EP is due in 2027.",
+            "foundingLocation": { "@type": "Place", "name": "Singapore" },
+            "homeLocation": {
+              "@type": "Place",
+              "name": "Barcelona, Spain",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Barcelona",
+                "addressCountry": "ES"
+              }
+            },
+            "subjectOf": {
+              "@type": "Article",
+              "headline": "Artists Exciting Us In 2026",
+              "url": "https://mixmag.asia/feature/artists-exciting-us-in-2026-april",
+              "datePublished": "2026-04",
+              "publisher": { "@type": "Organization", "name": "Mixmag Asia" }
+            },
+            "sameAs": [
+              "https://ra.co/dj/gumgo",
+              "https://soundcloud.com/gumgo",
+              "https://gumgo.bandcamp.com",
+              "https://www.instagram.com/gumgo.xyz"
+            ]
+          },
+          {
+            "@type": "ProfilePage",
+            "@id": "https://gumgo.art/#page",
+            "url": "https://gumgo.art/",
+            "name": "GUMGO — Korean DJ and vinyl curator, Barcelona",
+            "inLanguage": "en",
+            "mainEntity": { "@id": "https://gumgo.art/#gumgo" },
+            "about": { "@id": "https://gumgo.art/#gumgo" },
+            "primaryImageOfPage": "https://gumgo.art/og.jpg",
+            "availableLanguage": ["en", "es", "ca", "zh-Hans"]
+          }
+        ]
+      }
+    </script>
+
+    <link rel="preload" as="image" href="/hero/hero-composite.webp" type="image/webp" fetchpriority="high" />
+
+    <!-- Google tag loader; the config call runs from main.ts so no inline script is needed -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CKNF5FXSW6"></script>
+
+    <!-- Critical CSS: first paint before the bundle lands. No webfont is
+         requested anywhere on the site, so there is nothing to wait for. -->
+    <style>
+      *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+      body{background:#2F2A24;color:#111;font:13px/1.6 Verdana,Dotum,Geneva,Arial,sans-serif;-webkit-text-size-adjust:100%}
+      .hero__fig{margin:0}
+      .hero__img{width:100%;height:auto;display:block}
+    </style>
+  </head>
+
+  <body>
+    <!-- Ruled paper. Colour, pitch and fade are all measured off the hero
+         plate, so the page is printed on the same stock the plate was. It
+         lags behind the scroll, which is the only thing on the page that
+         reacts to scrolling. -->
+    <!-- Ruled paper. Pitch, colour and fade are measured off the hero plate.
+         It is the ground the sheet sits on, never the ground under the words,
+         and it lags the scroll. -->
+    <!-- Tiled ruling behind the frame, the way a page of this age dressed its
+         background. It lags the scroll. -->
+    <div class="paper" aria-hidden="true"></div>
+
+    <!-- The plate, full width, exactly as it was. -->
+    <header class="hero">
+      <figure class="hero__fig">
+        <img class="hero__img" src="/hero/hero-composite.webp"
+             alt="GUMGO with one hand raised to her eye holding a drawing compass, over a field of ruled paper crossed by printed bands and a drawn circle."
+             width="1672" height="941" fetchpriority="high" decoding="async" />
+        <figcaption class="hero__cap">After El Lissitzky, Self-Portrait (The Constructor), 1924</figcaption>
+      </figure>
+    </header>
+
+    <!-- The frame: a fixed column, a title strip, a nav column and the page. -->
+    <div class="frame">
+
+      <div class="title">
+        <h1 class="title__name">GUMGO</h1>
+        <p class="title__real">Jessica Eunjung Lee</p>
+        <p class="title__sub">Vinyl curator &middot; Barcelona &middot; Electronic Press Kit</p>
+      </div>
+
+      <div class="cols">
+
+        <nav class="side" id="nav" aria-label="Sections">
+          <p class="side__h">Contents</p>
+          <ul>
+            <li><a href="#z">Listen</a></li>
+            <li><a href="#y">Statement</a></li>
+            <li><a href="#x">Rooms</a></li>
+            <li><a href="#kit">Kit</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+
+          <p class="side__h">Elsewhere</p>
+          <ul>
+            <li><a href="https://soundcloud.com/gumgo" target="_blank" rel="noopener noreferrer" data-track="SoundCloud profile">SoundCloud</a></li>
+            <li><a href="https://gumgo.bandcamp.com" target="_blank" rel="noopener noreferrer" data-track="Bandcamp - side">Bandcamp</a></li>
+            <li><a href="https://ra.co/dj/gumgo" target="_blank" rel="noopener noreferrer" data-track="Resident Advisor - side">Resident Advisor</a></li>
+            <li><a href="https://www.instagram.com/gumgo.xyz" target="_blank" rel="noopener noreferrer" data-track="Instagram - side">Instagram</a></li>
+          </ul>
+
+          <p class="side__up">Updated 2026</p>
+        </nav>
+
+        <main class="main">
+
+          <div class="intro">
+            <p class="intro__line">Vinyl curator. Dub, electro and minimal, dug out of every city I play.</p>
+            <p class="intro__acts">
+              <a class="btn btn--go"
+                 href="https://www.youtube.com/watch?v=HDx12Hh6JfY"
+                 data-player="youtube" data-player-id="HDx12Hh6JfY"
+                 data-track="HOR Berlin - intro">Play the H&Ouml;R Berlin set</a>
+              <a class="btn"
+                 href="mailto:jessica.techie@gmail.com?subject=Booking%20enquiry%3A%20GUMGO"
+                 data-track="Booking - intro">Book GUMGO</a>
+            </p>
+            <p class="intro__ep" id="ep-link" hidden><a href="#ep">Debut EP, 2027: hear the snippets</a></p>
+
+            <table class="tbl">
+              <tr><th colspan="2">Selected</th></tr>
+              <tr><td><a href="https://mixmag.asia/feature/artists-exciting-us-in-2026-april"
+                         target="_blank" rel="noopener noreferrer"
+                         data-track="Mixmag Asia - proof">Mixmag Asia</a></td>
+                  <td>Artists Exciting Us 2026</td></tr>
+              <tr><td>H&Ouml;R Berlin</td><td>Full set &middot; 2026</td></tr>
+              <tr><td>Oslated</td><td>Special Mix 097</td></tr>
+            </table>
+          </div>
+
+          <!-- ── Z · LISTEN ─────────────────────────────────────────────── -->
+          <section id="z">
+            <h2 class="h">Listen</h2>
+
+            <!-- Nothing third party loads before a click; both keep their href. -->
+            <div class="cards">
+              <a class="card" href="https://www.youtube.com/watch?v=HDx12Hh6JfY"
+                 data-player="youtube" data-player-id="HDx12Hh6JfY"
+                 data-track="HOR Berlin - listen">
+                <span class="card__shot">
+                  <img src="https://i.ytimg.com/vi/HDx12Hh6JfY/maxresdefault.jpg" alt=""
+                       width="1280" height="720" loading="lazy" decoding="async" />
+                  <span class="card__go">&#9654;</span>
+                </span>
+                <span class="card__title">H&Ouml;R Berlin</span>
+                <span class="card__sub">Full set &middot; Berlin &middot; 2026</span>
+              </a>
+
+              <a class="card" href="https://soundcloud.com/oslated/oslated-special-mix-097-gumgo"
+                 data-player="soundcloud" data-track="Oslated Special Mix 097 - listen">
+                <span class="card__shot card__shot--blank">
+                  <span class="card__go">&#9654;</span>
+                </span>
+                <span class="card__title">Oslated Special Mix 097</span>
+                <span class="card__sub">Special Mix Series</span>
+              </a>
+            </div>
+
+            <!-- Built from whatever audio is in src/audio/ep; with none, the
+                 block is not rendered at all. -->
+            <div class="snips" id="ep" hidden>
+              <p class="sub">Debut EP &middot; 2027</p>
+              <ol class="snips__list" id="snips-list"></ol>
+            </div>
+
+            <p class="foot"><a href="#nav">back to top</a></p>
+          </section>
+
+          <section class="hidden" id="gigs" aria-label="Upcoming">
+            <h2 class="h">Upcoming</h2>
+            <div id="gigs-list"></div>
+          </section>
+
+          <!-- ── Y · STATEMENT ──────────────────────────────────────────── -->
+          <section id="y">
+            <h2 class="h">Statement</h2>
+
+            <table class="tbl">
+              <tr><th>Year</th><th>Event</th></tr>
+              <tr><td>2024</td><td>Singapore debut</td></tr>
+              <tr><td>2026</td><td>Mixmag Asia, H&Ouml;R Berlin</td></tr>
+              <tr><td>2026</td><td>Based in Barcelona</td></tr>
+              <tr><td>2027</td><td>Debut EP</td></tr>
+            </table>
+
+            <ol class="theses">
+              <li>I play for the room, not for myself. A set is communication, not self-expression. Less a performance than a release.</li>
+              <li>I learned time on the janggu, in cycles. A set climbs to its peak and comes back down.</li>
+              <li>Subtraction first. Bass and percussion carry the weight; everything else has to earn its place.</li>
+              <li>Material and repetition. The record is the material, and repetition is how it opens.</li>
+              <li>Underground is an attitude, not a room size.</li>
+            </ol>
+
+            <p class="foot"><a href="#nav">back to top</a></p>
+          </section>
+
+          <!-- ── X · ROOMS ──────────────────────────────────────────────── -->
+          <section id="x">
+            <h2 class="h">Rooms</h2>
+
+            <table class="tbl">
+              <tr><th>Room</th><th>Where</th></tr>
+              <tr><td>H&Ouml;R Berlin</td><td>Berlin &middot; 2026</td></tr>
+              <tr><td>Studio Stereo</td><td>Barcelona</td></tr>
+              <tr><td>Ganok</td><td>Lviv</td></tr>
+              <tr><td>Headquarters</td><td>Singapore</td></tr>
+              <tr><td>Bar Temp</td><td>Bangkok &middot; All night long</td></tr>
+              <tr><td>Faust</td><td>Seoul</td></tr>
+              <tr><td>Output</td><td>Busan</td></tr>
+            </table>
+
+            <p class="sub">Radio &amp; mixes</p>
+            <p>20ft Radio, Kyiv &middot; Oslated Special Mix 097 &middot; Seoul Community Radio, 2025
+               &middot; Aaja Music, London &middot; Headstream, Bali &middot; Shutter Rhythms
+               &middot; TOHA Radio</p>
+
+            <details class="more">
+              <summary>All other rooms</summary>
+              <table class="tbl">
+                <tr><td>Switch Pocket Club</td><td>Barcelona</td></tr>
+                <tr><td>RASA</td><td>Singapore</td></tr>
+                <tr><td>Santai</td><td>Singapore</td></tr>
+                <tr><td>Nue</td><td>Seoul</td></tr>
+                <tr><td>Dumb</td><td>Seoul</td></tr>
+                <tr><td>MTL Hannam</td><td>Seoul</td></tr>
+                <tr><td>Nasub</td><td>Busan</td></tr>
+                <tr><td>Noise</td><td>Chiang Mai</td></tr>
+                <tr><td>Hope Records</td><td>Bali</td></tr>
+                <tr><td>Millers Records</td><td>Bali</td></tr>
+              </table>
+            </details>
+
+            <p class="foot"><a href="#nav">back to top</a></p>
+          </section>
+
+          <!-- ── KIT ────────────────────────────────────────────────────── -->
+          <section id="kit">
+            <h2 class="h">Kit</h2>
+
+            <div class="ctl">
+              <span class="seg" role="group" aria-label="Biography length">
+                <button class="seg__b" type="button" data-len="50"  aria-pressed="true">50</button>
+                <button class="seg__b" type="button" data-len="150" aria-pressed="false">150</button>
+                <button class="seg__b" type="button" data-len="300" aria-pressed="false">300</button>
+              </span>
+              <span class="ctl__u">words</span>
+              <label><span class="visually-hidden">Biography language</span>
+                <select id="bio-lang">
+                  <option value="en" selected>English</option>
+                  <option value="es">Espa&ntilde;ol</option>
+                  <option value="ca">Catal&agrave;</option>
+                  <option value="zh">&#31616;&#20307;&#20013;&#25991;</option>
+                </select>
+              </label>
+              <button class="btn btn--sm" type="button" id="bio-copy" data-track="Bio copy">Copy</button>
+            </div>
+
+            <p class="bio" id="bio-text" lang="en">GUMGO is a Korean DJ and vinyl curator based in Barcelona, digging the record shops of every city she plays. Trained on the janggu from age nine, she plays dub techno, electro and minimal built on bass and percussion. Featured in Mixmag Asia&rsquo;s Artists Exciting Us 2026; sets for H&Ouml;R Berlin and Oslated. Debut EP due 2027.</p>
+
+            <!-- Hidden until the file exists, so the kit never offers a 404. -->
+            <p class="dl" id="kit-photos" hidden>
+              Press photos: <a id="kit-photos-link" href="#" download data-track="Press photos">gumgo-press-photos.zip</a>
+            </p>
+            <p class="dl" id="kit-logo" hidden>
+              Logo: <a id="kit-logo-link" href="#" download data-track="Logo">gumgo-logo.svg</a>
+            </p>
+
+            <p class="foot"><a href="#nav">back to top</a></p>
+          </section>
+
+          <!-- ── CONTACT ────────────────────────────────────────────────── -->
+          <section id="contact">
+            <h2 class="h">Contact</h2>
+
+            <table class="tbl">
+              <tr><th scope="row">Booking</th>
+                  <td><a href="mailto:jessica.techie@gmail.com?subject=Booking%20enquiry%3A%20GUMGO" data-track="Booking - contact">jessica.techie@gmail.com</a></td></tr>
+              <tr><th scope="row">Label / demo</th>
+                  <td><a href="mailto:jessica.techie@gmail.com?subject=Label%20enquiry%3A%20GUMGO%20debut%20EP" data-track="Label - contact">jessica.techie@gmail.com</a></td></tr>
+              <tr><th scope="row">Instagram</th>
+                  <td><a href="https://www.instagram.com/gumgo.xyz" target="_blank" rel="noopener noreferrer" data-track="Instagram - contact">@gumgo.xyz</a></td></tr>
+              <tr><th scope="row">Bandcamp</th>
+                  <td><a href="https://gumgo.bandcamp.com" target="_blank" rel="noopener noreferrer" data-track="Bandcamp - contact">gumgo.bandcamp.com</a></td></tr>
+              <tr><th scope="row">Resident Advisor</th>
+                  <td><a href="https://ra.co/dj/gumgo" target="_blank" rel="noopener noreferrer" data-track="Resident Advisor - contact">ra.co/dj/gumgo</a></td></tr>
+            </table>
+
+            <p class="foot"><a href="#nav">back to top</a></p>
+          </section>
+
+        </main>
+      </div>
+
+      <footer class="bottom">GUMGO &middot; Jessica Eunjung Lee &middot; jessica.techie@gmail.com</footer>
+    </div>
+
+    <a class="dm-fab" href="https://ig.me/m/gumgo.xyz"
+       target="_blank" rel="noopener noreferrer"
+       data-track="Floating DM" aria-label="Send GUMGO a direct message on Instagram">
+      <svg class="dm-fab__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="2" y="2" width="20" height="20" rx="5.5"/>
+        <circle cx="12" cy="12" r="4.4"/>
+        <circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none"/>
+      </svg>
+      <span class="dm-fab__label">DM</span>
+    </a>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

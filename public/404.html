@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <!-- Standalone page: the bundle never reaches it, so it carries its own
+         policy and its own style. No webfont, same as the rest of the site. -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self'; script-src 'none'; base-uri 'self'; form-action 'none'; object-src 'none'"
+    />
+    <title>404 — GUMGO</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      :root {
+        --paper:   #d6c9bb;
+        --paper-2: #cdbeb0;
+        --rule:    #958677;
+        --ink-2:   #52483e;
+        --ink:     #35302a;
+        --sans:    Verdana, Dotum, '돋움', Geneva, Arial, sans-serif;
+        --mono:    'Courier New', Courier, monospace;
+      }
+
+      body {
+        min-height: 100svh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background: var(--paper);
+        color: var(--ink);
+        font: 12px/1.5 var(--sans);
+        /* The same ruling as the rest of the site, at the same pitch, colour
+           and fade, all measured off the hero plate. */
+        background-image:
+          linear-gradient(to right,  #cdb7a3 0 1px, transparent 1px),
+          linear-gradient(to bottom, #cdb7a3 0 1px, transparent 1px);
+        background-size: max(10px, 0.927vw) max(10px, 0.927vw);
+      }
+
+      .box {
+        width: min(420px, 100%);
+        border: 1px solid var(--rule);
+        background: var(--paper);
+      }
+
+      .box__bar {
+        padding: 5px 8px;
+        background: var(--ink);
+        color: var(--paper);
+        font-size: 11px;
+        font-weight: bold;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .box__body { padding: 12px 8px; }
+
+      h1 {
+        font-family: var(--mono);
+        font-size: 13px;
+        font-weight: normal;
+        color: var(--ink-2);
+      }
+
+      p { margin-top: 8px; }
+
+      a {
+        display: inline-block;
+        margin-top: 12px;
+        padding: 5px 10px;
+        border: 1px solid var(--ink);
+        background: var(--paper-2);
+        color: var(--ink);
+        font-size: 11px;
+        font-weight: bold;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-decoration: none;
+      }
+      a:hover { background: var(--ink); color: var(--paper); }
+    </style>
+  </head>
+
+  <body>
+    <div class="box">
+      <p class="box__bar">GUMGO</p>
+      <div class="box__body">
+        <h1>404 &middot; page not found</h1>
+        <p>That address is not part of this press kit.</p>
+        <a href="/">Back to the press kit</a>
+      </div>
+    </div>
+  </body>
+</html>
