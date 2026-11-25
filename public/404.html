@@ -4,25 +4,33 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#2f2a24" />
     <!-- Standalone page: the bundle never reaches it, so it carries its own
          policy and its own style. No webfont, same as the rest of the site. -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self'; script-src 'none'; base-uri 'self'; form-action 'none'; object-src 'none'"
+      content="default-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self'; script-src 'none'; base-uri 'self'; form-action 'none'; object-src 'none'; upgrade-insecure-requests"
     />
     <title>404 — GUMGO</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- iOS ignores an SVG icon, so the home screen gets a raster of the
+         same mark rather than a screenshot of the page. -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <style>
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
       :root {
-        --paper:   #d6c9bb;
-        --paper-2: #cdbeb0;
-        --rule:    #958677;
-        --ink-2:   #52483e;
-        --ink:     #35302a;
-        --sans:    Verdana, Dotum, '돋움', Geneva, Arial, sans-serif;
-        --mono:    'Courier New', Courier, monospace;
+        --page:  #2f2a24;
+        --tile:  #3d3730;
+        --sheet: #ffffff;
+        --bar:   #1f1b17;
+        --head:  #e4e0d8;
+        --txt:   #111111;
+        --txt-2: #555555;
+        --link:  #0033cc;
+        --go:    #9e3a28;
+        --sans:  Verdana, Dotum, '돋움', Geneva, Arial, sans-serif;
+        --mono:  'Courier New', Courier, monospace;
       }
 
       body {
@@ -30,70 +38,82 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 24px;
-        background: var(--paper);
-        color: var(--ink);
-        font: 12px/1.5 var(--sans);
-        /* The same ruling as the rest of the site, at the same pitch, colour
-           and fade, all measured off the hero plate. */
+        padding: 16px;
+        background: var(--page);
+        color: var(--txt);
+        font: 13px/1.6 var(--sans);
+        /* The same tiled ground the site sits on */
         background-image:
-          linear-gradient(to right,  #cdb7a3 0 1px, transparent 1px),
-          linear-gradient(to bottom, #cdb7a3 0 1px, transparent 1px);
-        background-size: max(10px, 0.927vw) max(10px, 0.927vw);
+          linear-gradient(to right,  var(--tile) 0 1px, transparent 1px),
+          linear-gradient(to bottom, var(--tile) 0 1px, transparent 1px);
+        background-size: 14px 14px;
       }
 
-      .box {
+      .frame {
         width: min(420px, 100%);
-        border: 1px solid var(--rule);
-        background: var(--paper);
+        border: 1px solid #000000;
+        background: var(--sheet);
       }
 
-      .box__bar {
-        padding: 5px 8px;
-        background: var(--ink);
-        color: var(--paper);
-        font-size: 11px;
+      .title {
+        padding: 14px 16px;
+        background: var(--bar);
+        color: #ffffff;
+      }
+      .title h1 {
+        font-size: 24px;
         font-weight: bold;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        line-height: 1.1;
       }
+      .title p { margin-top: 4px; font-size: 11px; color: #c9c2b8; }
 
-      .box__body { padding: 12px 8px; }
-
-      h1 {
+      .body { padding: 16px; }
+      .body h2 {
         font-family: var(--mono);
         font-size: 13px;
         font-weight: normal;
-        color: var(--ink-2);
+        color: var(--txt-2);
       }
+      .body p { margin-top: 8px; }
 
-      p { margin-top: 8px; }
-
-      a {
+      a.btn {
         display: inline-block;
-        margin-top: 12px;
-        padding: 5px 10px;
-        border: 1px solid var(--ink);
-        background: var(--paper-2);
-        color: var(--ink);
-        font-size: 11px;
+        margin-top: 16px;
+        padding: 7px 14px;
+        border: 1px solid #000000;
+        background: var(--head);
+        color: var(--txt);
+        font-size: 12px;
         font-weight: bold;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
         text-decoration: none;
       }
-      a:hover { background: var(--ink); color: var(--paper); }
+      a.btn:visited { color: var(--txt); }
+      a.btn:hover { background: var(--bar); color: #ffffff; }
+
+      .foot {
+        padding: 10px 16px;
+        border-top: 1px solid #000000;
+        background: var(--head);
+        font-size: 11px;
+        color: var(--txt-2);
+      }
+      .foot a { color: var(--link); }
     </style>
   </head>
 
   <body>
-    <div class="box">
-      <p class="box__bar">GUMGO</p>
-      <div class="box__body">
-        <h1>404 &middot; page not found</h1>
-        <p>That address is not part of this press kit.</p>
-        <a href="/">Back to the press kit</a>
+    <div class="frame">
+      <div class="title">
+        <h1>GUMGO</h1>
+        <p>Vinyl curator &middot; Barcelona &middot; Electronic Press Kit</p>
       </div>
+      <div class="body">
+        <h2>404 &middot; page not found</h2>
+        <p>That address is not part of this press kit.</p>
+        <a class="btn" href="/">Back to the press kit</a>
+      </div>
+      <p class="foot">GUMGO &middot; <a href="mailto:jessica.techie@gmail.com">jessica.techie@gmail.com</a></p>
     </div>
   </body>
 </html>
