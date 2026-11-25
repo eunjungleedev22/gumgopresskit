@@ -416,7 +416,7 @@ body.is-building .hero__cap { animation: fade-in 300ms ease 200ms both; }
 
 /* ── Print ──────────────────────────────────────────────────────────────── */
 @media print {
-  .side, .foot, .player-modal, .dm-fab, .paper { display: none !important; }
+  .side, .foot, .player-modal, .dm, .paper { display: none !important; }
   body { background: #ffffff; }
   .frame { width: auto; border: 0; margin: 0; }
   .title, .h { background: none; color: #000000; border-bottom: 2px solid #000000; }
@@ -478,35 +478,62 @@ body.modal-open { overflow: hidden; }
   stroke-linecap: round;
 }
 
-/* ── Floating DM ────────────────────────────────────────────────────────── */
-.dm-fab {
+/* ── Floating DM ──────────────────────────────────────────────────────────
+   A small window pinned to the foot of a phone, built the way this age built
+   one: a title bar, a square frame and a hard offset behind it rather than a
+   soft shadow.
+
+   It replaces a pill that had been invisible since the redesign, because it
+   still named --ink and --paper, two tokens that stopped existing when the
+   palette changed, so its background resolved to transparent and its text to
+   the page's own near-black on white. */
+.dm {
   position: fixed;
   z-index: 7000;
-  right: max(20px, env(safe-area-inset-right));
-  bottom: max(20px, env(safe-area-inset-bottom));
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  /* Comfortably past the 44px minimum touch target */
-  min-height: 56px;
-  padding: 0 26px 0 22px;
-  border-radius: 0;
-  background: var(--ink);
-  color: var(--paper);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  right: max(10px, env(safe-area-inset-right));
+  bottom: max(10px, env(safe-area-inset-bottom));
+  width: 182px;
+  background: var(--sheet);
+  border: 1px solid var(--edge);
+  box-shadow: 4px 4px 0 var(--bar);
   transition: opacity 0.2s ease;
 }
-.dm-fab__icon { width: 22px; height: 22px; flex-shrink: 0; }
 
-/* A phone has no second way to open a direct message, so the button earns its
-   place there. On desktop Instagram is one line in Contact and a button that
-   follows the reader down the page would only cover the text. */
-@media (min-width: 1024px) {
-  .dm-fab { display: none; }
+.dm__bar {
+  padding: 5px 8px;
+  background: var(--bar);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  max-width: none;
+}
+
+.dm__go {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin: 7px;
+  /* Past the 44px a thumb needs */
+  padding: 12px 6px;
+  border: 1px solid var(--go);
+  background: var(--go);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+  text-decoration: none;
+}
+.dm__go:visited { color: #ffffff; }
+.dm__go:hover { background: var(--bar); border-color: var(--bar); color: #ffffff; }
+.dm__icon { width: 17px; height: 17px; flex: none; }
+
+/* Instagram is a line in Contact on a desktop, where a window following the
+   reader down the page would only cover the text. */
+@media (min-width: 720px) {
+  .dm { display: none; }
 }
 
 /* The player owns the screen while it is open */
-body.modal-open .dm-fab { opacity: 0; pointer-events: none; }
+body.modal-open .dm { opacity: 0; pointer-events: none; }

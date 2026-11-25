@@ -413,16 +413,22 @@
       <footer class="bottom">GUMGO &middot; Jessica Eunjung Lee &middot; jessica.techie@gmail.com</footer>
     </div>
 
-    <a class="dm-fab" href="https://ig.me/m/gumgo.xyz"
-       target="_blank" rel="noopener noreferrer" aria-label="Send GUMGO a direct message on Instagram">
-      <svg class="dm-fab__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-           stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <rect x="2" y="2" width="20" height="20" rx="5.5"/>
-        <circle cx="12" cy="12" r="4.4"/>
-        <circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none"/>
-      </svg>
-      <span class="dm-fab__label">DM</span>
-    </a>
+    <!-- A little window pinned to the foot of a phone. A booker reading this
+         on a train has one thumb; this is the shortest path from the page to
+         a message. Desktop gets Instagram as a line in Contact instead. -->
+    <aside class="dm">
+      <p class="dm__bar">Message GUMGO</p>
+      <a class="dm__go" href="https://ig.me/m/gumgo.xyz" target="_blank"
+         rel="noopener noreferrer">
+        <svg class="dm__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="2" y="2" width="20" height="20"/>
+          <circle cx="12" cy="12" r="4.4"/>
+          <circle cx="17.6" cy="6.4" r="1.2" fill="currentColor" stroke="none"/>
+        </svg>
+        Instagram DM
+      </a>
+    </aside>
 
     <script type="module" src="/src/main.ts"></script>
   </body>
