@@ -77,13 +77,38 @@ down before a booker reaches anything.
 
 - **Vite 8** + **TypeScript 6**, zero runtime dependencies
 - **Fonts:** none downloaded
-- **Data:** one Google Sheets tab, for Upcoming only (see `GOOGLE_SHEETS_GUIDE.md`).
+- **Data:** one Google Sheets tab, for Upcoming only (see `GOOGLE_SHEETS_GUIDE.md`),
+  and her writer page at local body, read **at build time** (see below).
   Everything else is in the document, so nothing below the hero waits on a fetch.
 - **Analytics:** none. There is no third-party script, no cookie and therefore
-  no consent banner to argue about. The only third-party request a visitor's
-  browser makes on load is the YouTube poster frame from `i.ytimg.com`;
-  everything else is a link they have to click.
+  no consent banner to argue about. The only third-party requests a visitor's
+  browser makes are two images: the YouTube poster frame from `i.ytimg.com`,
+  and the cover of her newest piece from `localbody.blog`, which is lazy and
+  below the fold so it is not fetched on load at all. Everything else is a
+  link they have to click.
 - **Hosting:** GitHub Pages via `.github/workflows/deploy.yml`
+
+## Writing
+
+The Writing section is her three most recent pieces at
+[local body](https://localbody.blog/en/writers/gumgo), where she writes as
+검은고양이. The writer page is server-rendered, so the build reads it with one
+`fetch` and parses the cards; nothing is fetched in the visitor's browser,
+which keeps `connect-src` closed and means a crawler that runs no JavaScript
+still sees the three pieces.
+
+Pages rebuilds on every push, so the block is as current as the last deploy.
+If local body is unreachable, or is rebuilt in a shape the parser does not
+know, **the build does not fail** — it falls back to `src/writing.json`, the
+last good answer, which is committed. Refresh that fallback with:
+
+```bash
+npm run writing:sync      # rewrites src/writing.json; commit the result
+```
+
+Everything that comes back is another site's text going into ours, so it is
+escaped on the way in and every URL is checked to be `localbody.blog` before
+it is allowed to become an `href` or a `src` (`scripts/localbody.mjs`).
 
 ## Develop
 

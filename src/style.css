@@ -289,6 +289,78 @@ p { max-width: 68ch; }
 /* ── EP snippets ────────────────────────────────────────────────────────────
    One track at a time. Progress is an arc, so there is no bar and no spinner:
    before a track knows its length there is nothing to show yet. */
+/* ── Writing ────────────────────────────────────────────────────────────
+   Her own words at local body. The newest piece carries the picture and the
+   two behind it are a line each, which is the shape a front page had then and
+   still the fastest way to read three things at a glance. */
+.wr-bio {
+  border: 1px solid #999999;
+  border-left: 4px solid var(--side);
+  background: var(--alt);
+  padding: 9px 12px;
+  max-width: none;
+  font-size: 12px;
+}
+/* Korean breaks anywhere by default, so a name set in a line of English can be
+   split down the middle. It breaks at word boundaries or not at all. */
+:lang(ko) { word-break: keep-all; }
+
+.wr-bio span { display: block; }
+.wr-bio span + span { margin-top: 5px; }
+
+.wr-lead,
+.wr-list a {
+  color: var(--txt);
+  text-decoration: none;
+  display: block;
+}
+.wr-lead:visited,
+.wr-list a:visited { color: var(--txt); }
+
+.wr-lead { border: 1px solid #999999; padding: 10px; }
+.wr-shot {
+  aspect-ratio: 16 / 9;
+  background: var(--bar);
+  border: 1px solid #999999;
+  margin-bottom: 8px;
+  display: block;
+  overflow: hidden;
+}
+.wr-shot img { object-fit: cover; width: 100%; height: 100%; }
+
+.wr-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--txt-2);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  display: block;
+}
+.wr-title {
+  color: var(--link);
+  font-weight: bold;
+  text-decoration: underline;
+  display: block;
+  margin-top: 2px;
+}
+.wr-lead .wr-title { font-size: 15px; }
+.wr-lead:hover .wr-title,
+.wr-list a:hover .wr-title { color: var(--go); }
+.wr-dek {
+  color: var(--txt-2);
+  font-size: 12px;
+  display: block;
+  margin-top: 3px;
+  max-width: 68ch;
+}
+
+.wr-list { border: 1px solid #999999; }
+.wr-list li + li { border-top: 1px solid #cccccc; }
+.wr-list li:nth-child(even) { background: var(--alt); }
+.wr-list a { padding: 9px 10px; }
+
+.wr-more { margin-top: 10px; }
+
 .snips__list { border: 1px solid #999999; margin-top: 6px; }
 .snip { display: flex; align-items: center; gap: 10px; padding: 6px 10px; }
 .snip + .snip { border-top: 1px solid #cccccc; }
