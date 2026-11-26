@@ -107,9 +107,52 @@ export function parse(html) {
   return { source: SOURCE, fetched: new Date().toISOString().slice(0, 10), bio, posts };
 }
 
-export async function fetchWriting(timeoutMs = 8000) {
-  const stop = AbortSignal.timeout(timeoutMs);
-  const res = await fetch(SOURCE, { signal: stop, headers: { accept: 'text/html' } });
-  if (!res.ok) throw new Error(`localbody: ${res.status} ${res.statusText}`);
-  return parse(await res.text());
+/**
+ * The build asks for the page the way a browser does.
+ *
+ * A bare `fetch` sends `user-agent: node` and almost nothing else, which is
+ * the shape every edge filter and bot score is tuned to notice. Nothing is
+ * blocking us today, but the request that matters runs unattended inside a
+ * GitHub Actions runner, from a datacentre range, once per deploy, and the
+ * first sign of it being turned away would be the site quietly serving a
+ * months-old fallback. A full, ordinary header set is what keeps it boring.
+ *
+ * It identifies itself at the end of the User-Agent all the same, so that if
+ * local body ever wants to allow, rate-limit or simply recognise this, there
+ * is a name and a URL to do it by rather than one more anonymous Chrome.
+ */
+const HEADERS = {
+  'user-agent':
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) ' +
+    'Chrome/141.0.0.0 Safari/537.36 gumgo-presskit/1.0 (+https://gumgo.xyz)',
+  accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+  'accept-language': 'en-GB,en;q=0.9,ko;q=0.8',
+  'cache-control': 'no-cache',
+  pragma: 'no-cache',
+  'sec-fetch-dest': 'document',
+  'sec-fetch-mode': 'navigate',
+  'sec-fetch-site': 'none',
+  'sec-fetch-user': '?1',
+  'upgrade-insecure-requests': '1',
+};
+
+/**
+ * One retry, because a single cold edge miss or a 502 during their deploy is
+ * not a reason to serve the fallback for the next however many days. Two
+ * attempts and then the fallback; it never blocks a deploy for longer than
+ * the two timeouts.
+ */
+export async function fetchWriting(timeoutMs = 8000, attempts = 2) {
+  let last;
+  for (let i = 0; i < attempts; i++) {
+    if (i > 0) await new Promise((r) => setTimeout(r, 1500));
+    try {
+      const res = await fetch(SOURCE, { signal: AbortSignal.timeout(timeoutMs), headers: HEADERS });
+      if (!res.ok) throw new Error(`localbody: ${res.status} ${res.statusText}`);
+      return parse(await res.text());
+    } catch (error) {
+      last = error;
+    }
+  }
+  throw last;
 }
