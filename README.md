@@ -97,14 +97,29 @@ The Writing section is her three most recent pieces at
 which keeps `connect-src` closed and means a crawler that runs no JavaScript
 still sees the three pieces.
 
-Pages rebuilds on every push, so the block is as current as the last deploy.
-If local body is unreachable, or is rebuilt in a shape the parser does not
-know, **the build does not fail** — it falls back to `src/writing.json`, the
-last good answer, which is committed. Refresh that fallback with:
+**The build never goes to local body.** It reads `src/writing.json`, which is
+committed, and that file is refreshed by one scheduled job:
+`.github/workflows/writing.yml`, hourly at minute 17. So the rate at which
+another site is touched is a schedule rather than a consequence of how often
+someone pushes, and a build is hermetic — it cannot be slowed, changed or
+broken by local body being slow, down or rebuilt.
+
+The job writes a commit only when her writing actually changed, so a quiet
+hour costs one request and nothing else. `updated` in that file is the date
+the writing last changed, not the date the job last ran. When there is a
+change it pushes and then asks the deploy workflow to run, because a commit
+pushed with `GITHUB_TOKEN` deliberately does not start a workflow by itself —
+which is also what stops it looping.
+
+By hand, any time:
 
 ```bash
 npm run writing:sync      # rewrites src/writing.json; commit the result
 ```
+
+**GitHub disables scheduled workflows in a repository with no activity for
+sixty days.** If the writing block ever freezes, check that first: Actions →
+Refresh writing from local body → Enable.
 
 Everything that comes back is another site's text going into ours, so it is
 escaped on the way in and every URL is checked to be `localbody.blog` before

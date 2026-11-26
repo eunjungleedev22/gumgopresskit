@@ -1,16 +1,41 @@
 /**
  * Refreshes src/writing.json from local body.
  *
- * The build fetches the writer page itself, so the site is current whether or
- * not this is ever run; the snapshot is only what the build falls back to when
- * local body is unreachable or has been rebuilt in a shape this does not know.
- * Run `npm run writing:sync` to update it, and commit the result, so the
- * fallback is never years behind the real page.
+ * This is the only thing on the project that asks local body for anything.
+ * The build reads the file and never goes to the network, so how often that
+ * site is touched is a schedule — once an hour, from .github/workflows/
+ * writing.yml — and not a consequence of how often someone pushes.
+ *
+ * It writes only when something actually changed, so an hour in which she
+ * published nothing leaves the file alone, the workflow finds nothing to
+ * commit, and nothing is deployed. `updated` is therefore the date her
+ * writing last changed, not the date this last ran.
+ *
+ * Exit codes: 0 wrote, 0 unchanged (printed either way), non-zero on failure,
+ * which fails the scheduled run loudly rather than leaving it to rot.
  */
 
-import { writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { fetchWriting } from './localbody.mjs';
 
-const data = await fetchWriting();
-writeFileSync('src/writing.json', `${JSON.stringify(data, null, 2)}\n`);
-console.log(`src/writing.json: ${data.posts.length} posts, newest ${data.posts[0].date} — ${data.posts[0].title}`);
+const FILE = 'src/writing.json';
+
+/** Everything but the timestamp, so a re-run is not a change. */
+const body = (d) => JSON.stringify({ source: d.source, bio: d.bio, posts: d.posts });
+
+const fresh = await fetchWriting();
+
+let current = null;
+try {
+  current = JSON.parse(readFileSync(FILE, 'utf8'));
+} catch {
+  // No snapshot yet, or an unreadable one: write a good one over it.
+}
+
+if (current && body(current) === body(fresh)) {
+  console.log(`${FILE}: unchanged (${fresh.posts.length} posts, newest ${fresh.posts[0].date})`);
+} else {
+  const out = { source: fresh.source, updated: fresh.fetched, bio: fresh.bio, posts: fresh.posts };
+  writeFileSync(FILE, `${JSON.stringify(out, null, 2)}\n`);
+  console.log(`${FILE}: updated — ${fresh.posts.length} posts, newest ${fresh.posts[0].date} · ${fresh.posts[0].title}`);
+}

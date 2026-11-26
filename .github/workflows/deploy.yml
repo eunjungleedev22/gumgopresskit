@@ -5,6 +5,9 @@ on:
     branches:
       - main
       - claude/dj-gumgo-presskit-kwK7B
+  # So the hourly writing refresh can deploy its own commit: a push made with
+  # GITHUB_TOKEN deliberately does not start a workflow by itself.
+  workflow_dispatch:
 
 permissions:
   contents: read

@@ -1,0 +1,60 @@
+name: Refresh writing from local body
+
+# The only place on this project that asks local body for anything, so the
+# rate is this schedule and nothing else: once an hour, whatever happens with
+# pushes. Minute 17 rather than 0 because every cron on GitHub fires on the
+# hour and the queue there is the slowest part of the hour.
+#
+# It writes a commit only when her writing actually changed, so a quiet hour
+# costs one request and nothing else. A commit pushed with GITHUB_TOKEN does
+# not start another workflow, which is what stops this looping — so when
+# there is a change, it asks the deploy workflow to run.
+#
+# GitHub disables scheduled workflows in a repository with no activity for
+# sixty days. If the writing block ever freezes, that is the first thing to
+# check: Actions, this workflow, Enable.
+
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: writing
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Fetch her writer page
+        run: npm run writing:sync
+
+      - name: Commit and deploy if anything changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- src/writing.json; then
+            echo "Nothing changed; no commit, no deploy."
+            exit 0
+          fi
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/writing.json
+          git commit \
+            -m "Refresh her writing from local body" \
+            -m "Written by .github/workflows/writing.yml, which reads her writer page once an hour and commits only when something changed."
+          git push
+
+          gh workflow run deploy.yml --ref "${GITHUB_REF_NAME}"
